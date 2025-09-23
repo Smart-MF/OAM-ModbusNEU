@@ -7,6 +7,10 @@
         <ApplicationProgram>
           <Static>
             <Parameters>
+              <!-- only description no offset -->
+              <Parameter Id="%AID%_P-%T%%CCC%004" Name="CH%C%Name" ParameterType="%AID%_PT-Text40Byte" Text="Beschreibung des Kanals" Value="" />
+              <Parameter Id="%AID%_P-%T%%CCC%100" Name="Trigger%C%Name" ParameterType="%AID%_PT-Text40Byte" Text="Beschreibung" Value="" />
+              <!-- ********* -->
               <!-- ****************************** -->
               <!-- ModBus Chanel -->
               <!-- Settings for one Chanel  -->
@@ -16,96 +20,59 @@
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="0" BitOffset="0" />
                 <Parameter Id="%AID%_UP-%T%%CCC%000" Name="CH%C%ModbusSlaveSelection" Offset="0" BitOffset="0" ParameterType="%AID%_PT-SlaveIdSelection" Text="Slave:" SuffixText="" Value="0" />
                 <Parameter Id="%AID%_UP-%T%%CCC%001" Name="CH%C%ModBusDptSelection" Offset="1" BitOffset="0" ParameterType="%AID%_PT-DptSelection" Text="DPT-Auswahl" SuffixText="" Value="0" />
-                <Parameter Id="%AID%_UP-%T%%CCC%002" Name="CH%C%ModBusBusDirection" Offset="2" BitOffset="0" ParameterType="%AID%_PT-ModbusDirection" Text="Richtung" SuffixText="" Value="1" />
-                <!-- 6bit free -->
+                <Parameter Id="%AID%_UP-%T%%CCC%002" Name="CH%C%ModBusBusDirection" Offset="2" BitOffset="0" ParameterType="%AID%_PT-ModbusDirection" Text="Richtung" SuffixText="" Value="1" />  <!-- 2bit -->
+                <Parameter Id="%AID%_UP-%T%%CCC%009" Name="CH%C%ModBusRegisterPosDPT5001" Offset="2" BitOffset="2" ParameterType="%AID%_PT-RegisterPosDPT56" Text="Register Position" Value="1" /> <!-- 3bit -->
+                <Parameter Id="%AID%_UP-%T%%CCC%010" Name="CH%C%ModBusRegisterPosDPT5" Offset="2" BitOffset="5" ParameterType="%AID%_PT-RegisterPosDPT56" Text="Register Position" Value="1" /> <!-- 3bit -->
                 <Parameter Id="%AID%_UP-%T%%CCC%003" Name="CH%C%ModbusRegister" Offset="3" BitOffset="0" ParameterType="%AID%_PT-RegisterAddress" Text="Register" SuffixText="" Value="0" /> <!-- 4Byte -->
               </Union>
-              <!-- only description no offset -->
-              <Parameter Id="%AID%_P-%T%%CCC%004" Name="CH%C%Name" ParameterType="%AID%_PT-Text40Byte" Text="Beschreibung des Kanals" Value="" />
-              <!-- ********* -->
               <Union SizeInBit="45">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="7" BitOffset="0" />
                 <Parameter Id="%AID%_UP-%T%%CCC%005" Name="CH%C%ModBusSendDelay" Offset="0" BitOffset="0" ParameterType="%AID%_PT-DelaySeconds" Text="   zyklisch senden (0=nicht senden)" SuffixText="Sekunden" Value="0" /><!-- 4Byte -->
                 <Parameter Id="%AID%_UP-%T%%CCC%006" Name="CH%C%ModBusValueChange" Offset="4" BitOffset="0" ParameterType="%AID%_PT-ValueChange" Text="   abs Abweichung senden (0=nicht senden)" SuffixText="*0.1" Value="0" /><!-- 4Byte -->
                 <Parameter Id="%AID%_UP-%T%%CCC%007" Name="CH%C%ModBusReadCycle" Offset="8" BitOffset="0" ParameterType="%AID%_PT-ReadCycle" Text="   Abfrage" SuffixText="" Value="1" />
               </Union>
-              <!-- UNION test -->
-              <Union SizeInBit="8">
+              <Union SizeInBit="16">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="16" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%T%%CCC%008" Name="CH%C%ModBusInputTypDpt1" ParameterType="%AID%_PT-InputTypDpt1" Text="Typ" Value="0" Offset="0" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%T%%CCC%009" Name="CH%C%ModBusRegisterPosDPT5001" ParameterType="%AID%_PT-RegisterPosDPT56" Text="Register Position" Value="1" Offset="0" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%T%%CCC%010" Name="CH%C%ModBusRegisterPosDPT5" ParameterType="%AID%_PT-RegisterPosDPT56" Text="Register Position" Value="1" Offset="0" BitOffset="0" />
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%011" Name="CH%C%ModBusReserve4"           ParameterType="%AID%_PT-Res"                Text="Register Position" Value="0" Offset="0" BitOffset="0" /> -->
-                <Parameter Id="%AID%_UP-%T%%CCC%012" Name="CH%C%ModBusRegisterPosDPT7" ParameterType="%AID%_PT-RegisterPosDPT7" Text="Register Position" Value="1" Offset="0" BitOffset="0" />
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%013" Name="CH%C%ModBusReserve6"           ParameterType="%AID%_PT-Res"                Text="Register Position" Value="0" Offset="0" BitOffset="0" /> -->
-                <Parameter Id="%AID%_UP-%T%%CCC%014" Name="CH%C%ModBusRegisterPosDPT9" ParameterType="%AID%_PT-RegisterPos" Text="Register Position" Value="3" Offset="0" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%T%%CCC%015" Name="CH%C%ModBusRegisterPosDPT12" ParameterType="%AID%_PT-RegisterPos12" Text="Register Position" Value="3" Offset="0" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%T%%CCC%016" Name="CH%C%ModBusRegisterPosDPT13" ParameterType="%AID%_PT-RegisterPos13" Text="Register Position" Value="3" Offset="0" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%T%%CCC%017" Name="CH%C%ModBusRegisterPosDPT14" ParameterType="%AID%_PT-RegisterPos" Text="Register Position" Value="3" Offset="0" BitOffset="0" />
-              </Union>
-              <Union SizeInBit="8">
-                <Memory CodeSegment="%AID%_RS-04-00000" Offset="17" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%T%%CCC%018" Name="CH%C%ModBusInputTypInvDpt1" ParameterType="%AID%_PT-InputTypInvDpt1" Text="Invertiert" Value="0" Offset="0" BitOffset="0" />
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%019" Name="CH%C%ModBusReserve12"           ParameterType="%AID%_PT-Res"                Text="Reserse"           Value="0" Offset="0" BitOffset="0" /> -->
-                <Parameter Id="%AID%_UP-%T%%CCC%020" Name="CH%C%ModbusCountBitsDPT56" ParameterType="%AID%_PT-CountBitsDPT56" Text="Anzahl Bits" Value="255" Offset="0" BitOffset="0" />
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%021" Name="CH%C%ModBusReserve14"           ParameterType="%AID%_PT-Res"                Text="Reserve"           Value="0" Offset="0" BitOffset="0" /> -->
-                <Parameter Id="%AID%_UP-%T%%CCC%022" Name="CH%C%ModbusCountBitsDPT7" ParameterType="%AID%_PT-CountBitsDPT7" Text="Anzahl Bits" Value="16" Offset="0" BitOffset="0" />
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%023" Name="CH%C%ModBusReserve16"           ParameterType="%AID%_PT-Res"                Text="Reserve9"          Value="0" Offset="0" BitOffset="0" /> -->
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%024" Name="CH%C%ModBusReserve17"           ParameterType="%AID%_PT-Res"                Text="Reserve10"         Value="0" Offset="0" BitOffset="0" /> -->
-                <Parameter Id="%AID%_UP-%T%%CCC%025" Name="CH%C%ModBusWordPosDpt12" ParameterType="%AID%_PT-WordPosDpt14" Text="Word Reihenfolge" Value="0" Offset="0" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%T%%CCC%026" Name="CH%C%ModBusWordPosDpt13" ParameterType="%AID%_PT-WordPosDpt14" Text="Word Reihenfolge" Value="0" Offset="0" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%T%%CCC%027" Name="CH%C%ModBusWordPosDpt14" ParameterType="%AID%_PT-WordPosDpt14" Text="Word Reihenfolge" Value="0" Offset="0" BitOffset="0" />
-              </Union>
-              <Union SizeInBit="8">
-                <Memory CodeSegment="%AID%_RS-04-00000" Offset="18" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%T%%CCC%028" Name="CH%C%ModBusBitPosDpt1" ParameterType="%AID%_PT-BitPosDpt1" Text="Position Bit" Value="0" Offset="0" BitOffset="0" />
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%029" Name="CH%C%ModBusReserve22"           ParameterType="%AID%_PT-BitPosDpt1" Text="offset von rechts"   Value="0" Offset="0" BitOffset="0" /> -->
-                <Parameter Id="%AID%_UP-%T%%CCC%030" Name="CH%C%ModBusOffsetRight5" ParameterType="%AID%_PT-BitPosDpt1" Text="offset von rechts" Value="0" Offset="0" BitOffset="0" />
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%031" Name="CH%C%ModBusReserve24"           ParameterType="%AID%_PT-Res"        Text="Reserve14"           Value="0" Offset="0" BitOffset="0" /> -->
-                <Parameter Id="%AID%_UP-%T%%CCC%032" Name="CH%C%ModBusOffsetRight7" ParameterType="%AID%_PT-BitPosDpt1" Text="offset von rechts" Value="0" Offset="0" BitOffset="0" />
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%033" Name="CH%C%ModBusReserve26"           ParameterType="%AID%_PT-Res"        Text="Reserve16"           Value="0" Offset="0" BitOffset="0" /> -->
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%034" Name="CH%C%ModBusReserve27"           ParameterType="%AID%_PT-Res"        Text="Reserve17"           Value="0" Offset="0" BitOffset="0" /> -->
-                <Parameter Id="%AID%_UP-%T%%CCC%035" Name="CH%C%ModBusWordTyp12" ParameterType="%AID%_PT-WordTyp" Text="Register Typ" Value="0" Offset="0" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%T%%CCC%036" Name="CH%C%ModBusWordTyp13" ParameterType="%AID%_PT-WordTyp" Text="Register Typ" Value="0" Offset="0" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%T%%CCC%037" Name="CH%C%ModBusWordTyp14" ParameterType="%AID%_PT-WordTyp" Text="Register Typ" Value="0" Offset="0" BitOffset="0" />
-              </Union>
-              <Union SizeInBit="8">
-                <Memory CodeSegment="%AID%_RS-04-00000" Offset="19" BitOffset="0" />
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%038" Name="CH%C%ModBusReserve31"              ParameterType="%AID%_PT-Res"                   Text="Reserve31"         Value="0" Offset="0" BitOffset="0" /> -->
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%039" Name="CH%C%ModBusReserve32"              ParameterType="%AID%_PT-Res"                   Text="Reserve32"         Value="0" Offset="0" BitOffset="0" /> -->
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%040" Name="CH%C%ModBusReserve33"              ParameterType="%AID%_PT-Res"                   Text="Reserve33"         Value="0" Offset="0" BitOffset="0" /> -->
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%041" Name="CH%C%ModBusReserve34"              ParameterType="%AID%_PT-Res"                   Text="Reserve34"         Value="0" Offset="0" BitOffset="0" /> -->
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%042" Name="CH%C%ModBusReserve35"              ParameterType="%AID%_PT-Res"                   Text="Reserve35"         Value="0" Offset="0" BitOffset="0" /> -->
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%043" Name="CH%C%ModBusReserve36"              ParameterType="%AID%_PT-Res"                   Text="Reserve36"         Value="0" Offset="0" BitOffset="0" /> -->
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%044" Name="CH%C%ModBusReserve37"              ParameterType="%AID%_PT-Res"                   Text="Reserve37"         Value="0" Offset="0" BitOffset="0" /> -->
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%045" Name="CH%C%ModBusReserve38"              ParameterType="%AID%_PT-Res"                   Text="Reserve38"         Value="0" Offset="0" BitOffset="0" /> -->
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%046" Name="CH%C%ModBusReserve39"              ParameterType="%AID%_PT-Res"                   Text="Reserve39"         Value="0" Offset="0" BitOffset="0" /> -->
-                <Parameter Id="%AID%_UP-%T%%CCC%047" Name="CH%C%ModBusRegisterValueTypDpt14" ParameterType="%AID%_PT-RegisterValueTypDpt14" Text="Registerwert-Typ" Value="3" Offset="0" BitOffset="0" />
-              </Union>
-              <Union SizeInBit="8">
-                <Memory CodeSegment="%AID%_RS-04-00000" Offset="20" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%T%%CCC%048" Name="CH%C%ModBusReadBitFunktion" ParameterType="%AID%_PT-ReadBitFunction" Text="Funktion" Value="1" Offset="0" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%T%%CCC%049" Name="CH%C%ModBusReadWordFunktion" ParameterType="%AID%_PT-ReadWordFunction" Text="Funktion" Value="4" Offset="0" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%T%%CCC%050" Name="CH%C%ModBusWriteWordFunktion" ParameterType="%AID%_PT-WriteWordFunction" Text="Funktion" Value="6" Offset="0" BitOffset="0" />
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%051" Name="CH%C%ModBusReserve44"          ParameterType="%AID%_PT-Res"        Text="Reserve44"             Value="0" Offset="0" BitOffset="0" /> -->
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%052" Name="CH%C%ModBusReserve45"          ParameterType="%AID%_PT-Res"        Text="Reserve45"             Value="0" Offset="0" BitOffset="0" /> -->
+                <Parameter Id="%AID%_UP-%T%%CCC%008" Name="CH%C%ModBusInputTypDpt1" Offset="0" BitOffset="0" ParameterType="%AID%_PT-InputTypDpt1" Text="Typ" Value="0" />   <!-- 2bit -->
+                <Parameter Id="%AID%_UP-%T%%CCC%012" Name="CH%C%ModBusRegisterPosDPT7" Offset="0" BitOffset="2" ParameterType="%AID%_PT-RegisterPosDPT7" Text="Register Position" Value="1" /> <!-- 2bit -->
+                <Parameter Id="%AID%_UP-%T%%CCC%014" Name="CH%C%ModBusRegisterPosDPT9" Offset="0" BitOffset="4" ParameterType="%AID%_PT-RegisterPos" Text="Register Position" Value="3" /> <!-- 3bit -->
+                <Parameter Id="%AID%_UP-%T%%CCC%018" Name="CH%C%ModBusInputTypInvDpt1" Offset="0" BitOffset="7" ParameterType="%AID%_PT-InputTypInvDpt1" Text="Invertiert" Value="0" /> <!-- 1bit -->
+                <Parameter Id="%AID%_UP-%T%%CCC%015" Name="CH%C%ModBusRegisterPosDPT12" Offset="1" BitOffset="0" ParameterType="%AID%_PT-RegisterPos12" Text="Register Position" Value="3" /> <!-- 2bit -->
+                <Parameter Id="%AID%_UP-%T%%CCC%016" Name="CH%C%ModBusRegisterPosDPT13" Offset="1" BitOffset="2" ParameterType="%AID%_PT-RegisterPos13" Text="Register Position" Value="3" /> <!-- 2bit -->
+                <Parameter Id="%AID%_UP-%T%%CCC%017" Name="CH%C%ModBusRegisterPosDPT14" Offset="1" BitOffset="4" ParameterType="%AID%_PT-RegisterPos" Text="Register Position" Value="3" /> <!-- 3bit -->
               </Union>
               <Union SizeInBit="32">
+                <Memory CodeSegment="%AID%_RS-04-00000" Offset="18" BitOffset="0" />
+                <Parameter Id="%AID%_UP-%T%%CCC%020" Name="CH%C%ModbusCountBitsDPT56" Offset="0" BitOffset="0" ParameterType="%AID%_PT-CountBitsDPT56" Text="Anzahl Bits" Value="255" />
+                <Parameter Id="%AID%_UP-%T%%CCC%022" Name="CH%C%ModbusCountBitsDPT7" Offset="1" BitOffset="0" ParameterType="%AID%_PT-CountBitsDPT7" Text="Anzahl Bits" Value="16" />
+                <Parameter Id="%AID%_UP-%T%%CCC%025" Name="CH%C%ModBusWordPosDpt12" Offset="2" BitOffset="0" ParameterType="%AID%_PT-WordPosDpt14" Text="Word Reihenfolge" Value="0" />  <!-- 1bit -->
+                <Parameter Id="%AID%_UP-%T%%CCC%026" Name="CH%C%ModBusWordPosDpt13" Offset="2" BitOffset="1" ParameterType="%AID%_PT-WordPosDpt14" Text="Word Reihenfolge" Value="0" /> <!-- 1bit -->
+                <Parameter Id="%AID%_UP-%T%%CCC%027" Name="CH%C%ModBusWordPosDpt14" Offset="2" BitOffset="2" ParameterType="%AID%_PT-WordPosDpt14" Text="Word Reihenfolge" Value="0" /> <!-- 1bit -->
+                <Parameter Id="%AID%_UP-%T%%CCC%035" Name="CH%C%ModBusWordTyp12" Offset="2" BitOffset="3" ParameterType="%AID%_PT-WordTyp" Text="Register Typ" Value="0" /> <!-- 1bit -->
+                <Parameter Id="%AID%_UP-%T%%CCC%036" Name="CH%C%ModBusWordTyp13" Offset="2" BitOffset="4" ParameterType="%AID%_PT-WordTyp" Text="Register Typ" Value="0" /> <!-- 1bit -->
+                <Parameter Id="%AID%_UP-%T%%CCC%037" Name="CH%C%ModBusWordTyp14" Offset="2" BitOffset="5" ParameterType="%AID%_PT-WordTyp" Text="Register Typ" Value="0" /> <!-- 1bit -->
+                <Parameter Id="%AID%_UP-%T%%CCC%047" Name="CH%C%ModBusRegisterValueTypDpt14" Offset="2" BitOffset="6" ParameterType="%AID%_PT-RegisterValueTypDpt14" Text="Registerwert-Typ" Value="3" /> <!-- 2bit -->
+              </Union>
+              <Union SizeInBit="24">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="21" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%T%%CCC%053" Name="CH%C%ModBuscalculationValueDiff" ParameterType="%AID%_PT-calculationValue" Text="x = ModbusValue / Var1" Value="1" Offset="0" BitOffset="0" SuffixText="Var1" />
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%054" Name="CH%C%ModBusReserve47"           ParameterType="%AID%_PT-Res"   Text="Reserve"  Value="0" Offset="0" BitOffset="0" /> -->
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%055" Name="CH%C%ModBusReserve48"           ParameterType="%AID%_PT-Res"   Text="Reserve"  Value="0" Offset="0" BitOffset="0" /> -->
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%056" Name="CH%C%ModBusReserve49"           ParameterType="%AID%_PT-Res"   Text="Reserve"  Value="0" Offset="0" BitOffset="0" /> -->
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%057" Name="CH%C%ModBusReserve50"           ParameterType="%AID%_PT-Res"   Text="Reserve"  Value="0" Offset="0" BitOffset="0" /> -->
+                <Parameter Id="%AID%_UP-%T%%CCC%028" Name="CH%C%ModBusBitPosDpt1" Offset="0" BitOffset="0" ParameterType="%AID%_PT-BitPosDpt1" Text="Position Bit" Value="0" />
+                <Parameter Id="%AID%_UP-%T%%CCC%030" Name="CH%C%ModBusOffsetRight5" Offset="1" BitOffset="0" ParameterType="%AID%_PT-BitPosDpt1" Text="offset von rechts" Value="0" />
+                <Parameter Id="%AID%_UP-%T%%CCC%032" Name="CH%C%ModBusOffsetRight7" Offset="2" BitOffset="0" ParameterType="%AID%_PT-BitPosDpt1" Text="offset von rechts" Value="0" />
+              </Union>
+              <Union SizeInBit="8">
+                <Memory CodeSegment="%AID%_RS-04-00000" Offset="24" BitOffset="0" />
+                <Parameter Id="%AID%_UP-%T%%CCC%048" Name="CH%C%ModBusReadBitFunktion" Offset="0" BitOffset="0" ParameterType="%AID%_PT-ReadBitFunction" Text="Funktion" Value="1" /> <!-- 2bit -->
+                <Parameter Id="%AID%_UP-%T%%CCC%049" Name="CH%C%ModBusReadWordFunktion" Offset="0" BitOffset="2" ParameterType="%AID%_PT-ReadWordFunction" Text="Funktion" Value="4" /> <!-- 2bit -->
+                <Parameter Id="%AID%_UP-%T%%CCC%050" Name="CH%C%ModBusWriteWordFunktion" Offset="0" BitOffset="4" ParameterType="%AID%_PT-WriteWordFunction" Text="Funktion" Value="6" /><!-- 2bit -->
+                <!-- free 2bit -->
               </Union>
               <Union SizeInBit="32">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="25" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%T%%CCC%058" Name="CH%C%ModBuscalculationValueAdd" ParameterType="%AID%_PT-calculationValue2" Text="KNX Output = x + Var2" Value="0" Offset="0" BitOffset="0" SuffixText="Var2" />
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%059" Name="CH%C%ModBusReserve52"           ParameterType="%AID%_PT-Res"   Text="Reserve"  Value="0" Offset="0" BitOffset="0" /> -->
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%060" Name="CH%C%ModBusReserve53"           ParameterType="%AID%_PT-Res"   Text="Reserve"  Value="0" Offset="0" BitOffset="0" /> -->
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%061" Name="CH%C%ModBusReserve54"           ParameterType="%AID%_PT-Res"   Text="Reserve"  Value="0" Offset="0" BitOffset="0" /> -->
-                <!-- <Parameter Id="%AID%_UP-%T%%CCC%062" Name="CH%C%ModBusReserve55"           ParameterType="%AID%_PT-Res"   Text="Reserve"  Value="0" Offset="0" BitOffset="0" /> -->
+                <Parameter Id="%AID%_UP-%T%%CCC%053" Name="CH%C%ModBuscalculationValueDiff" Offset="0" BitOffset="0" ParameterType="%AID%_PT-calculationValue" Text="x = ModbusValue / Var1" Value="1" SuffixText="Var1" /> <!-- 4Byte -->
+                <Parameter Id="%AID%_UP-%T%%CCC%058" Name="CH%C%ModBuscalculationValueAdd" Offset="4" BitOffset="0" ParameterType="%AID%_PT-calculationValue2" Text="KNX Output = x + Var2" Value="0" SuffixText="Var2" /> <!-- 4Byte -->
               </Union>
+
+              <!--
               <Parameter Id="%AID%_P-%T%%CCC%067" Name="CH%C%ModBusSelectionVirtualZaehler1" ParameterType="%AID%_PT-CheckBox" Text="" SuffixText="" Value="0">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="26" BitOffset="0" />
               </Parameter>
@@ -142,19 +109,14 @@
               <Parameter Id="%AID%_P-%T%%CCC%078" Name="CH%C%ModBusTypZaehler4" ParameterType="%AID%_PT-TypeVirtualZaehler" Text="ValueTyp" SuffixText="" Value="0">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="37" BitOffset="0" />
               </Parameter>
-
-
-              <!-- ****************************** -->
-              <!-- ModBus Chanel  ENDE      -->
-              <!-- Settings for one Chanel  -->
-              <!-- ****************************** -->
-
-
-              <Parameter Id="%AID%_P-%T%%CCC%100" Name="Trigger%C%Name" ParameterType="%AID%_PT-Text40Byte" Text="Beschreibung" Value="" />
+              -->
             </Parameters>
             <ParameterRefs>
 
 
+
+
+              
               <ParameterRef Id="%AID%_P-%T%%CCC%100_R-%T%%CCC%10001" RefId="%AID%_P-%T%%CCC%100" />
             </ParameterRefs>
             <ComObjectTable>

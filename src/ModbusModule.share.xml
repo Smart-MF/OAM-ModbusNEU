@@ -162,26 +162,21 @@
               </ParameterType>
               <!-- Set Modbus protocol functions -->
               <ParameterType Id="%AID%_PT-ReadBitFunction" Name="ReadBitFunction">
-                <TypeRestriction Base="Value" SizeInBit="8">
+                <TypeRestriction Base="Value" SizeInBit="2">
                   <Enumeration Text="0x01 - Lese Coils" Value="1" Id="%ENID%" />
-                  <Enumeration Text="0x02 - Lese Discrete Inputs" Value="2"
-                    Id="%ENID%" />
+                  <Enumeration Text="0x02 - Lese Discrete Inputs" Value="2" Id="%ENID%" />
                 </TypeRestriction>
               </ParameterType>
               <ParameterType Id="%AID%_PT-ReadWordFunction" Name="ReadWordFunction">
-                <TypeRestriction Base="Value" SizeInBit="8">
-                  <Enumeration Text="0x03 - Lese holding registers" Value="3"
-                    Id="%ENID%" />
-                  <Enumeration Text="0x04 - Lese input registers" Value="4"
-                    Id="%ENID%" />
+                <TypeRestriction Base="Value" SizeInBit="2">
+                  <Enumeration Text="0x03 - Lese holding registers" Value="3" Id="%ENID%" />
+                  <Enumeration Text="0x04 - Lese input registers" Value="4" Id="%ENID%" />
                 </TypeRestriction>
               </ParameterType>
               <ParameterType Id="%AID%_PT-WriteWordFunction" Name="WriteWordFunction">
-                <TypeRestriction Base="Value" SizeInBit="8">
-                  <Enumeration Text="0x06 - Schreibe Single Register" Value="6"
-                    Id="%ENID%" />
-                  <Enumeration Text="0x10 - Schreibe Multi Register" Value="16"
-                    Id="%ENID%" />
+                <TypeRestriction Base="Value" SizeInBit="2">
+                  <Enumeration Text="0x06 - Schreibe Single Register" Value="6" Id="%ENID%" />
+                  <Enumeration Text="0x10 - Schreibe Multi Register" Value="16" Id="%ENID%" />
                 </TypeRestriction>
               </ParameterType>
               <!-- Set Modbus Register Address KNX -->
@@ -194,13 +189,13 @@
               </ParameterType>
               <!-- DPT1 Typ -->
               <ParameterType Id="%AID%_PT-InputTypDpt1" Name="InputTypDpt1">
-                <TypeRestriction Base="Value" SizeInBit="8">
+                <TypeRestriction Base="Value" SizeInBit="2">
                   <Enumeration Text="Bit Register" Value="0" Id="%ENID%" />
                   <Enumeration Text="Bit in Word Register" Value="1" Id="%ENID%" />
                 </TypeRestriction>
               </ParameterType>
               <ParameterType Id="%AID%_PT-InputTypInvDpt1" Name="InputTypInvDpt1">
-                <TypeRestriction Base="Value" SizeInBit="8">
+                <TypeRestriction Base="Value" SizeInBit="1">
                   <Enumeration Text="Nein" Value="0" Id="%ENID%" />
                   <Enumeration Text="Ja" Value="1" Id="%ENID%" />
                 </TypeRestriction>
@@ -227,7 +222,7 @@
               </ParameterType>
               <!-- DPT5 & 6 Typ -->
               <ParameterType Id="%AID%_PT-RegisterPosDPT56" Name="RegisterPosDPT56">
-                <TypeRestriction Base="Value" SizeInBit="8">
+                <TypeRestriction Base="Value" SizeInBit="3">
                   <Enumeration Text="High Byte" Value="1" Id="%ENID%" />
                   <Enumeration Text="Low Byte" Value="2" Id="%ENID%" />
                   <Enumeration Text="frei wählbar" Value="3" Id="%ENID%" />
@@ -247,7 +242,7 @@
               </ParameterType>
               <!-- DPT7 Typ -->
               <ParameterType Id="%AID%_PT-RegisterPosDPT7" Name="RegisterPosDPT7">
-                <TypeRestriction Base="Value" SizeInBit="8">
+                <TypeRestriction Base="Value" SizeInBit="2">
                   <Enumeration Text="High/Low Byte" Value="1" Id="%ENID%" />
                   <Enumeration Text="frei wählbar" Value="2" Id="%ENID%" />
                 </TypeRestriction>
@@ -275,50 +270,45 @@
               <!-- DPT14 Typ -->
               <!-- Typ Word / double Word -->
               <ParameterType Id="%AID%_PT-WordTyp" Name="WordTyp">
-                <TypeRestriction Base="Value" SizeInBit="8">
+                <TypeRestriction Base="Value" SizeInBit="1">
                   <Enumeration Text="Word Register" Value="0" Id="%ENID%" />
                   <Enumeration Text="Double Word Register" Value="1" Id="%ENID%" />
                 </TypeRestriction>
               </ParameterType>
               <!-- Position Register -->
               <ParameterType Id="%AID%_PT-RegisterPos" Name="RegisterPos">
-                <TypeRestriction Base="Value" SizeInBit="8">
+                <TypeRestriction Base="Value" SizeInBit="3">
                   <Enumeration Text="Low byte - unsigned" Value="1" Id="%ENID%" />
                   <Enumeration Text="High Byte - unsigned" Value="2" Id="%ENID%" />
-                  <Enumeration Text="High/Low byte - unsigned" Value="3"
-                    Id="%ENID%" />
+                  <Enumeration Text="High/Low byte - unsigned" Value="3" Id="%ENID%" />
                   <Enumeration Text="Low byte - signed" Value="4" Id="%ENID%" />
                   <Enumeration Text="High Byte - signed" Value="5" Id="%ENID%" />
-                  <Enumeration Text="High/Low byte - signed" Value="6"
-                    Id="%ENID%" />
+                  <Enumeration Text="High/Low byte - signed" Value="6" Id="%ENID%" />
                 </TypeRestriction>
               </ParameterType>
               <ParameterType Id="%AID%_PT-RegisterPos13" Name="RegisterPos13">
-                <TypeRestriction Base="Value" SizeInBit="8">
+                <TypeRestriction Base="Value" SizeInBit="2">
                   <Enumeration Text="Low byte - signed" Value="1" Id="%ENID%" />
                   <Enumeration Text="High Byte - signed" Value="2" Id="%ENID%" />
-                  <Enumeration Text="High/Low byte - signed" Value="3"
-                    Id="%ENID%" />
+                  <Enumeration Text="High/Low byte - signed" Value="3" Id="%ENID%" />
                 </TypeRestriction>
               </ParameterType>
               <ParameterType Id="%AID%_PT-RegisterPos12" Name="RegisterPos12">
-                <TypeRestriction Base="Value" SizeInBit="8">
+                <TypeRestriction Base="Value" SizeInBit="2">
                   <Enumeration Text="Low byte - unsigned" Value="1" Id="%ENID%" />
-                  <Enumeration Text="High Byte - unsigned" Value="2"
-                    Id="%ENID%" />
-                  <Enumeration Text="High/Low byte - unsigned" Value="3"
-                    Id="%ENID%" />
+                  <Enumeration Text="High Byte - unsigned" Value="2" Id="%ENID%" />
+                  <Enumeration Text="High/Low byte - unsigned" Value="3" Id="%ENID%" />
                 </TypeRestriction>
               </ParameterType>
               <ParameterType Id="%AID%_PT-RegisterValueTypDpt14" Name="RegisterValueTypDpt14">
-                <TypeRestriction Base="Value" SizeInBit="8">
+                <TypeRestriction Base="Value" SizeInBit="2">
                   <Enumeration Text="unsigned" Value="1" Id="%ENID%" />
                   <Enumeration Text="signed" Value="2" Id="%ENID%" />
                   <Enumeration Text="float" Value="3" Id="%ENID%" />
                 </TypeRestriction>
               </ParameterType>
               <ParameterType Id="%AID%_PT-WordPosDpt14" Name="WordPosDpt14">
-                <TypeRestriction Base="Value" SizeInBit="8">
+                <TypeRestriction Base="Value" SizeInBit="1">
                   <Enumeration Text="HI Word / LO Word" Value="0" Id="%ENID%" />
                   <Enumeration Text="LO Word / HI Word" Value="1" Id="%ENID%" />
                 </TypeRestriction>
