@@ -13,19 +13,19 @@
 #define KNX_UART_TX_PIN 0
 
 #ifdef ARDUINO_ARCH_RP2040
-    #include "FileTransferModule.h"
-    #ifndef OPENKNX_USB_EXCHANGE_IGNORE
-        #include "UsbExchangeModule.h"
-    #endif
-    #if defined(KNX_IP_LAN) || defined(KNX_IP_WIFI)
-        #include "NetworkModule.h"
-    #endif
+#include "FileTransferModule.h"
+#ifndef OPENKNX_USB_EXCHANGE_IGNORE
+#include "UsbExchangeModule.h"
+#endif
+#if defined(KNX_IP_LAN) || defined(KNX_IP_WIFI)
+#include "NetworkModule.h"
+#endif
 #endif
 
 #ifdef ARDUINO_ARCH_ESP32
-    #if defined(KNX_IP_LAN) || defined(KNX_IP_WIFI)
-        #include "NetworkModule.h"
-    #endif
+#if defined(KNX_IP_LAN) || defined(KNX_IP_WIFI)
+#include "NetworkModule.h"
+#endif
 
 #endif
 
@@ -43,16 +43,15 @@ bool core1_separate_stack = true;
 
 void setup()
 {
-    const uint8_t firmwareRevision = 10;
+    const uint8_t firmwareRevision = 0;
     openknx.init(firmwareRevision);
     openknx.addModule(1, openknxLogic);
     openknx.addModule(2, openknxmodbusModule);
-
 #ifdef ARDUINO_ARCH_RP2040
-    #ifndef OPENKNX_USB_EXCHANGE_IGNORE
-    // openknx.addModule(8, openknxUsbExchangeModule);
-    #endif
-    // openknx.addModule(9, openknxFileTransferModule);
+#ifndef OPENKNX_USB_EXCHANGE_IGNORE
+    openknx.addModule(8, openknxUsbExchangeModule);
+#endif
+    openknx.addModule(9, openknxFileTransferModule);
 #endif
 
     openknx.setup();

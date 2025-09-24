@@ -2,9 +2,9 @@
 #include "ModbusChannel.h"
 #include "OpenKNX.h"
 #ifdef ARDUINO_ARCH_RP2040
-    #ifndef OPENKNX_USB_EXCHANGE_IGNORE
-        #include "UsbExchangeModule.h"
-    #endif
+#ifndef OPENKNX_USB_EXCHANGE_IGNORE
+#include "UsbExchangeModule.h"
+#endif
 #endif
 
 // #define DEVICE_ID "SMARTMF-Modbus-RTU-3BE"
@@ -20,7 +20,7 @@
 
 class modbusModule : public OpenKNX::Module
 {
-  private:
+private:
     uint32_t _timer1 = 0;
     uint32_t _timer2 = 0;
     uint8_t _currentChannel = 0;
@@ -31,13 +31,13 @@ class modbusModule : public OpenKNX::Module
     void setupCustomFlash();
     void setupChannels();
 #ifdef ARDUINO_ARCH_RP2040
-    #ifndef OPENKNX_USB_EXCHANGE_IGNORE
+#ifndef OPENKNX_USB_EXCHANGE_IGNORE
     void registerUsbExchangeCallbacks();
-    #endif
+#endif
 #endif
     static void modbus_idle();
 
-  public:
+public:
     modbusModule();
     void loop(bool configured) override;
     void setup(bool configured) override;
@@ -50,6 +50,9 @@ class modbusModule : public OpenKNX::Module
     void processInputKo(GroupObject &ko) override;
     bool processCommand(const std::string cmd, bool diagnoseKo);
     void showHelp() override;
+
+    bool modbusInitSerial(HardwareSerial &serial);
+    bool modbusParitySerial(uint32_t baud, HardwareSerial &serial);
 };
 
 extern modbusModule openknxmodbusModule;

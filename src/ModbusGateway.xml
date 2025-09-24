@@ -12,22 +12,22 @@
   <op:ETS
     OpenKnxId="0xA2"
     ApplicationNumber="48"
-    ApplicationVersion="22"
-    ReplacesVersions="1 2 3 16 17 18 19 20 21"
+    ApplicationVersion="1.6"
+    ReplacesVersions="1.5 1.4 1.3 1.2 1.1 1.0"
     ApplicationRevision="0"
     ProductName="ModbusRTU"
     BusCurrent="10"
     BuildSuffix=""
     BuildSuffixText=""
-    MediumTypes="MT-0 MT-5"
+    MediumTypes="MT-0"
     OrderNumber="SmartMF_ModbusRTU" />
 
-  <op:define prefix="BASE" ModuleType="30"
+  <op:define prefix="BASE" ModuleType="10"  
     share="../lib/OGM-Common/src/Common.share.xml">
     <op:verify File="../lib/OGM-Common/library.json" ModuleVersion="1.4" />
   </op:define>
 
-  <op:define prefix="UCT" ModuleType="40"
+  <op:define prefix="UCT" ModuleType="98"
     share="../lib/OFM-ConfigTransfer/src/ConfigTransfer.share.xml">
     <op:verify File="../lib/OFM-ConfigTransfer/library.json" ModuleVersion="0.4" />
   </op:define>
@@ -35,7 +35,9 @@
   <op:define prefix="MOD" ModuleType="2"
     share="ModbusModule.share.xml"
     template="ModbusModule.templ.xml"
-    NumChannels="1" KoOffset="50" />
+    NumChannels="1" KoOffset="50" >
+    <op:verify File="../library.json" ModuleVersion="1.6" />
+  </op:define>
 
   <op:define prefix="LOG" ModuleType="10"
     share="../lib/OFM-LogicModule/src/Logikmodul.share.xml"

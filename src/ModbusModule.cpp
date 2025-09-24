@@ -31,7 +31,7 @@ void modbusModule::setup(bool configured)
     SMARTMF_MODBUS_SERIAL.setRX(SMARTMF_MODBUS_RX_PIN);
     SMARTMF_MODBUS_SERIAL.setTX(SMARTMF_MODBUS_TX_PIN);
 #endif
-    SMARTMF_MODBUS_SERIAL.begin(9600);
+    modbusInitSerial(SMARTMF_MODBUS_SERIAL);
 
     if (configured)
     {
@@ -105,7 +105,8 @@ void modbusModule::loop(bool configured)
 
     if (configured)
     {
-        if (ParamMOD_VisibleChannels == 0) return;
+        if (ParamMOD_VisibleChannels == 0)
+            return;
 
         uint8_t processed = 0;
         do
@@ -133,7 +134,7 @@ void modbusModule::loop1(bool configured)
 }
 #endif
 
-void modbusModule::processInputKo(GroupObject& ko)
+void modbusModule::processInputKo(GroupObject &ko)
 {
     // logDebugP("processInputKo GA%04X", ko.asap());
     // logHexDebugP(ko.valueRef(), ko.valueSize());
@@ -165,24 +166,103 @@ bool modbusModule::processCommand(const std::string cmd, bool diagnoseKo)
 }
 
 #ifdef ARDUINO_ARCH_RP2040
-    #ifndef OPENKNX_USB_EXCHANGE_IGNORE
+#ifndef OPENKNX_USB_EXCHANGE_IGNORE
 void modbusModule::registerUsbExchangeCallbacks()
 {
     // Sample
-    openknxUsbExchangeModule.onLoad("modbus.txt", [](UsbExchangeFile* file) -> void {
-        file->write("Demo");
-    });
-    openknxUsbExchangeModule.onEject("modbus.txt", [](UsbExchangeFile* file) -> bool {
+    openknxUsbExchangeModule.onLoad("modbus.txt", [](UsbExchangeFile *file) -> void
+                                    { file->write("Demo"); });
+    openknxUsbExchangeModule.onEject("modbus.txt", [](UsbExchangeFile *file) -> bool
+                                     {
         // File is required
         if (file == nullptr)
         {
             logError("modbusModule", "File modbus.txt was deleted but is mandatory");
             return false;
         }
-        return true;
-    });
+        return true; });
 }
-    #endif
 #endif
+#endif
+
+bool modbusModule::modbusParitySerial(uint32_t baud, HardwareSerial &serial)
+{
+    switch (ParamMOD_BusParitySelection)
+    {
+    case 0: // Even (1 stop bit)
+        serial.begin(baud, SERIAL_8E1);
+        logInfoP("Parity: Even (1 stop bit)");
+        return true;
+        break;
+    case 1: // Odd (1 stop bit)
+        serial.begin(baud, SERIAL_8O1);
+        logInfoP("Parity: Odd (1 stop bit)");
+        return true;
+        break;
+    case 2: // None (2 stop bits)
+        serial.begin(baud, SERIAL_8N2);
+        logInfoP("Parity: None (2 stop bits)");
+        return true;
+        break;
+    case 3: // None (1 stop bit)
+        serial.begin(baud, SERIAL_8N1);
+        logInfoP("Parity: None (1 stop bit)");
+        return true;
+        break;
+
+    default:
+        logInfoP("Parity: Error: ");
+        // logInfo(ParamMOD_BusParitySelection);
+        return false;
+        break;
+    }
+}
+
+
+bool modbusModule::modbusInitSerial(HardwareSerial &serial)
+{
+    // Set Modbus communication baudrate
+    switch (ParamMOD_BusBaudrateSelection)
+    {
+    case 0:
+        SERIAL_DEBUG.println("Baudrate: 1200kBit/s");
+        return modbusParitySerial(1200, serial);
+
+        break;
+    case 1:
+        SERIAL_DEBUG.println("Baudrate: 2400kBit/s");
+        return modbusParitySerial(2400, serial);
+        break;
+    case 2:
+        SERIAL_DEBUG.println("Baudrate: 4800kBit/s");
+        return modbusParitySerial(4800, serial);
+        break;
+    case 3:
+        SERIAL_DEBUG.println("Baudrate: 9600kBit/s");
+        return modbusParitySerial(9600, serial);
+        break;
+    case 4:
+        SERIAL_DEBUG.println("Baudrate: 19200kBit/s");
+        return modbusParitySerial(19200, serial);
+        break;
+    case 5:
+        SERIAL_DEBUG.println("Baudrate: 38400kBit/s");
+        return modbusParitySerial(38400, serial);
+        break;
+    case 6:
+        SERIAL_DEBUG.println("Baudrate: 56000kBit/s");
+        return modbusParitySerial(56000, serial);
+        break;
+    case 7:
+        SERIAL_DEBUG.println("Baudrate: 115200kBit/s");
+        return modbusParitySerial(115200, serial);
+        break;
+    default:
+        SERIAL_DEBUG.print("Baudrate: Error: ");
+        SERIAL_DEBUG.println(knx.paramByte(MOD_BusBaudrateSelection));
+        return false;
+        break;
+    }
+}
 
 modbusModule openknxmodbusModule;

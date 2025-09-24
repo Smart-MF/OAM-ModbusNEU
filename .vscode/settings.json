@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "*.yaml": "esphome",
+        "ostream": "cpp"
+    }
+}
