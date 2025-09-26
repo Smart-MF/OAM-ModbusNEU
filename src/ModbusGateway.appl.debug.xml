@@ -9,7 +9,7 @@
         </CatalogSection>
       </Catalog>
       <ApplicationPrograms>
-        <op:version OpenKnxId="0xA2" ApplicationNumber="48" ApplicationVersion="22" ReplacesVersions="1 2 3 16 17 18 19 20 21" ApplicationRevision="0" />
+        <op:version OpenKnxId="0xA2" ApplicationNumber="48" ApplicationVersion="22" ReplacesVersions="21 20 19 18 17 16" ApplicationRevision="0" />
         <ApplicationProgram Id="%AID%" ProgramType="ApplicationProgram" MaskVersion="MV-07B0" Name="ModbusRTU" LoadProcedureStyle="MergedProcedure" PeiType="0" DefaultLanguage="de-DE" DynamicTableManagement="false" Linkable="true" MinEtsVersion="5.0" ContextHelpFile="%FILE-HELP-de%" IconFile="%FILE-ICONS%" IPConfig="Custom" ApplicationNumber="0" ApplicationVersion="0" ReplacesVersions="0">
           <Static>
             <Code>
@@ -134,7 +134,7 @@
             </Product>
           </Products>
           <Hardware2Programs>
-            <Hardware2Program Id="%Hardware2ProgramId%" MediumTypes="MT-0 MT-5">
+            <Hardware2Program Id="%Hardware2ProgramId%" MediumTypes="MT-0">
               <ApplicationProgramRef RefId="%AID%" />
               <RegistrationInfo RegistrationStatus="Registered" RegistrationNumber="0001/%HardwareVersionEncoded%1" />
             </Hardware2Program>

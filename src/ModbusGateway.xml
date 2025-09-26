@@ -22,7 +22,7 @@
     MediumTypes="MT-0"
     OrderNumber="SmartMF_ModbusRTU" />
 
-  <op:define prefix="BASE" ModuleType="10"  
+  <op:define prefix="BASE" ModuleType="10"
     share="../lib/OGM-Common/src/Common.share.xml">
     <op:verify File="../lib/OGM-Common/library.json" ModuleVersion="1.4" />
   </op:define>
@@ -35,7 +35,7 @@
   <op:define prefix="MOD" ModuleType="2"
     share="ModbusModule.share.xml"
     template="ModbusModule.templ.xml"
-    NumChannels="1" KoOffset="50" >
+    NumChannels="10" KoOffset="50">
     <op:verify File="../library.json" ModuleVersion="1.6" />
   </op:define>
 

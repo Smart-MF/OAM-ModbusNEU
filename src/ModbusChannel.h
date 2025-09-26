@@ -1,13 +1,15 @@
 #pragma once
 #include "OpenKNX.h"
+#include "ModBusMaster.h"
 
-class modbusChannel : public OpenKNX::Channel
+class modbusChannel : public OpenKNX::Channel, public ModbusMaster
 {
 private:
   uint8_t _modbus_ID;
   uint8_t _baud_value;
   uint8_t _parity_value;
   HardwareSerial &_serial;
+  static bool idle_processing;
 
   bool errorState[2];
   bool valueValid;
@@ -29,14 +31,19 @@ private:
 
   bool modbusParitySerial(uint32_t baud, HardwareSerial &serial);
   bool modbusInitSerial(HardwareSerial &serial);
-  void ErrorHandling(uint8_t channel);
+  void ErrorHandling();
   void ErrorHandlingLED();
 
 public:
   modbusChannel(uint8_t index, uint8_t id, uint8_t _baud_value, uint8_t _parity_value, HardwareSerial &serial);
+  // static void idleCallback();
 
   bool readModbus(bool readRequest);
+  bool sendModbus();
   bool modbusToKnx(uint8_t dpt, bool readRequest);
+  bool knxToModbus(uint8_t dpt, bool readRequest);
+  void printDebugResult(const char *dpt, uint16_t registerAddr, uint8_t result);
+  uint8_t sendProtocol(uint16_t registerAddr, uint16_t u16value);
   const std::string name() override;
   void setup() override;
   void loop() override;

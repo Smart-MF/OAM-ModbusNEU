@@ -1,12 +1,16 @@
 #include "ModbusModule.h"
 #include "HardwareConfig.h"
+#include "ModBusMaster.h"
 
 // #define DEVICE_SMARTMF_MODBUS_RTU_3BE
 #define SMARTMF_MODBUS_SERIAL Serial2
 
 bool modbusModule::idle_processing = false;
 
-modbusModule::modbusModule() {}
+modbusModule::modbusModule()
+{
+    idle(modbusModule::idleCallback);
+}
 
 const std::string modbusModule::name()
 {
@@ -22,7 +26,7 @@ const std::string modbusModule::version()
 void modbusModule::setup(bool configured)
 {
     // delay(1000);
-    logInfoP("Setup0");
+    logDebugP("Setup0");
     logIndentUp();
 
 // setup Pins
@@ -50,6 +54,7 @@ void modbusModule::setupChannels()
     {
         _channels[i] = new modbusChannel(i, slave_id, 3, 3, SMARTMF_MODBUS_SERIAL);
         _channels[i]->setup();
+        _channels[i]->idle(idleCallback);
     }
 }
 
@@ -83,7 +88,7 @@ void modbusModule::setupCustomFlash()
     logIndentDown();
 }
 
-void modbusModule::modbus_idle()
+void modbusModule::idleCallback()
 {
     idle_processing = true;
     openknx.loop();
@@ -99,7 +104,7 @@ void modbusModule::loop(bool configured)
 
     if (delayCheck(_timer1, 5100))
     {
-        logInfoP("Loop0");
+        logDebugP("LoopModule");
         _timer1 = millis();
     }
 
@@ -121,14 +126,14 @@ void modbusModule::loop(bool configured)
 void modbusModule::setup1(bool configured)
 {
     delay(1000);
-    // logInfoP("Setup1");
+    // logDebugP("Setup1");
 }
 
 void modbusModule::loop1(bool configured)
 {
     if (delayCheck(_timer2, 7200))
     {
-        // logInfoP("Loop1");
+        // logDebugP("Loop1");
         _timer2 = millis();
     }
 }
@@ -211,13 +216,11 @@ bool modbusModule::modbusParitySerial(uint32_t baud, HardwareSerial &serial)
         break;
 
     default:
-        logInfoP("Parity: Error: ");
-        // logInfo(ParamMOD_BusParitySelection);
+        logInfoP("Parity: Error: %i", ParamMOD_BusParitySelection);
         return false;
         break;
     }
 }
-
 
 bool modbusModule::modbusInitSerial(HardwareSerial &serial)
 {

@@ -18,7 +18,7 @@
 // #define SMARTMF_MODBUS_TX_PIN 4
 // #define SMARTMF_MODBUS_DIR_PIN 24
 
-class modbusModule : public OpenKNX::Module
+class modbusModule : public OpenKNX::Module, public ModbusMaster
 {
 private:
     uint32_t _timer1 = 0;
@@ -35,7 +35,7 @@ private:
     void registerUsbExchangeCallbacks();
 #endif
 #endif
-    static void modbus_idle();
+    static void idleCallback();
 
 public:
     modbusModule();
