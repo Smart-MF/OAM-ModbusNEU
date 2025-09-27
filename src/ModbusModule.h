@@ -36,6 +36,8 @@ private:
 #endif
 #endif
     static void idleCallback();
+    static void preTransmission();
+    static void postTransmission();
 
 public:
     modbusModule();

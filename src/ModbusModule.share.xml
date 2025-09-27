@@ -50,14 +50,14 @@
               </ParameterType>
               <!-- enumeration with 8-bit (word) values -->
               <ParameterType Id="%AID%_PT-ByteOrderSelection" Name="ByteOrderSelection">
-                <TypeRestriction Base="Value" SizeInBit="8">
+                <TypeRestriction Base="Value" SizeInBit="1">
                   <Enumeration Text="MSB first" Value="0" Id="%ENID%" />
                   <Enumeration Text="LSB first" Value="1" Id="%ENID%" />
                 </TypeRestriction>
               </ParameterType>
               <!-- enumeration with 8-bit (word) values -->
               <ParameterType Id="%AID%_PT-WordOrderSelection" Name="WordOrderSelection">
-                <TypeRestriction Base="Value" SizeInBit="8">
+                <TypeRestriction Base="Value" SizeInBit="1">
                   <Enumeration Text="Erste Adresse '0'" Value="0" Id="%ENID%" />
                   <Enumeration Text="Erste Adresse '1'" Value="1" Id="%ENID%" />
                 </TypeRestriction>
@@ -120,7 +120,7 @@
               <!-- *************  -->
               <!-- ModBus ID  -->
               <ParameterType Id="%AID%_PT-BusID" Name="BusID">
-                <TypeNumber SizeInBit="32" Type="signedInt" minInclusive="0" maxInclusive="247" />
+                <TypeNumber SizeInBit="8" Type="unsignedInt" minInclusive="0" maxInclusive="247" /> 
               </ParameterType>
               <!-- ModBus DPT  -->
               <ParameterType Id="%AID%_PT-DptSelection" Name="DptSelection">

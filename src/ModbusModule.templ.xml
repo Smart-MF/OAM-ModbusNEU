@@ -233,7 +233,7 @@
               <choose ParamRefId="%AID%_UP-%TT%00001_R-%TT%0000101">
                 <when test="&gt;=%C%">
                   <!-- START INCLUDE HERE -->
-                  <ParameterBlock Id="%AID%_PB-nnn" Name="Channel%C%Page" Text="Kanal %C%: {{0: ...}}" TextParameterRefId="%AID%_P-%T%%CCC%100_R-%T%%CCC%10001" HelpContext="Empty" ShowInComObjectTree="true">
+                  <ParameterBlock Id="%AID%_PB-nnn" Name="Channel%C%Page" Text="Kanal %C%: {{0: ...}}" TextParameterRefId="%AID%_P-%T%%CCC%004_R-%T%%CCC%00401" HelpContext="Empty" ShowInComObjectTree="true">
                     <ParameterSeparator Id="%AID%_PS-nnn" Text="Beispiel Channel" UIHint="Headline" />
                     <!-- Name -->
                     <ParameterRefRef RefId="%AID%_P-%T%%CCC%004_R-%T%%CCC%00401" HelpContext="BASE-ChannelName" />

@@ -160,36 +160,76 @@
 #define     MOD_BusParitySelectionShift 3
 #define MOD_BusDelayRequest                     112      // 8 Bits, Bit 7-0
 #define MOD_BusDelayCycle                       113      // 8 Bits, Bit 7-0
-#define MOD_BusID_Slave1                        114      // int32_t
-#define MOD_BusByteOrderSelectionSlave1         115      // 8 Bits, Bit 7-0
-#define MOD_BusWordOrderSelectionSlave1         115      // 8 Bits, Bit 5--2
-#define MOD_BusByteOrderSelectionSlave2         115      // 8 Bits, Bit 3--4
-#define MOD_BusWordOrderSelectionSlave2         115      // 8 Bits, Bit 1--6
-#define MOD_BusID_Slave2                        116      // int32_t
-#define MOD_BusID_Slave3                        117      // int32_t
-#define MOD_BusByteOrderSelectionSlave3         118      // 8 Bits, Bit 7-0
-#define MOD_BusWordOrderSelectionSlave3         118      // 8 Bits, Bit 5--2
-#define MOD_BusByteOrderSelectionSlave4         118      // 8 Bits, Bit 3--4
-#define MOD_BusWordOrderSelectionSlave4         118      // 8 Bits, Bit 1--6
-#define MOD_BusID_Slave4                        119      // int32_t
-#define MOD_BusID_Slave5                        120      // int32_t
-#define MOD_BusByteOrderSelectionSlave5         121      // 8 Bits, Bit 7-0
-#define MOD_BusWordOrderSelectionSlave5         121      // 8 Bits, Bit 5--2
-#define MOD_BusByteOrderSelectionSlave6         121      // 8 Bits, Bit 3--4
-#define MOD_BusWordOrderSelectionSlave6         121      // 8 Bits, Bit 1--6
-#define MOD_BusID_Slave6                        122      // int32_t
-#define MOD_BusID_Slave7                        123      // int32_t
-#define MOD_BusByteOrderSelectionSlave7         124      // 8 Bits, Bit 7-0
-#define MOD_BusWordOrderSelectionSlave7         124      // 8 Bits, Bit 5--2
-#define MOD_BusByteOrderSelectionSlave8         124      // 8 Bits, Bit 3--4
-#define MOD_BusWordOrderSelectionSlave8         124      // 8 Bits, Bit 1--6
-#define MOD_BusID_Slave8                        125      // int32_t
-#define MOD_BusID_Slave9                        126      // int32_t
-#define MOD_BusByteOrderSelectionSlave9         127      // 8 Bits, Bit 7-0
-#define MOD_BusWordOrderSelectionSlave9         127      // 8 Bits, Bit 5--2
-#define MOD_BusByteOrderSelectionSlave10        127      // 8 Bits, Bit 3--4
-#define MOD_BusWordOrderSelectionSlave10        127      // 8 Bits, Bit 1--6
-#define MOD_BusID_Slave10                       128      // int32_t
+#define MOD_BusID_Slave1                        114      // uint8_t
+#define MOD_BusByteOrderSelectionSlave1         115      // 1 Bit, Bit 7
+#define     MOD_BusByteOrderSelectionSlave1Mask 0x80
+#define     MOD_BusByteOrderSelectionSlave1Shift 7
+#define MOD_BusWordOrderSelectionSlave1         115      // 1 Bit, Bit 5
+#define     MOD_BusWordOrderSelectionSlave1Mask 0x20
+#define     MOD_BusWordOrderSelectionSlave1Shift 5
+#define MOD_BusByteOrderSelectionSlave2         115      // 1 Bit, Bit 3
+#define     MOD_BusByteOrderSelectionSlave2Mask 0x08
+#define     MOD_BusByteOrderSelectionSlave2Shift 3
+#define MOD_BusWordOrderSelectionSlave2         115      // 1 Bit, Bit 1
+#define     MOD_BusWordOrderSelectionSlave2Mask 0x02
+#define     MOD_BusWordOrderSelectionSlave2Shift 1
+#define MOD_BusID_Slave2                        116      // uint8_t
+#define MOD_BusID_Slave3                        117      // uint8_t
+#define MOD_BusByteOrderSelectionSlave3         118      // 1 Bit, Bit 7
+#define     MOD_BusByteOrderSelectionSlave3Mask 0x80
+#define     MOD_BusByteOrderSelectionSlave3Shift 7
+#define MOD_BusWordOrderSelectionSlave3         118      // 1 Bit, Bit 5
+#define     MOD_BusWordOrderSelectionSlave3Mask 0x20
+#define     MOD_BusWordOrderSelectionSlave3Shift 5
+#define MOD_BusByteOrderSelectionSlave4         118      // 1 Bit, Bit 3
+#define     MOD_BusByteOrderSelectionSlave4Mask 0x08
+#define     MOD_BusByteOrderSelectionSlave4Shift 3
+#define MOD_BusWordOrderSelectionSlave4         118      // 1 Bit, Bit 1
+#define     MOD_BusWordOrderSelectionSlave4Mask 0x02
+#define     MOD_BusWordOrderSelectionSlave4Shift 1
+#define MOD_BusID_Slave4                        119      // uint8_t
+#define MOD_BusID_Slave5                        120      // uint8_t
+#define MOD_BusByteOrderSelectionSlave5         121      // 1 Bit, Bit 7
+#define     MOD_BusByteOrderSelectionSlave5Mask 0x80
+#define     MOD_BusByteOrderSelectionSlave5Shift 7
+#define MOD_BusWordOrderSelectionSlave5         121      // 1 Bit, Bit 5
+#define     MOD_BusWordOrderSelectionSlave5Mask 0x20
+#define     MOD_BusWordOrderSelectionSlave5Shift 5
+#define MOD_BusByteOrderSelectionSlave6         121      // 1 Bit, Bit 3
+#define     MOD_BusByteOrderSelectionSlave6Mask 0x08
+#define     MOD_BusByteOrderSelectionSlave6Shift 3
+#define MOD_BusWordOrderSelectionSlave6         121      // 1 Bit, Bit 1
+#define     MOD_BusWordOrderSelectionSlave6Mask 0x02
+#define     MOD_BusWordOrderSelectionSlave6Shift 1
+#define MOD_BusID_Slave6                        122      // uint8_t
+#define MOD_BusID_Slave7                        123      // uint8_t
+#define MOD_BusByteOrderSelectionSlave7         124      // 1 Bit, Bit 7
+#define     MOD_BusByteOrderSelectionSlave7Mask 0x80
+#define     MOD_BusByteOrderSelectionSlave7Shift 7
+#define MOD_BusWordOrderSelectionSlave7         124      // 1 Bit, Bit 5
+#define     MOD_BusWordOrderSelectionSlave7Mask 0x20
+#define     MOD_BusWordOrderSelectionSlave7Shift 5
+#define MOD_BusByteOrderSelectionSlave8         124      // 1 Bit, Bit 3
+#define     MOD_BusByteOrderSelectionSlave8Mask 0x08
+#define     MOD_BusByteOrderSelectionSlave8Shift 3
+#define MOD_BusWordOrderSelectionSlave8         124      // 1 Bit, Bit 1
+#define     MOD_BusWordOrderSelectionSlave8Mask 0x02
+#define     MOD_BusWordOrderSelectionSlave8Shift 1
+#define MOD_BusID_Slave8                        125      // uint8_t
+#define MOD_BusID_Slave9                        126      // uint8_t
+#define MOD_BusByteOrderSelectionSlave9         127      // 1 Bit, Bit 7
+#define     MOD_BusByteOrderSelectionSlave9Mask 0x80
+#define     MOD_BusByteOrderSelectionSlave9Shift 7
+#define MOD_BusWordOrderSelectionSlave9         127      // 1 Bit, Bit 5
+#define     MOD_BusWordOrderSelectionSlave9Mask 0x20
+#define     MOD_BusWordOrderSelectionSlave9Shift 5
+#define MOD_BusByteOrderSelectionSlave10        127      // 1 Bit, Bit 3
+#define     MOD_BusByteOrderSelectionSlave10Mask 0x08
+#define     MOD_BusByteOrderSelectionSlave10Shift 3
+#define MOD_BusWordOrderSelectionSlave10        127      // 1 Bit, Bit 1
+#define     MOD_BusWordOrderSelectionSlave10Mask 0x02
+#define     MOD_BusWordOrderSelectionSlave10Shift 1
+#define MOD_BusID_Slave10                       128      // uint8_t
 
 // Verfügbare Kanäle
 #define ParamMOD_VisibleChannels                     (knx.paramByte(MOD_VisibleChannels))
@@ -202,65 +242,65 @@
 // Zeit zwischen zwei Abfragezyklen
 #define ParamMOD_BusDelayCycle                       (knx.paramByte(MOD_BusDelayCycle))
 //     Slave: 1
-#define ParamMOD_BusID_Slave1                        ((int32_t)knx.paramInt(MOD_BusID_Slave1))
+#define ParamMOD_BusID_Slave1                        (knx.paramByte(MOD_BusID_Slave1))
 // Register Position
-#define ParamMOD_BusByteOrderSelectionSlave1         (knx.paramByte(MOD_BusByteOrderSelectionSlave1))
+#define ParamMOD_BusByteOrderSelectionSlave1         ((bool)(knx.paramByte(MOD_BusByteOrderSelectionSlave1) & MOD_BusByteOrderSelectionSlave1Mask))
 // Register Start
-#define ParamMOD_BusWordOrderSelectionSlave1         (knx.paramByte(MOD_BusWordOrderSelectionSlave1))
+#define ParamMOD_BusWordOrderSelectionSlave1         ((bool)(knx.paramByte(MOD_BusWordOrderSelectionSlave1) & MOD_BusWordOrderSelectionSlave1Mask))
 // Register Position
-#define ParamMOD_BusByteOrderSelectionSlave2         (knx.paramByte(MOD_BusByteOrderSelectionSlave2))
+#define ParamMOD_BusByteOrderSelectionSlave2         ((bool)(knx.paramByte(MOD_BusByteOrderSelectionSlave2) & MOD_BusByteOrderSelectionSlave2Mask))
 // Register Start
-#define ParamMOD_BusWordOrderSelectionSlave2         (knx.paramByte(MOD_BusWordOrderSelectionSlave2))
+#define ParamMOD_BusWordOrderSelectionSlave2         ((bool)(knx.paramByte(MOD_BusWordOrderSelectionSlave2) & MOD_BusWordOrderSelectionSlave2Mask))
 //     Slave: 2
-#define ParamMOD_BusID_Slave2                        ((int32_t)knx.paramInt(MOD_BusID_Slave2))
+#define ParamMOD_BusID_Slave2                        (knx.paramByte(MOD_BusID_Slave2))
 //     Slave: 3
-#define ParamMOD_BusID_Slave3                        ((int32_t)knx.paramInt(MOD_BusID_Slave3))
+#define ParamMOD_BusID_Slave3                        (knx.paramByte(MOD_BusID_Slave3))
 // Register Position
-#define ParamMOD_BusByteOrderSelectionSlave3         (knx.paramByte(MOD_BusByteOrderSelectionSlave3))
+#define ParamMOD_BusByteOrderSelectionSlave3         ((bool)(knx.paramByte(MOD_BusByteOrderSelectionSlave3) & MOD_BusByteOrderSelectionSlave3Mask))
 // Register Start
-#define ParamMOD_BusWordOrderSelectionSlave3         (knx.paramByte(MOD_BusWordOrderSelectionSlave3))
+#define ParamMOD_BusWordOrderSelectionSlave3         ((bool)(knx.paramByte(MOD_BusWordOrderSelectionSlave3) & MOD_BusWordOrderSelectionSlave3Mask))
 // Register Position
-#define ParamMOD_BusByteOrderSelectionSlave4         (knx.paramByte(MOD_BusByteOrderSelectionSlave4))
+#define ParamMOD_BusByteOrderSelectionSlave4         ((bool)(knx.paramByte(MOD_BusByteOrderSelectionSlave4) & MOD_BusByteOrderSelectionSlave4Mask))
 // Register Start
-#define ParamMOD_BusWordOrderSelectionSlave4         (knx.paramByte(MOD_BusWordOrderSelectionSlave4))
+#define ParamMOD_BusWordOrderSelectionSlave4         ((bool)(knx.paramByte(MOD_BusWordOrderSelectionSlave4) & MOD_BusWordOrderSelectionSlave4Mask))
 //     Slave: 4
-#define ParamMOD_BusID_Slave4                        ((int32_t)knx.paramInt(MOD_BusID_Slave4))
+#define ParamMOD_BusID_Slave4                        (knx.paramByte(MOD_BusID_Slave4))
 //     Slave: 5
-#define ParamMOD_BusID_Slave5                        ((int32_t)knx.paramInt(MOD_BusID_Slave5))
+#define ParamMOD_BusID_Slave5                        (knx.paramByte(MOD_BusID_Slave5))
 // Register Position
-#define ParamMOD_BusByteOrderSelectionSlave5         (knx.paramByte(MOD_BusByteOrderSelectionSlave5))
+#define ParamMOD_BusByteOrderSelectionSlave5         ((bool)(knx.paramByte(MOD_BusByteOrderSelectionSlave5) & MOD_BusByteOrderSelectionSlave5Mask))
 // Register Start
-#define ParamMOD_BusWordOrderSelectionSlave5         (knx.paramByte(MOD_BusWordOrderSelectionSlave5))
+#define ParamMOD_BusWordOrderSelectionSlave5         ((bool)(knx.paramByte(MOD_BusWordOrderSelectionSlave5) & MOD_BusWordOrderSelectionSlave5Mask))
 // Register Position
-#define ParamMOD_BusByteOrderSelectionSlave6         (knx.paramByte(MOD_BusByteOrderSelectionSlave6))
+#define ParamMOD_BusByteOrderSelectionSlave6         ((bool)(knx.paramByte(MOD_BusByteOrderSelectionSlave6) & MOD_BusByteOrderSelectionSlave6Mask))
 // Register Start
-#define ParamMOD_BusWordOrderSelectionSlave6         (knx.paramByte(MOD_BusWordOrderSelectionSlave6))
+#define ParamMOD_BusWordOrderSelectionSlave6         ((bool)(knx.paramByte(MOD_BusWordOrderSelectionSlave6) & MOD_BusWordOrderSelectionSlave6Mask))
 //     Slave: 6
-#define ParamMOD_BusID_Slave6                        ((int32_t)knx.paramInt(MOD_BusID_Slave6))
+#define ParamMOD_BusID_Slave6                        (knx.paramByte(MOD_BusID_Slave6))
 //     Slave: 7
-#define ParamMOD_BusID_Slave7                        ((int32_t)knx.paramInt(MOD_BusID_Slave7))
+#define ParamMOD_BusID_Slave7                        (knx.paramByte(MOD_BusID_Slave7))
 // Register Position
-#define ParamMOD_BusByteOrderSelectionSlave7         (knx.paramByte(MOD_BusByteOrderSelectionSlave7))
+#define ParamMOD_BusByteOrderSelectionSlave7         ((bool)(knx.paramByte(MOD_BusByteOrderSelectionSlave7) & MOD_BusByteOrderSelectionSlave7Mask))
 // Register Start
-#define ParamMOD_BusWordOrderSelectionSlave7         (knx.paramByte(MOD_BusWordOrderSelectionSlave7))
+#define ParamMOD_BusWordOrderSelectionSlave7         ((bool)(knx.paramByte(MOD_BusWordOrderSelectionSlave7) & MOD_BusWordOrderSelectionSlave7Mask))
 // Register Position
-#define ParamMOD_BusByteOrderSelectionSlave8         (knx.paramByte(MOD_BusByteOrderSelectionSlave8))
+#define ParamMOD_BusByteOrderSelectionSlave8         ((bool)(knx.paramByte(MOD_BusByteOrderSelectionSlave8) & MOD_BusByteOrderSelectionSlave8Mask))
 // Register Start
-#define ParamMOD_BusWordOrderSelectionSlave8         (knx.paramByte(MOD_BusWordOrderSelectionSlave8))
+#define ParamMOD_BusWordOrderSelectionSlave8         ((bool)(knx.paramByte(MOD_BusWordOrderSelectionSlave8) & MOD_BusWordOrderSelectionSlave8Mask))
 //     Slave: 8
-#define ParamMOD_BusID_Slave8                        ((int32_t)knx.paramInt(MOD_BusID_Slave8))
+#define ParamMOD_BusID_Slave8                        (knx.paramByte(MOD_BusID_Slave8))
 //     Slave: 9
-#define ParamMOD_BusID_Slave9                        ((int32_t)knx.paramInt(MOD_BusID_Slave9))
+#define ParamMOD_BusID_Slave9                        (knx.paramByte(MOD_BusID_Slave9))
 // Register Position
-#define ParamMOD_BusByteOrderSelectionSlave9         (knx.paramByte(MOD_BusByteOrderSelectionSlave9))
+#define ParamMOD_BusByteOrderSelectionSlave9         ((bool)(knx.paramByte(MOD_BusByteOrderSelectionSlave9) & MOD_BusByteOrderSelectionSlave9Mask))
 // Register Start
-#define ParamMOD_BusWordOrderSelectionSlave9         (knx.paramByte(MOD_BusWordOrderSelectionSlave9))
+#define ParamMOD_BusWordOrderSelectionSlave9         ((bool)(knx.paramByte(MOD_BusWordOrderSelectionSlave9) & MOD_BusWordOrderSelectionSlave9Mask))
 // Register Position
-#define ParamMOD_BusByteOrderSelectionSlave10        (knx.paramByte(MOD_BusByteOrderSelectionSlave10))
+#define ParamMOD_BusByteOrderSelectionSlave10        ((bool)(knx.paramByte(MOD_BusByteOrderSelectionSlave10) & MOD_BusByteOrderSelectionSlave10Mask))
 // Register Start
-#define ParamMOD_BusWordOrderSelectionSlave10        (knx.paramByte(MOD_BusWordOrderSelectionSlave10))
+#define ParamMOD_BusWordOrderSelectionSlave10        ((bool)(knx.paramByte(MOD_BusWordOrderSelectionSlave10) & MOD_BusWordOrderSelectionSlave10Mask))
 //     Slave: 10
-#define ParamMOD_BusID_Slave10                       ((int32_t)knx.paramInt(MOD_BusID_Slave10))
+#define ParamMOD_BusID_Slave10                       (knx.paramByte(MOD_BusID_Slave10))
 
 #define MOD_KoDebugModbus 20
 

@@ -7,16 +7,15 @@
 uint32_t timer1sec;
 uint32_t sendDelay;
 
-//bool modbusChannel::idle_processing = false;
+// bool modbusChannel::idle_processing = false;
 
-modbusChannel::modbusChannel(uint8_t index, uint8_t id, uint8_t baud_value, uint8_t parity_value, HardwareSerial &serial) : _serial(serial)
+modbusChannel::modbusChannel(uint8_t index, uint8_t baud_value, uint8_t parity_value, HardwareSerial &serial) : _serial(serial)
 {
     _channelIndex = index;
-    _modbus_ID = id;
     _baud_value = baud_value;
     _parity_value = parity_value;
 
-    //idle(modbusChannel::idleCallback);
+    // idle(modbusChannel::idleCallback);
 }
 
 const std::string modbusChannel::name()
@@ -26,11 +25,54 @@ const std::string modbusChannel::name()
 
 void modbusChannel::setup()
 {
-    logInfoP("setup");
+    logInfoP("setup ");
     logIndentUp();
     logDebugP("debug setup");
     logTraceP("trace setup");
     logIndentDown();
+
+    switch (ParamMOD_CHModbusSlaveSelection)
+    {
+    case 1:
+        _modbus_ID = ParamMOD_BusID_Slave1;
+        break;
+    case 2:
+        _modbus_ID = ParamMOD_BusID_Slave2;
+        break;
+    case 3:
+        _modbus_ID = ParamMOD_BusID_Slave3;
+        break;
+    case 4:
+        _modbus_ID = ParamMOD_BusID_Slave4;
+        break;
+    case 5:
+        _modbus_ID = ParamMOD_BusID_Slave5;
+        break;
+    case 6:
+        _modbus_ID = ParamMOD_BusID_Slave6;
+        break;
+    case 7:
+        _modbus_ID = ParamMOD_BusID_Slave7;
+        break;
+    case 8:
+        _modbus_ID = ParamMOD_BusID_Slave8;
+        break;
+    case 9:
+        _modbus_ID = ParamMOD_BusID_Slave9;
+        break;
+    case 10:
+        _modbus_ID = ParamMOD_BusID_Slave10;
+        break;
+
+    default:
+        logInfoP("MODBBUS wrong Slave ");
+        logInfoP("Slave %i:", MOD_CHModbusSlaveSelection);
+        break;
+    }
+
+    logDebugP("Modbus_ID: %i", _modbus_ID);
+
+    begin(_modbus_ID, _serial);
 }
 
 void modbusChannel::loop()
@@ -44,12 +86,12 @@ void modbusChannel::loop()
     }
 }
 
-//void modbusChannel::idleCallback()
+// void modbusChannel::idleCallback()
 //{
-//    idle_processing = true;
-//    openknx.loop();
-//    idle_processing = false;
-//}
+//     idle_processing = true;
+//     openknx.loop();
+//     idle_processing = false;
+// }
 
 bool modbusChannel::readModbus(bool readRequest)
 {
@@ -142,6 +184,11 @@ void modbusChannel::ErrorHandlingLED()
     //        setLED_ERROR(LOW);
 }
 
+inline uint16_t modbusChannel::adjustRegisterAddress(uint16_t u16ReadAddress, uint8_t RegisterStart)
+{
+    return u16ReadAddress && RegisterStart ? u16ReadAddress - 1 : u16ReadAddress;
+}
+
 /**********************************************************************************************************
  **********************************************************************************************************
  *  Modbus to KNX
@@ -156,11 +203,12 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
 
     bool lSend = readRequest; // && !valueValid; // Flag if value should be send on KNX
     uint8_t result;
-    uint16_t registerAddr; // = adjustRegisterAddress(ParamMOD_CHModbusRegister);
+    uint16_t registerAddr = ParamMOD_CHModbusRegister; // adjustRegisterAddress(ParamMOD_CHModbusRegister, ParamMOD);
 
 #ifdef Serial_Debug_Modbus
     logDebugP("Modbus->KNX %i", registerAddr);
-    logDebugP(" ");
+    logDebugP("Slave_ID: %i", _modbus_ID);
+    logDebugP("Slave: %i", ParamMOD_CHModbusSlaveSelection);
 #endif
 
     {
@@ -466,6 +514,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
         {
 #ifdef Serial_Debug_Modbus
             logDebugP("DPT7 |");
+            logDebugP("Reg: %u", registerAddr);
 #endif
             // clear Responsebuffer before revicing a new message
             clearResponseBuffer();

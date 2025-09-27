@@ -30,11 +30,11 @@ void modbusModule::setup(bool configured)
     logIndentUp();
 
 // setup Pins
-#ifdef DEVICE_SMARTMF_MODBUS_RTU_3BE
+
     pinMode(SMARTMF_MODBUS_DIR_PIN, OUTPUT);
     SMARTMF_MODBUS_SERIAL.setRX(SMARTMF_MODBUS_RX_PIN);
     SMARTMF_MODBUS_SERIAL.setTX(SMARTMF_MODBUS_TX_PIN);
-#endif
+
     modbusInitSerial(SMARTMF_MODBUS_SERIAL);
 
     if (configured)
@@ -49,12 +49,17 @@ void modbusModule::setupChannels()
 {
     uint8_t slave_id = 1;
 
+    pinMode(SMARTMF_MODBUS_DIR_PIN, OUTPUT);
+    digitalWrite(SMARTMF_MODBUS_DIR_PIN, 0);
+
     // for (uint8_t i = 0; i < ParamMOD_VisibleChannels; i++)
     for (uint8_t i = 0; i < 10; i++)
     {
-        _channels[i] = new modbusChannel(i, slave_id, 3, 3, SMARTMF_MODBUS_SERIAL);
+        _channels[i] = new modbusChannel(i, 3, 3, SMARTMF_MODBUS_SERIAL);
         _channels[i]->setup();
         _channels[i]->idle(idleCallback);
+        _channels[i]->preTransmission(preTransmission);
+        _channels[i]->postTransmission(postTransmission);
     }
 }
 
@@ -93,6 +98,16 @@ void modbusModule::idleCallback()
     idle_processing = true;
     openknx.loop();
     idle_processing = false;
+}
+
+void modbusModule::preTransmission()
+{
+    digitalWrite(SMARTMF_MODBUS_DIR_PIN, 1);
+}
+
+void modbusModule::postTransmission()
+{
+    digitalWrite(SMARTMF_MODBUS_DIR_PIN, 0);
 }
 
 void modbusModule::loop(bool configured)
@@ -228,41 +243,40 @@ bool modbusModule::modbusInitSerial(HardwareSerial &serial)
     switch (ParamMOD_BusBaudrateSelection)
     {
     case 0:
-        SERIAL_DEBUG.println("Baudrate: 1200kBit/s");
+        logInfoP("Baudrate: 1200kBit/s");
         return modbusParitySerial(1200, serial);
 
         break;
     case 1:
-        SERIAL_DEBUG.println("Baudrate: 2400kBit/s");
+        logInfoP("Baudrate: 2400kBit/s");
         return modbusParitySerial(2400, serial);
         break;
     case 2:
-        SERIAL_DEBUG.println("Baudrate: 4800kBit/s");
+        logInfoP("Baudrate: 4800kBit/s");
         return modbusParitySerial(4800, serial);
         break;
     case 3:
-        SERIAL_DEBUG.println("Baudrate: 9600kBit/s");
+        logInfoP("Baudrate: 9600kBit/s");
         return modbusParitySerial(9600, serial);
         break;
     case 4:
-        SERIAL_DEBUG.println("Baudrate: 19200kBit/s");
+        logInfoP("Baudrate: 19200kBit/s");
         return modbusParitySerial(19200, serial);
         break;
     case 5:
-        SERIAL_DEBUG.println("Baudrate: 38400kBit/s");
+        logInfoP("Baudrate: 38400kBit/s");
         return modbusParitySerial(38400, serial);
         break;
     case 6:
-        SERIAL_DEBUG.println("Baudrate: 56000kBit/s");
+        logInfoP("Baudrate: 56000kBit/s");
         return modbusParitySerial(56000, serial);
         break;
     case 7:
-        SERIAL_DEBUG.println("Baudrate: 115200kBit/s");
+        logInfoP("Baudrate: 115200kBit/s");
         return modbusParitySerial(115200, serial);
         break;
     default:
-        SERIAL_DEBUG.print("Baudrate: Error: ");
-        SERIAL_DEBUG.println(knx.paramByte(MOD_BusBaudrateSelection));
+        logInfoP("Baudrate: Error: %i", ParamMOD_BusBaudrateSelection);
         return false;
         break;
     }

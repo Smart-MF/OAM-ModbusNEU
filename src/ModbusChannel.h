@@ -35,8 +35,8 @@ private:
   void ErrorHandlingLED();
 
 public:
-  modbusChannel(uint8_t index, uint8_t id, uint8_t _baud_value, uint8_t _parity_value, HardwareSerial &serial);
-  // static void idleCallback();
+  modbusChannel(uint8_t index, uint8_t _baud_value, uint8_t _parity_value, HardwareSerial &serial);
+  inline uint16_t adjustRegisterAddress(uint16_t u16ReadAddress, uint8_t RegisterStart);
 
   bool readModbus(bool readRequest);
   bool sendModbus();
