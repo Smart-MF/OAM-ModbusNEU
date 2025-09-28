@@ -5,6 +5,11 @@
 // #define DEVICE_SMARTMF_MODBUS_RTU_3BE
 #define SMARTMF_MODBUS_SERIAL Serial2
 
+uint32_t timer_time_between_Reg_Reads;
+uint32_t timer_time_between_Cycle_Reads;
+
+uint32_t idle_Count_Test = 0;
+
 bool modbusModule::idle_processing = false;
 
 modbusModule::modbusModule()
@@ -29,8 +34,11 @@ void modbusModule::setup(bool configured)
     logDebugP("Setup0");
     logIndentUp();
 
-// setup Pins
-
+    // setup Pins
+#ifdef DEVICE_SMARTMF_1TE_MODBUS
+    pinMode(SMARTMF_LED, OUTPUT);
+    digitalWrite(SMARTMF_LED, LOW);
+#endif
     pinMode(SMARTMF_MODBUS_DIR_PIN, OUTPUT);
     SMARTMF_MODBUS_SERIAL.setRX(SMARTMF_MODBUS_RX_PIN);
     SMARTMF_MODBUS_SERIAL.setTX(SMARTMF_MODBUS_TX_PIN);
@@ -47,8 +55,6 @@ void modbusModule::setup(bool configured)
 
 void modbusModule::setupChannels()
 {
-    uint8_t slave_id = 1;
-
     pinMode(SMARTMF_MODBUS_DIR_PIN, OUTPUT);
     digitalWrite(SMARTMF_MODBUS_DIR_PIN, 0);
 
@@ -112,15 +118,12 @@ void modbusModule::postTransmission()
 
 void modbusModule::loop(bool configured)
 {
-    if (idle_processing)
-    {
-        return;
-    }
 
-    if (delayCheck(_timer1, 5100))
+    if (delayCheck(_timer1, 1000))
     {
         logDebugP("LoopModule");
         _timer1 = millis();
+        logDebugP("CH%i:", _channel);
     }
 
     if (configured)
@@ -129,10 +132,54 @@ void modbusModule::loop(bool configured)
             return;
 
         uint8_t processed = 0;
+        uint8_t result;
         do
+        {
             _channels[_currentChannel]->loop();
+            if (!idle_processing)
+            {
+                result = _channels[_channel]->readModbus(true);
 
-        while (openknx.freeLoopIterate(ParamMOD_VisibleChannels, _currentChannel, processed));
+                switch (result)
+                {
+                case 0:
+                    // logDebugP("ERROR");
+                    _channel++;
+                    break;
+                case 1:
+                    _channel++;
+                    break;
+                case 0x02: // ku8MBIllegalDataAddress
+                    _channel++;
+                    break;
+                case 0x03: // ku8MBIllegalDataValue
+                    _channel++;
+                    break;
+                case 0x04: // ku8MBSlaveDeviceFailure
+                    _channel++;
+                    break;
+                case 0xE0: // ku8MBInvalidSlaveID
+                    _channel++;
+                    break;
+                case 0xE1: // ku8MBInvalidFunction
+                    _channel++;
+                    break;
+                case 0xE2: // ku8MBResponseTimedOut
+                    logDebugP("ERROR: Response Timed Out");
+                    _channel++;
+                    break;
+
+                default:
+                    break;
+                }
+                if (_channel >= ParamMOD_VisibleChannels)
+                    _channel = 0;
+
+                digitalWrite(15, LOW);
+                logDebugP("cout: %i", idle_Count_Test);
+                idle_Count_Test = 0;
+            }
+        } while (openknx.freeLoopIterate(ParamMOD_VisibleChannels, _currentChannel, processed));
     }
 }
 

@@ -70,16 +70,15 @@ void modbusChannel::setup()
         break;
     }
 
-    logDebugP("Modbus_ID: %i", _modbus_ID);
-
     begin(_modbus_ID, _serial);
 }
 
 void modbusChannel::loop()
 {
-    readModbus(true);
+    sendKNX();
+    // _readDone = readModbus(true);
 
-    if (delayCheck(timer1sec, 1000))
+    if (delayCheck(timer1sec, 10000))
     {
         timer1sec = millis();
         logDebugP("loopChannel");
@@ -93,7 +92,12 @@ void modbusChannel::loop()
 //     idle_processing = false;
 // }
 
-bool modbusChannel::readModbus(bool readRequest)
+bool modbusChannel::readDone()
+{
+    return _readDone;
+}
+
+uint8_t modbusChannel::readModbus(bool readRequest)
 {
     // 1. DPT auslesen: bei 0 abbrechen
     // 2. Richtung bestimmen: KNX - Modbus / Modbus - KNX
@@ -108,7 +112,7 @@ bool modbusChannel::readModbus(bool readRequest)
         return 0; // Kein Slave ausgewählt = Channel inaktiv, daher abbruch
 
     if (ParamMOD_CHModBusDptSelection == 0 || ParamMOD_CHModBusDptSelection > 14)
-        return false; // Kein DPT ausgewählt, oder dpt >14, daher abbruch
+        return 0; // Kein DPT ausgewählt, oder dpt >14, daher abbruch
 
     // ERROR LED
     // if (_channel_aktive == 1 && _slaveID >= 0)
@@ -129,7 +133,7 @@ bool modbusChannel::readModbus(bool readRequest)
         if (_readyToSend)
         {
             _readyToSend = false;
-            sendModbus();
+            return sendModbus();
         }
         return false;
         break;
@@ -189,6 +193,21 @@ inline uint16_t modbusChannel::adjustRegisterAddress(uint16_t u16ReadAddress, ui
     return u16ReadAddress && RegisterStart ? u16ReadAddress - 1 : u16ReadAddress;
 }
 
+void modbusChannel::sendKNX()
+{
+    // bool lSend; // = readRequest; // && !valueValid; // Flag if value should be send on KNX
+    uint32_t lCycle = ParamMOD_CHModBusSendDelay * 1000;
+    // if cyclic sending is requested, send the last value if one is available
+    lSend = (lCycle && delayCheck(sendDelay, lCycle)); //  && valueValid);
+
+    if (lSend)
+    {
+        KoMOD_GO_BASE_.objectWritten();
+        sendDelay = millis();
+        lSend = false;
+    }
+}
+
 /**********************************************************************************************************
  **********************************************************************************************************
  *  Modbus to KNX
@@ -198,25 +217,24 @@ inline uint16_t modbusChannel::adjustRegisterAddress(uint16_t u16ReadAddress, ui
  **********************************************************************************************************/
 
 // Routine zum Einlesen des ModBus-Register mit senden auf KNX-Bus
-bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
+uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
 {
 
-    bool lSend = readRequest; // && !valueValid; // Flag if value should be send on KNX
-    uint8_t result;
+    // bool lSend; // = readRequest; // && !valueValid; // Flag if value should be send on KNX
+    uint8_t result = 0;
     uint16_t registerAddr = ParamMOD_CHModbusRegister; // adjustRegisterAddress(ParamMOD_CHModbusRegister, ParamMOD);
 
 #ifdef Serial_Debug_Modbus
     logDebugP("Modbus->KNX %i", registerAddr);
     logDebugP("Slave_ID: %i", _modbus_ID);
     logDebugP("Slave: %i", ParamMOD_CHModbusSlaveSelection);
+    logDebugP("Cycle: %i", ParamMOD_CHModBusSendDelay);
 #endif
 
-    {
-        uint32_t lCycle = ParamMOD_CHModBusSendDelay * 1000;
+    // uint32_t lCycle = ParamMOD_CHModBusSendDelay * 1000;
 
-        // if cyclic sending is requested, send the last value if one is available
-        lSend |= (lCycle && delayCheck(sendDelay, lCycle)); //  && valueValid);
-    }
+    // if cyclic sending is requested, send the last value if one is available
+    // lSend = (lCycle && delayCheck(sendDelay, lCycle)); //  && valueValid);
 
     // wählt den passenden DPT
     switch (dpt)
@@ -254,7 +272,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                     result = readDiscreteInputs(registerAddr, 1);
                     break;
                 default: // default Switch(ModBusReadBitFunktion)
-                    return false;
+                    return result;
                 }
                 if (result == ku8MBSuccess)
                 {
@@ -280,7 +298,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                     result = readInputRegisters(registerAddr, 1);
                     break;
                 default: // Error Switch (0x03 & 0x04)
-                    return false;
+                    return result;
                 } // Ende Switch (0x03 & 0x04)
                 if (result == ku8MBSuccess)
                 {
@@ -289,7 +307,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
             }
             else
             {
-                return false;
+                return result;
             }
 
             if (result == ku8MBSuccess)
@@ -326,7 +344,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
 #endif
                 ErrorHandling();
 
-                return false;
+                return result;
             }
         }
         break;
@@ -362,7 +380,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                 result = readInputRegisters(registerAddr, 1);
                 break;
             default: // Error Switch (0x03 & 0x04)
-                return false;
+                return result;
             } // Ende Switch (0x03 & 0x04)
 
             if (result == ku8MBSuccess)
@@ -384,7 +402,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
 #endif
                     break;
                 default:
-                    return false;
+                    return result;
                 } // Ende Register Pos
 
                 // senden bei Wertänderung
@@ -415,7 +433,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
 #endif
                 ErrorHandling();
 
-                return false;
+                return result;
             }
         }
         break;
@@ -451,7 +469,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                 result = readInputRegisters(registerAddr, 1);
                 break;
             default: // Error Switch (0x03 & 0x04)
-                return false;
+                return result;
             } // Ende Switch (0x03 & 0x04)
 
             if (result == ku8MBSuccess)
@@ -470,7 +488,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                     logDebugP("%u", v, BIN);
                     break;
                 default:
-                    return false;
+                    return result;
                 } // Ende Register Pos
 
                 // senden bei Wertänderung
@@ -502,7 +520,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
 
                 ErrorHandling();
 
-                return false;
+                return result;
             }
         }
         break;
@@ -534,12 +552,11 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                 result = readInputRegisters(registerAddr, 1);
                 break;
             default: // Error Switch (0x03 & 0x04)
-                return false;
+                return result;
             } // Ende Switch (0x03 & 0x04)
 
             if (result == ku8MBSuccess)
             {
-
                 switch (ParamMOD_CHModBusRegisterPosDPT7)
                 {
                 case 1: // High/LOW Byte
@@ -550,7 +567,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                     v = v & ((1 << ParamMOD_CHModbusCountBitsDPT7) - 1);
                     break;
                 default:
-                    return false;
+                    return result;
                 } // Ende Register Pos
 
                 // senden bei Wertänderung
@@ -581,7 +598,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
 #endif
                 ErrorHandling();
 
-                return false;
+                return result;
             }
         }
         break;
@@ -612,7 +629,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                 result = readInputRegisters(registerAddr, 1);
                 break;
             default: // Error Switch (0x03 & 0x04)
-                return false;
+                return result;
             } // Ende Switch (0x03 & 0x04)
 
             if (result == ku8MBSuccess)
@@ -649,7 +666,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
 #endif
                 ErrorHandling();
 
-                return false;
+                return result;
             }
         }
         break;
@@ -685,7 +702,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                 result = readInputRegisters(registerAddr, 1);
                 break;
             default: // Error Switch (0x03 & 0x04)
-                return false;
+                return result;
             } // Ende Switch (0x03 & 0x04)
 
             if (result == ku8MBSuccess)
@@ -706,7 +723,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                         uraw = getResponseBuffer(0);
                         break;
                     default:
-                        return false;
+                        return result;
                     }
 
 #ifdef Serial_Debug_Modbus
@@ -732,7 +749,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                         sraw = (int16_t)getResponseBuffer(0); // muss noch bearbeitet werden !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                         break;
                     default:
-                        return false;
+                        return result;
                     }
 #ifdef Serial_Debug_Modbus
                     logDebugP("%i", sraw);
@@ -773,7 +790,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
 #endif
                 ErrorHandling();
 
-                return false;
+                return result;
             }
         }
         break;
@@ -817,7 +834,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                     result = readInputRegisters(registerAddr, 1);
                     break;
                 default:
-                    return false;
+                    return result;
                 }
 
                 if (result == ku8MBSuccess)
@@ -835,7 +852,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                         v = (uint16_t)getResponseBuffer(0); // muss noch bearbeitet werden !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                         break;
                     default:
-                        return false;
+                        return result;
                     }
 
                     // Löscht Fehlerspeicher
@@ -849,7 +866,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
 #endif
                     ErrorHandling();
 
-                    return false;
+                    return result;
                 }
 
                 break;
@@ -874,7 +891,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                     result = readInputRegisters(registerAddr, 2);
                     break;
                 default:
-                    return false;
+                    return result;
                 }
 
                 if (result == ku8MBSuccess)
@@ -891,7 +908,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                         //  ************************************************************************** MUSS NOCH GEPRÜFT WERDEN !!!!!!!!!!!!!!!!!!!!!!!!!!!
                         break;
                     default:
-                        return false;
+                        return result;
                     } // Ende // HI / LO Word
                 }
                 else // Fehler
@@ -902,11 +919,11 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
 
                     ErrorHandling();
 
-                    return false;
+                    return result;
                 }
                 break; // Ende Case 1 Double Register
             default:
-                return false;
+                return result;
             } // ENDE ENDE Word / Double Word Register
 
             if (result == ku8MBSuccess)
@@ -976,7 +993,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                     result = readInputRegisters(registerAddr, 1);
                     break;
                 default:
-                    return false;
+                    return result;
                 }
 
                 if (result == ku8MBSuccess)
@@ -994,7 +1011,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                         v = (int16_t)getResponseBuffer(0); // muss noch bearbeitet werden !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                         break;
                     default:
-                        return false;
+                        return result;
                     }
                 }
                 else
@@ -1004,7 +1021,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
 #endif
                     ErrorHandling();
 
-                    return false;
+                    return result;
                 }
 
                 break;
@@ -1029,7 +1046,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                     result = readInputRegisters(registerAddr, 2);
                     break;
                 default:
-                    return false;
+                    return result;
                 }
 
                 if (result == ku8MBSuccess)
@@ -1046,7 +1063,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                         //  ************************************************************************** MUSS NOCH GEPRÜFT WERDEN !!!!!!!!!!!!!!!!!!!!!!!!!!!
                         break;
                     default:
-                        return false;
+                        return result;
                     } // Ende // HI / LO Word
                 }
                 else
@@ -1056,11 +1073,11 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
 #endif
                     ErrorHandling();
 
-                    return false;
+                    return result;
                 }
                 break; // Ende Case 1 Double Register
             default:
-                return false;
+                return result;
             } // ENDE ENDE Word / Double Word Register
 
             if (result == ku8MBSuccess)
@@ -1131,7 +1148,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                     result = readInputRegisters(registerAddr, 1);
                     break;
                 default:
-                    return false;
+                    return result;
                 }
 
                 if (result == ku8MBSuccess)
@@ -1152,7 +1169,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                             uraw = getResponseBuffer(0);
                             break;
                         default:
-                            return false;
+                            return result;
                         }
 #ifdef Serial_Debug_Modbus
                         logDebugP("%u", uraw);
@@ -1177,7 +1194,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                             sraw = (int16_t)getResponseBuffer(0); // muss noch bearbeitet werden !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                             break;
                         default:
-                            return false;
+                            return result;
                         }
 #ifdef Serial_Debug_Modbus
                         logDebugP("%i", sraw);
@@ -1194,7 +1211,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
 #endif
                     ErrorHandling();
 
-                    return false;
+                    return result;
                 }
 
                 break;
@@ -1219,7 +1236,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                     result = readInputRegisters(registerAddr, 2);
                     break;
                 default:
-                    return false;
+                    return result;
                 }
 
                 if (result == ku8MBSuccess)
@@ -1238,7 +1255,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                         //  ************************************************************************** MUSS NOCH GEPRÜFT WERDEN !!!!!!!!!!!!!!!!!!!!!!!!!!!
                         break;
                     default:
-                        return false;
+                        return result;
                     } // Ende // HI / LO Word
                     // check receive input datatype ( signed / unsgined / Float)
                     switch (ParamMOD_CHModBusRegisterValueTypDpt14)
@@ -1274,7 +1291,7 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                     }
                     break;
                     default:
-                        return false;
+                        return result;
                     }
                 }
                 else
@@ -1285,11 +1302,11 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
 
                     ErrorHandling();
 
-                    return false;
+                    return result;
                 }
                 break; // Ende Case 1 Double Register
             default:
-                return false;
+                return result;
             } // ENDE ENDE Word / Double Word Register
 
             if (result == ku8MBSuccess)
@@ -1328,14 +1345,23 @@ bool modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
         KoMOD_GO_BASE_.objectWritten();
         valueValid = true;
         sendDelay = millis();
+        lSend = false;
     }
 
     return true;
 }
 
-bool modbusChannel::knxToModbus(uint8_t dpt, bool readRequest)
+//*****************************************************************************************************************************************
+//*****************************************************************************************************************************************
+//
+//*****************************************  KNX TO Modbus ********************************************************************************
+//
+//*****************************************************************************************************************************************
+//*****************************************************************************************************************************************
+
+uint8_t modbusChannel::knxToModbus(uint8_t dpt, bool readRequest)
 {
-    uint8_t result;
+    uint8_t result = 0;
     uint16_t registerAddr = ParamMOD_CHModbusRegister; // adjustRegisterAddress(ParamMOD_CHModbusRegister);
 
 #ifdef Serial_Debug_Modbus_Min
@@ -1367,7 +1393,7 @@ bool modbusChannel::knxToModbus(uint8_t dpt, bool readRequest)
             }
             else
             {
-                return false;
+                return result;
             }
             printDebugResult("1.001", registerAddr, result);
         }
@@ -1405,7 +1431,7 @@ bool modbusChannel::knxToModbus(uint8_t dpt, bool readRequest)
                 v <<= ParamMOD_CHModBusOffsetRight5;
                 break;
             default:
-                return false;
+                return result;
             } // Ende Register Pos
 
             result = sendProtocol(registerAddr, v);
@@ -1431,7 +1457,7 @@ bool modbusChannel::knxToModbus(uint8_t dpt, bool readRequest)
                 v <<= (ParamMOD_CHModBusOffsetRight7);
                 break;
             default:
-                return false;
+                return result;
             } // Ende Register Pos
 
             result = sendProtocol(registerAddr, v);
@@ -1480,7 +1506,7 @@ bool modbusChannel::knxToModbus(uint8_t dpt, bool readRequest)
                 v = (int)roundf(raw);
                 break;
             default:
-                return false;
+                return result;
             }
             result = sendProtocol(registerAddr, v);
             printDebugResult("9", registerAddr, result);

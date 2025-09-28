@@ -85,7 +85,7 @@ public:
 
   @ingroup constant
   */
-  static const uint8_t ku8MBIllegalFunction = 0x01;
+  static const uint8_t ku8MBIllegalFunction = 0x00;
 
   /**
   Modbus protocol illegal data address exception.
@@ -145,7 +145,7 @@ public:
 
   @ingroup constant
   */
-  static const uint8_t ku8MBSuccess = 0x00;
+  static const uint8_t ku8MBSuccess = 0x01;
 
   /**
   ModbusMaster invalid response slave ID exception.
@@ -244,7 +244,7 @@ private:
   static const uint8_t ku8MBReadWriteMultipleRegisters = 0x17; ///< Modbus function 0x17 Read Write Multiple Registers
 
   // Modbus timeout [milliseconds]
-  static const uint16_t ku16MBResponseTimeout = 500; ///< Modbus timeout [milliseconds]
+  static const uint16_t ku16MBResponseTimeout = 100; ///< Modbus timeout [milliseconds]
 
   // master function that conducts Modbus transactions
   uint8_t ModbusMasterTransaction(uint8_t u8MBFunction);

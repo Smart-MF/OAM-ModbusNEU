@@ -700,7 +700,6 @@ uint8_t ModbusMaster::ModbusMasterTransaction(uint8_t u8MBFunction)
   //     }
   // }
   _serial->flush(); // flush transmit buffer
-
 #if __MODBUSMASTER_DEBUG__
   digitalWrite(__MODBUSMASTER_DEBUG_PIN_A__, false);
 #endif
@@ -713,7 +712,7 @@ uint8_t ModbusMaster::ModbusMasterTransaction(uint8_t u8MBFunction)
   // loop until we run out of time or bytes, or an error occurs
   u32StartTime = millis();
   // uint8_t u8BytesLeftStore = 0;
-  while (u8BytesLeft && !u8MBStatus)
+  while (u8BytesLeft && u8MBStatus == 1)
   {
     // #if __MODBUSMASTER_DEBUG__
     //     if (u8MBFunction == ku8MBWriteSingleRegister)
@@ -732,6 +731,7 @@ uint8_t ModbusMaster::ModbusMasterTransaction(uint8_t u8MBFunction)
     // #endif
     if (_serial->available())
     {
+      // digitalWrite(15,LOW);
 #if __MODBUSMASTER_DEBUG__
       digitalWrite(__MODBUSMASTER_DEBUG_PIN_A__, true);
 #endif
@@ -819,7 +819,7 @@ uint8_t ModbusMaster::ModbusMasterTransaction(uint8_t u8MBFunction)
     }
 
     // verify CRC
-    if (!u8MBStatus && (lowByte(u16CRC) != u8ModbusADU[u8ModbusADUSize - 2] ||
+    if (u8MBStatus==1 && (lowByte(u16CRC) != u8ModbusADU[u8ModbusADUSize - 2] ||
                         highByte(u16CRC) != u8ModbusADU[u8ModbusADUSize - 1]))
     {
       u8MBStatus = ku8MBInvalidCRC;
@@ -827,7 +827,7 @@ uint8_t ModbusMaster::ModbusMasterTransaction(uint8_t u8MBFunction)
   }
 
   // disassemble ADU into words
-  if (!u8MBStatus)
+  if (u8MBStatus==1)
   {
     // evaluate returned Modbus function code
     switch (u8ModbusADU[1])

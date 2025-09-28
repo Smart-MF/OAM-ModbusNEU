@@ -9,7 +9,9 @@ private:
   uint8_t _baud_value;
   uint8_t _parity_value;
   HardwareSerial &_serial;
-  static bool idle_processing;
+  // static bool idle_processing;
+  bool _readDone = false;
+  bool lSend = false;
 
   bool errorState[2];
   bool valueValid;
@@ -33,15 +35,17 @@ private:
   bool modbusInitSerial(HardwareSerial &serial);
   void ErrorHandling();
   void ErrorHandlingLED();
+  void sendKNX();
 
 public:
   modbusChannel(uint8_t index, uint8_t _baud_value, uint8_t _parity_value, HardwareSerial &serial);
+  bool readDone();
   inline uint16_t adjustRegisterAddress(uint16_t u16ReadAddress, uint8_t RegisterStart);
 
-  bool readModbus(bool readRequest);
+  uint8_t readModbus(bool readRequest);
   bool sendModbus();
-  bool modbusToKnx(uint8_t dpt, bool readRequest);
-  bool knxToModbus(uint8_t dpt, bool readRequest);
+  uint8_t modbusToKnx(uint8_t dpt, bool readRequest);
+  uint8_t knxToModbus(uint8_t dpt, bool readRequest);
   void printDebugResult(const char *dpt, uint16_t registerAddr, uint8_t result);
   uint8_t sendProtocol(uint16_t registerAddr, uint16_t u16value);
   const std::string name() override;
