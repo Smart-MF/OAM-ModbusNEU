@@ -14,17 +14,17 @@
             <ParameterTypes>
               <!-- the following ParameterTypes are from a productive example -->
               <ParameterType Id="%AID%_PT-DelaySeconds" Name="DelaySeconds">
-                <TypeNumber SizeInBit="32" Type="signedInt" minInclusive="0" maxInclusive="86400" />
+                <TypeNumber SizeInBit="32" Type="unsignedInt" minInclusive="0" maxInclusive="86400" />
               </ParameterType>
               <!-- simple integer type -->
               <ParameterType Id="%AID%_PT-calculationValue" Name="calculationValue">
-                <TypeNumber SizeInBit="32" Type="signedInt" minInclusive="1" maxInclusive="65000" />
+                <TypeNumber SizeInBit="16" Type="unsignedInt" minInclusive="1" maxInclusive="65000" />
               </ParameterType>
               <ParameterType Id="%AID%_PT-calculationValue2" Name="calculationValue2">
-                <TypeNumber SizeInBit="32" Type="signedInt" minInclusive="-32000" maxInclusive="32000" />
+                <TypeNumber SizeInBit="16" Type="signedInt" minInclusive="-32000" maxInclusive="32000" />
               </ParameterType>
               <ParameterType Id="%AID%_PT-ZaehlerOffset" Name="ZaehlerOffset">
-                <TypeNumber SizeInBit="32" Type="signedInt" minInclusive="0" maxInclusive="99999999" />
+                <TypeNumber SizeInBit="32" Type="unsignedInt" minInclusive="0" maxInclusive="99999999" />
               </ParameterType>
               <!-- enumeration with 8-bit (word) values -->
               <ParameterType Id="%AID%_PT-BaudrateSelection" Name="BaudrateSelection">
@@ -106,7 +106,7 @@
               </ParameterType>
               <!-- Parameter type for an 8 bit percent parameter -->
               <ParameterType Id="%AID%_PT-Percentage" Name="Percentage">
-                <TypeNumber SizeInBit="8" Type="signedInt" minInclusive="0" maxInclusive="100" />
+                <TypeNumber SizeInBit="8" Type="unsignedInt" minInclusive="0" maxInclusive="100" />
               </ParameterType>
               <!-- Parameter type for an 8 bit enumeration -->
               <ParameterType Id="%AID%_PT-DptSelect" Name="DptSelect">

@@ -35,7 +35,7 @@
   <op:define prefix="MOD" ModuleType="2"
     share="ModbusModule.share.xml"
     template="ModbusModule.templ.xml"
-    NumChannels="10" KoOffset="50">
+    NumChannels="200" KoOffset="50">
     <op:verify File="../library.json" ModuleVersion="1.6" />
   </op:define>
 

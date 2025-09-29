@@ -54,22 +54,22 @@
                 <Parameter Id="%AID%_UP-%T%%CCC%047" Name="CH%C%ModBusRegisterValueTypDpt14" Offset="2" BitOffset="6" ParameterType="%AID%_PT-RegisterValueTypDpt14" Text="Registerwert-Typ" Value="3" /> <!-- 2bit -->
               </Union>
               <Union SizeInBit="24">
-                <Memory CodeSegment="%AID%_RS-04-00000" Offset="21" BitOffset="0" />
+                <Memory CodeSegment="%AID%_RS-04-00000" Offset="22" BitOffset="0" />
                 <Parameter Id="%AID%_UP-%T%%CCC%028" Name="CH%C%ModBusBitPosDpt1" Offset="0" BitOffset="0" ParameterType="%AID%_PT-BitPosDpt1" Text="Position Bit" Value="0" />
                 <Parameter Id="%AID%_UP-%T%%CCC%030" Name="CH%C%ModBusOffsetRight5" Offset="1" BitOffset="0" ParameterType="%AID%_PT-BitPosDpt1" Text="offset von rechts" Value="0" />
                 <Parameter Id="%AID%_UP-%T%%CCC%032" Name="CH%C%ModBusOffsetRight7" Offset="2" BitOffset="0" ParameterType="%AID%_PT-BitPosDpt1" Text="offset von rechts" Value="0" />
               </Union>
               <Union SizeInBit="24">
-                <Memory CodeSegment="%AID%_RS-04-00000" Offset="24" BitOffset="0" />
+                <Memory CodeSegment="%AID%_RS-04-00000" Offset="25" BitOffset="0" />
                 <Parameter Id="%AID%_UP-%T%%CCC%048" Name="CH%C%ModBusReadBitFunktion" Offset="0" BitOffset="0" ParameterType="%AID%_PT-ReadBitFunction" Text="Funktion" Value="1" />
                 <Parameter Id="%AID%_UP-%T%%CCC%049" Name="CH%C%ModBusReadWordFunktion" Offset="1" BitOffset="0" ParameterType="%AID%_PT-ReadWordFunction" Text="Funktion" Value="4" />
                 <Parameter Id="%AID%_UP-%T%%CCC%050" Name="CH%C%ModBusWriteWordFunktion" Offset="2" BitOffset="0" ParameterType="%AID%_PT-WriteWordFunction" Text="Funktion" Value="6" />
                 <!-- free 2bit -->
               </Union>
               <Union SizeInBit="32">
-                <Memory CodeSegment="%AID%_RS-04-00000" Offset="27" BitOffset="0" />
-                <Parameter Id="%AID%_UP-%T%%CCC%053" Name="CH%C%ModBuscalculationValueDiff" Offset="0" BitOffset="0" ParameterType="%AID%_PT-calculationValue" Text="x = ModbusValue / Var1" Value="1" SuffixText="Var1" /> <!-- 4Byte -->
-                <Parameter Id="%AID%_UP-%T%%CCC%058" Name="CH%C%ModBuscalculationValueAdd" Offset="4" BitOffset="0" ParameterType="%AID%_PT-calculationValue2" Text="KNX Output = x + Var2" Value="0" SuffixText="Var2" /> <!-- 4Byte -->
+                <Memory CodeSegment="%AID%_RS-04-00000" Offset="28" BitOffset="0" />
+                <Parameter Id="%AID%_UP-%T%%CCC%053" Name="CH%C%ModBuscalculationValueDiff" Offset="0" BitOffset="0" ParameterType="%AID%_PT-calculationValue" Text="x = ModbusValue / Var1" Value="1" SuffixText="Var1" /> <!-- 2Byte -->
+                <Parameter Id="%AID%_UP-%T%%CCC%058" Name="CH%C%ModBuscalculationValueAdd" Offset="2" BitOffset="0" ParameterType="%AID%_PT-calculationValue2" Text="KNX Output = x + Var2" Value="0" SuffixText="Var2" /> <!-- 2Byte -->
               </Union>
               <!-- virtuelle Zähler 
               <Parameter Id="%AID%_P-%T%%CCC%067" Name="CH%C%ModBusSelectionVirtualZaehler1" ParameterType="%AID%_PT-CheckBox" Text="" SuffixText="" Value="0">

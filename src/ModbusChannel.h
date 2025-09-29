@@ -8,7 +8,7 @@ private:
   uint8_t _modbus_ID;
   uint8_t _baud_value;
   uint8_t _parity_value;
-  uint8_t _readCyclecounter=0;
+  uint8_t _readCyclecounter = 0;
   HardwareSerial &_serial;
   // static bool idle_processing;
   bool _readDone = false;
@@ -40,7 +40,9 @@ private:
 
 public:
   modbusChannel(uint8_t index, uint8_t _baud_value, uint8_t _parity_value, HardwareSerial &serial);
+  bool isActiveCH();
   bool readDone();
+  bool isReadyCH();
   inline uint16_t adjustRegisterAddress(uint16_t u16ReadAddress, uint8_t RegisterStart);
 
   uint8_t readModbus(bool readRequest);

@@ -31,6 +31,9 @@ void modbusChannel::setup()
     logTraceP("trace setup");
     logIndentDown();
 
+    // Set Counter
+    _readCyclecounter = ParamMOD_CHModBusReadCycle;
+
     switch (ParamMOD_CHModbusSlaveSelection)
     {
     case 1:
@@ -78,11 +81,11 @@ void modbusChannel::loop()
     sendKNX();
     // _readDone = readModbus(true);
 
-    if (delayCheck(timer1sec, 10000))
-    {
-        timer1sec = millis();
-        logDebugP("loopChannel");
-    }
+    // if (delayCheck(timer1sec, 10000))
+    //{
+    //     timer1sec = millis();
+    //     logDebugP("loopChannel");
+    // }
 }
 
 // void modbusChannel::idleCallback()
@@ -97,6 +100,25 @@ bool modbusChannel::readDone()
     return _readDone;
 }
 
+bool modbusChannel::isActiveCH()
+{
+    if (ParamMOD_CHModbusSlaveSelection == 0)
+        return false;
+    else
+        return true;
+}
+
+bool modbusChannel::isReadyCH()
+{
+    if (ParamMOD_CHModbusSlaveSelection != 0 && _readCyclecounter == 1)
+        return true;
+    else
+    {
+        _readCyclecounter--;
+        return false;
+    }
+}
+
 uint8_t modbusChannel::readModbus(bool readRequest)
 {
     // 1. DPT auslesen: bei 0 abbrechen
@@ -108,23 +130,16 @@ uint8_t modbusChannel::readModbus(bool readRequest)
     // 7. Modbus Wert abfragen
     // 8. KNX Botschaft senden
 
-    if (ParamMOD_CHModbusSlaveSelection == 0)
+    if (ParamMOD_CHModbusSlaveSelection == 0 || _modbus_ID == 0)
         return 0; // Kein Slave ausgewählt = Channel inaktiv, daher abbruch
 
     if (ParamMOD_CHModBusDptSelection == 0 || ParamMOD_CHModBusDptSelection > 14)
         return 0; // Kein DPT ausgewählt, oder dpt >14, daher abbruch
-   
-        _readCyclecounter++;  //zählt Abfragezähler hoch 
-    if (ParamMOD_CHModBusReadCycle == _readCyclecounter)
-        _readCyclecounter = 0; //setzt Abfragezähler wieder auf Null
-    else
-        return 0; //AbfrageZyclus noch nicht erreicht 
 
-        // if (_channel_aktive == 1 && _slaveID >= 0)
-    // ERROR LED
-    //{
-    //     ErrorHandlingLED();
-    // }
+    // wird in Funktion isReadyCH() bei jeder Abfrage um 1 dekrementiert
+    _readCyclecounter = ParamMOD_CHModBusReadCycle; // setzt Abfragezähler wieder zurück
+
+    ErrorHandlingLED();
 
     // Richtungsauswahl: KNX - Modbus oder Modbus - KNX
     switch (ParamMOD_CHModBusBusDirection)
@@ -133,6 +148,7 @@ uint8_t modbusChannel::readModbus(bool readRequest)
 #ifdef Serial_Debug_Modbus_Min
         if (readRequest)
         {
+
             logDebugP("KNX->Modbus ");
         }
 #endif
@@ -201,16 +217,12 @@ inline uint16_t modbusChannel::adjustRegisterAddress(uint16_t u16ReadAddress, ui
 
 void modbusChannel::sendKNX()
 {
-    // bool lSend; // = readRequest; // && !valueValid; // Flag if value should be send on KNX
     uint32_t lCycle = ParamMOD_CHModBusSendDelay * 1000;
     // if cyclic sending is requested, send the last value if one is available
-    lSend = (lCycle && delayCheck(sendDelay, lCycle)); //  && valueValid);
-
-    if (lSend)
+    if (lCycle && delayCheck(sendDelay, lCycle))
     {
         KoMOD_GO_BASE_.objectWritten();
         sendDelay = millis();
-        lSend = false;
     }
 }
 
@@ -226,15 +238,12 @@ void modbusChannel::sendKNX()
 uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
 {
 
-    // bool lSend; // = readRequest; // && !valueValid; // Flag if value should be send on KNX
+    bool lSend; // = readRequest; // && !valueValid; // Flag if value should be send on KNX
     uint8_t result = 0;
     uint16_t registerAddr = ParamMOD_CHModbusRegister; // adjustRegisterAddress(ParamMOD_CHModbusRegister, ParamMOD);
 
 #ifdef Serial_Debug_Modbus
-    logDebugP("Modbus->KNX %i", registerAddr);
-    logDebugP("Slave_ID: %i", _modbus_ID);
-    logDebugP("Slave: %i", ParamMOD_CHModbusSlaveSelection);
-    logDebugP("Cycle: %i", ParamMOD_CHModBusSendDelay);
+    logDebugP("Modbus->KNX %i, ID:%i, Slave:%i", registerAddr, _modbus_ID, ParamMOD_CHModbusSlaveSelection);
 #endif
 
     // uint32_t lCycle = ParamMOD_CHModBusSendDelay * 1000;
@@ -536,10 +545,6 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
     case 7:
         if (readRequest)
         {
-#ifdef Serial_Debug_Modbus
-            logDebugP("DPT7 |");
-            logDebugP("Reg: %u", registerAddr);
-#endif
             // clear Responsebuffer before revicing a new message
             clearResponseBuffer();
 
@@ -549,12 +554,12 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
             switch (ParamMOD_CHModBusReadWordFunktion)
             {
             case 3: // 0x03 Lese holding registers
-                logDebugP(" 0x03 ");
+                logDebugP("DPT7 | 0x03 | Reg: %u", registerAddr);
                 result = readHoldingRegisters(registerAddr, 1);
                 break; // Ende 0x03
 
             case 4:
-                logDebugP(" 0x04 ");
+                logDebugP("DPT7 | 0x04 | Reg: %u", registerAddr);
                 result = readInputRegisters(registerAddr, 1);
                 break;
             default: // Error Switch (0x03 & 0x04)
@@ -590,7 +595,7 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                 }
 
 #ifdef Serial_Debug_Modbus_Min
-                logDebugP("%u", v);
+                logDebugP("Value: %u", v);
 #endif
 
                 // Löscht Fehlerspeicher
@@ -1120,10 +1125,6 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
 
         if (readRequest)
         {
-#ifdef Serial_Debug_Modbus
-            logDebugP("DPT14 ");
-#endif
-
             // clear Responsebuffer before receiving a new message
             clearResponseBuffer();
 
@@ -1133,15 +1134,12 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
             switch (ParamMOD_CHModBusWordTyp14) // Choose Word Register OR Double Word Register
             {
             case 0: // Word Register
-#ifdef Serial_Debug_Modbus
-                logDebugP("| Word ");
-#endif
                 // Choose Modbus Funktion (0x03 readHoldingRegisters ODER 0x04 readInputRegisters)
                 switch (ParamMOD_CHModBusReadWordFunktion)
                 {
                 case 3: // 0x03 Lese holding registers
 #ifdef Serial_Debug_Modbus
-                    logDebugP(" 0x03 ");
+                    logDebugP("DPT14| Word 0x03 ");
 #endif
                     result = readHoldingRegisters(registerAddr, 1);
                     break;
@@ -1149,7 +1147,7 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                 case 4:
 
 #ifdef Serial_Debug_Modbus
-                    logDebugP(" 0x04 ");
+                    logDebugP("DPT14| Word 0x04 ");
 #endif
                     result = readInputRegisters(registerAddr, 1);
                     break;
@@ -1177,12 +1175,13 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                         default:
                             return result;
                         }
-#ifdef Serial_Debug_Modbus
-                        logDebugP("%u", uraw);
-#endif
+
                         //  ************************ MUSS NOCH GEPRÜFT WERDEN !!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        v = uraw / (float)ParamMOD_CHModBuscalculationValueDiff;
-                        v = v + (int16_t)ParamMOD_CHModBuscalculationValueAdd;
+                        v = (float)uraw / ParamMOD_CHModBuscalculationValueDiff;
+                        v = v + ParamMOD_CHModBuscalculationValueAdd;
+
+                        logDebugP("value: %f | raw: %u", v, uraw);
+                        logDebugP("Diff: %u | add: %i", ParamMOD_CHModBuscalculationValueDiff, ParamMOD_CHModBuscalculationValueAdd);
                     }
                     else
                     {
@@ -1202,12 +1201,12 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                         default:
                             return result;
                         }
-#ifdef Serial_Debug_Modbus
-                        logDebugP("%i", sraw);
-#endif
+
                         //  ************************ MUSS NOCH GEPRÜFT WERDEN !!!!!!!!!!!!!!!!!!!!!!!!!!!
                         v = sraw / (float)ParamMOD_CHModBuscalculationValueDiff;
                         v = v + (int16_t)ParamMOD_CHModBuscalculationValueAdd;
+
+                        logDebugP("value: %f", v);
                     }
                 }
                 else
@@ -1222,22 +1221,19 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
 
                 break;
             case 1: // Double Word Register
-#ifdef Serial_Debug_Modbus
-                logDebugP("| Double Word ");
-#endif
                 // Choose Modbus Funktion (0x03 readHoldingRegisters ODER 0x04 readInputRegisters)
                 switch (ParamMOD_CHModBusReadWordFunktion)
                 {
                 case 3: // 0x03 Lese holding registers
 #ifdef Serial_Debug_Modbus
-                    logDebugP(" 0x03 ");
+                    logDebugP("DPT14| Double Word | 0x03 ");
 #endif
                     result = readHoldingRegisters(registerAddr, 2);
                     break;
 
                 case 4:
 #ifdef Serial_Debug_Modbus
-                    logDebugP(" 0x04 ");
+                    logDebugP("DPT14| Double Word | 0x04 ");
 #endif
                     result = readInputRegisters(registerAddr, 2);
                     break;
@@ -1330,9 +1326,7 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                     lastSentValue.lValue = v;
                 }
 
-#ifdef Serial_Debug_Modbus_Min
                 logDebugP("%f", v, 2);
-#endif
 
                 // Löscht Fehlerspeicher
                 errorState[0] = false;
@@ -1343,6 +1337,7 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
         break; // Ende PDT14
 
     default: // all other dpts
+        logInfoP("Falscher DPT: %i", dpt);
         break;
     } // Ende DPT Wahl Wahl
 

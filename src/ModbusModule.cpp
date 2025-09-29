@@ -119,12 +119,12 @@ void modbusModule::postTransmission()
 void modbusModule::loop(bool configured)
 {
 
-    if (delayCheck(_timer1, 1000))
-    {
-        logDebugP("LoopModule");
-        _timer1 = millis();
-        logDebugP("CH%i:", _channel);
-    }
+    // if (delayCheck(_timer1, 1000))
+    //{
+    //     logDebugP("LoopModule");
+    //     _timer1 = millis();
+    //     logDebugP("CH%i:", _channel);
+    // }
 
     if (configured)
     {
@@ -132,34 +132,55 @@ void modbusModule::loop(bool configured)
             return;
 
         uint8_t processed = 0;
+        uint8_t count = 0;
         uint8_t result;
         do
         {
             _channels[_currentChannel]->loop(); // loop -> only for KNX send send cyclically
+            // Sucht nächsten aktiven und wartenden Channel
+            for (int i = 0; i < ParamMOD_VisibleChannels; i++)
+            {
+                _currentChannel++;
+                if (_channels[_currentChannel]->isActiveCH())
+                    break;
+            }
+
+            
+
+            if (_currentChannel >= ParamMOD_VisibleChannels)
+                _currentChannel = 0;
 
             if (!idle_processing && run_cycle)
             {
-                result = _channels[_channel]->readModbus(true); // read cyclically the Modbus-Channels
-
-                if (result != result_old)
+                if (delayCheck(_timerCycleChannel, ParamMOD_BusDelayRequest * 10) || ParamMOD_BusDelayRequest == 0) // Zeit zwischen zwei Modbus Register Abfragen
                 {
-                    logInfoP("ERROR: %i", result, HEX);
-                    // Diagnose Objekt schicken
-                }
-
-                
-                _channel++;
-
-
-                // setzt _channel counter wieder zurück
-                if (_channel >= ParamMOD_VisibleChannels)
-                {
-                    _channel = 0;
-                    if (!ParamMOD_BusDelayCycle == 0) // Bei Abfrage ohne Pause wird direkt ein neuer Abfragezyklus gestartet
+                    result = _channels[_channel]->readModbus(true); // read cyclically the Modbus-Channels
+                    if (result != result_old)
                     {
-                        run_cycle = false;
-                        _timerCycle = millis();
+                        logInfoP("ERROR: %i", result, HEX);
+                        // Diagnose Objekt schicken
+                        result_old = result;
                     }
+
+                    // Sucht nächsten aktiven und wartenden Channel
+                    for (int i = 0; i < ParamMOD_VisibleChannels; i++)
+                    {
+                        _channel++;
+                        if (_channels[_channel]->isReadyCH())
+                            break;
+                    }
+
+                    // setzt _channel counter wieder zurück
+                    if (_channel >= ParamMOD_VisibleChannels)
+                    {
+                        _channel = 0;
+                        if (ParamMOD_BusDelayCycle != 0) // Bei Abfrage ohne Pause wird direkt ein neuer Abfragezyklus gestartet
+                        {
+                            run_cycle = false;
+                            _timerCycle = millis();
+                        }
+                    }
+                    _timerCycleChannel = millis();
                 }
             }
 
@@ -169,7 +190,7 @@ void modbusModule::loop(bool configured)
                 run_cycle = true;
             }
 
-        } while (openknx.freeLoopIterate(ParamMOD_VisibleChannels, _currentChannel, processed));
+        } while (openknx.freeLoopIterate(ParamMOD_VisibleChannels, count, processed));
     }
 }
 
