@@ -8,6 +8,7 @@ private:
   uint8_t _modbus_ID;
   uint8_t _baud_value;
   uint8_t _parity_value;
+  uint8_t _readCyclecounter=0;
   HardwareSerial &_serial;
   // static bool idle_processing;
   bool _readDone = false;

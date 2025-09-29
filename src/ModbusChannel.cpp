@@ -113,9 +113,15 @@ uint8_t modbusChannel::readModbus(bool readRequest)
 
     if (ParamMOD_CHModBusDptSelection == 0 || ParamMOD_CHModBusDptSelection > 14)
         return 0; // Kein DPT ausgewählt, oder dpt >14, daher abbruch
+   
+        _readCyclecounter++;  //zählt Abfragezähler hoch 
+    if (ParamMOD_CHModBusReadCycle == _readCyclecounter)
+        _readCyclecounter = 0; //setzt Abfragezähler wieder auf Null
+    else
+        return 0; //AbfrageZyclus noch nicht erreicht 
 
+        // if (_channel_aktive == 1 && _slaveID >= 0)
     // ERROR LED
-    // if (_channel_aktive == 1 && _slaveID >= 0)
     //{
     //     ErrorHandlingLED();
     // }

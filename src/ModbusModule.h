@@ -23,8 +23,10 @@ class modbusModule : public OpenKNX::Module, public ModbusMaster
 private:
     uint32_t _timer1 = 0;
     uint32_t _timer2 = 0;
+    uint32_t _timerCycle = 0;
     uint8_t _currentChannel = 0;
     uint8_t _channel = 0;
+    uint8_t result_old =0xFF;
     modbusChannel *_channels[MOD_ChannelCount];
     OpenKNX::Flash::Driver *_modbusStorage = nullptr;
     static bool idle_processing;

@@ -8,7 +8,7 @@
 uint32_t timer_time_between_Reg_Reads;
 uint32_t timer_time_between_Cycle_Reads;
 
-uint32_t idle_Count_Test = 0;
+bool run_cycle = true;
 
 bool modbusModule::idle_processing = false;
 
@@ -135,50 +135,40 @@ void modbusModule::loop(bool configured)
         uint8_t result;
         do
         {
-            _channels[_currentChannel]->loop();
-            if (!idle_processing)
+            _channels[_currentChannel]->loop(); // loop -> only for KNX send send cyclically
+
+            if (!idle_processing && run_cycle)
             {
-                result = _channels[_channel]->readModbus(true);
+                result = _channels[_channel]->readModbus(true); // read cyclically the Modbus-Channels
 
-                switch (result)
+                if (result != result_old)
                 {
-                case 0:
-                    // logDebugP("ERROR");
-                    _channel++;
-                    break;
-                case 1:
-                    _channel++;
-                    break;
-                case 0x02: // ku8MBIllegalDataAddress
-                    _channel++;
-                    break;
-                case 0x03: // ku8MBIllegalDataValue
-                    _channel++;
-                    break;
-                case 0x04: // ku8MBSlaveDeviceFailure
-                    _channel++;
-                    break;
-                case 0xE0: // ku8MBInvalidSlaveID
-                    _channel++;
-                    break;
-                case 0xE1: // ku8MBInvalidFunction
-                    _channel++;
-                    break;
-                case 0xE2: // ku8MBResponseTimedOut
-                    logDebugP("ERROR: Response Timed Out");
-                    _channel++;
-                    break;
-
-                default:
-                    break;
+                    logInfoP("ERROR: %i", result, HEX);
+                    // Diagnose Objekt schicken
                 }
-                if (_channel >= ParamMOD_VisibleChannels)
-                    _channel = 0;
 
-                digitalWrite(15, LOW);
-                logDebugP("cout: %i", idle_Count_Test);
-                idle_Count_Test = 0;
+                
+                _channel++;
+
+
+                // setzt _channel counter wieder zurück
+                if (_channel >= ParamMOD_VisibleChannels)
+                {
+                    _channel = 0;
+                    if (!ParamMOD_BusDelayCycle == 0) // Bei Abfrage ohne Pause wird direkt ein neuer Abfragezyklus gestartet
+                    {
+                        run_cycle = false;
+                        _timerCycle = millis();
+                    }
+                }
             }
+
+            // Wartet xsek bis der nächste komplette Abfragezyklus gestartet wird
+            if (delayCheck(_timerCycle, ParamMOD_BusDelayCycle * 1000))
+            {
+                run_cycle = true;
+            }
+
         } while (openknx.freeLoopIterate(ParamMOD_VisibleChannels, _currentChannel, processed));
     }
 }
