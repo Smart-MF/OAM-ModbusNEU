@@ -4,8 +4,8 @@
 #define Serial_Debug_Modbus_Min
 #define Serial_Debug_Modbus
 
-uint32_t timer1sec;
-uint32_t sendDelay;
+
+
 
 // bool modbusChannel::idle_processing = false;
 
@@ -79,8 +79,7 @@ void modbusChannel::setup()
 void modbusChannel::loop()
 {
     sendKNX();
-    // _readDone = readModbus(true);
-
+ 
     // if (delayCheck(timer1sec, 10000))
     //{
     //     timer1sec = millis();
@@ -88,17 +87,6 @@ void modbusChannel::loop()
     // }
 }
 
-// void modbusChannel::idleCallback()
-//{
-//     idle_processing = true;
-//     openknx.loop();
-//     idle_processing = false;
-// }
-
-bool modbusChannel::readDone()
-{
-    return _readDone;
-}
 
 bool modbusChannel::isActiveCH()
 {
@@ -221,6 +209,7 @@ void modbusChannel::sendKNX()
     // if cyclic sending is requested, send the last value if one is available
     if (lCycle && delayCheck(sendDelay, lCycle))
     {
+        logInfoP("CH%i",_channelIndex);
         KoMOD_GO_BASE_.objectWritten();
         sendDelay = millis();
     }
@@ -238,7 +227,7 @@ void modbusChannel::sendKNX()
 uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
 {
 
-    bool lSend; // = readRequest; // && !valueValid; // Flag if value should be send on KNX
+    bool lSend = 0; // = readRequest; // && !valueValid; // Flag if value should be send on KNX
     uint8_t result = 0;
     uint16_t registerAddr = ParamMOD_CHModbusRegister; // adjustRegisterAddress(ParamMOD_CHModbusRegister, ParamMOD);
 

@@ -25,6 +25,7 @@ private:
     uint32_t _timer2 = 0;
     uint32_t _timerCycle = 0;
     uint32_t _timerCycleChannel = 0;
+    uint32_t _timerCycleSendChannel = 0;
     uint8_t _currentChannel = 0;
     uint8_t _channel = 0;
     uint8_t result_old = 0x01;
@@ -34,9 +35,11 @@ private:
 
     void setupCustomFlash();
     void setupChannels();
+    int findNextActive(int size, int currentIndex);
+    int findNextReady(int size, int currentIndex);
 #ifdef ARDUINO_ARCH_RP2040
 #ifndef OPENKNX_USB_EXCHANGE_IGNORE
-    void registerUsbExchangeCallbacks();
+        void registerUsbExchangeCallbacks();
 #endif
 #endif
     static void idleCallback();

@@ -116,6 +116,30 @@ void modbusModule::postTransmission()
     digitalWrite(SMARTMF_MODBUS_DIR_PIN, 0);
 }
 
+int modbusModule::findNextActive(int size, int currentIndex)
+{
+    for (int i = 1; i <= size; i++) // i=1, damit wir nicht wieder currentIndex selbst nehmen
+    {
+        int idx = (currentIndex + i) % size;
+        if (_channels[idx]->isActiveCH())
+        {
+            // logInfoP("next: %i", idx);
+            return idx; // hier haben wir den nächsten activen CH gefunden
+        }
+    }
+    return 0;
+}
+
+int modbusModule::findNextReady(int size, int currentIndex)
+{
+    for (int i = currentIndex + 1; i < size; i++)
+    {
+        if (_channels[i]->isReadyCH())
+            return i;
+    }
+    return size; //
+}
+
 void modbusModule::loop(bool configured)
 {
 
@@ -136,19 +160,12 @@ void modbusModule::loop(bool configured)
         uint8_t result;
         do
         {
-            _channels[_currentChannel]->loop(); // loop -> only for KNX send send cyclically
-            // Sucht nächsten aktiven und wartenden Channel
-            for (int i = 0; i < ParamMOD_VisibleChannels; i++)
+            if (delayCheck(_timerCycleSendChannel, 5))
             {
-                _currentChannel++;
-                if (_channels[_currentChannel]->isActiveCH())
-                    break;
+                _channels[_currentChannel]->loop(); // loop -> only for KNX send send cyclically
+                _currentChannel = findNextActive(ParamMOD_VisibleChannels, _currentChannel);
+                _timerCycleSendChannel;
             }
-
-            
-
-            if (_currentChannel >= ParamMOD_VisibleChannels)
-                _currentChannel = 0;
 
             if (!idle_processing && run_cycle)
             {
@@ -163,12 +180,7 @@ void modbusModule::loop(bool configured)
                     }
 
                     // Sucht nächsten aktiven und wartenden Channel
-                    for (int i = 0; i < ParamMOD_VisibleChannels; i++)
-                    {
-                        _channel++;
-                        if (_channels[_channel]->isReadyCH())
-                            break;
-                    }
+                    _channel = findNextReady(ParamMOD_VisibleChannels, _channel);
 
                     // setzt _channel counter wieder zurück
                     if (_channel >= ParamMOD_VisibleChannels)

@@ -5,14 +5,14 @@
 class modbusChannel : public OpenKNX::Channel, public ModbusMaster
 {
 private:
+  uint32_t sendDelay;
+  uint32_t timer1sec;
+
   uint8_t _modbus_ID;
   uint8_t _baud_value;
   uint8_t _parity_value;
   uint8_t _readCyclecounter = 0;
   HardwareSerial &_serial;
-  // static bool idle_processing;
-  bool _readDone = false;
-  bool lSend = false;
 
   bool errorState[2];
   bool valueValid;
