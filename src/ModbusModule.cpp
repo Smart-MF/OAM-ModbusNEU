@@ -174,8 +174,18 @@ void modbusModule::loop(bool configured)
                     result = _channels[_channel]->readModbus(true); // read cyclically the Modbus-Channels
                     if (result != result_old)
                     {
-                        logInfoP("ERROR: %i", result, HEX);
+                        if(result==1)
+                        {
+                        logInfoP("CH%i: run again",_channel);
+                        error[_channel] = false;
+                        }
+                        else
+                        {
+                        logInfoP("CH%i: ERROR: %i",_channel, result, HEX);
+                        error[_channel] = true;
+                        }
                         // Diagnose Objekt schicken
+                        KoMOD_DebugModbus.value(result,DPT_Value_1_Ucount);
                         result_old = result;
                     }
 
