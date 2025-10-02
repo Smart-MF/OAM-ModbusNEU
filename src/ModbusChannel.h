@@ -9,12 +9,13 @@ private:
   uint32_t timer1sec;
 
   uint8_t _modbus_ID;
+  uint16_t _registerAddr; 
   uint8_t _baud_value;
   uint8_t _parity_value;
   uint8_t _readCyclecounter = 0;
   HardwareSerial &_serial;
 
-  bool errorState[2];
+  bool errorState[ParamMOD_VisibleChannels];
   bool valueValid;
   bool _readyToSend;
   uint8_t _skipCounter;
@@ -34,17 +35,15 @@ private:
 
   bool modbusParitySerial(uint32_t baud, HardwareSerial &serial);
   bool modbusInitSerial(HardwareSerial &serial);
-  void ErrorHandling();
-  void ErrorHandlingLED();
   void sendKNX();
 
 public:
-  modbusChannel(uint8_t index, uint8_t _baud_value, uint8_t _parity_value, HardwareSerial &serial);
+  modbusChannel(uint8_t index, uint8_t baud_value, uint8_t parity_value, HardwareSerial &serial);
   bool isActiveCH();
   bool readDone();
   bool isReadyCH();
+  uint8_t modbusChannel::getModbusID();
   inline uint16_t adjustRegisterAddress(uint16_t u16ReadAddress, uint8_t RegisterStart);
-
   uint8_t readModbus(bool readRequest);
   bool sendModbus();
   uint8_t modbusToKnx(uint8_t dpt, bool readRequest);

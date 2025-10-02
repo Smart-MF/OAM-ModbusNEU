@@ -533,7 +533,7 @@
             </ParameterRefs>
             <ComObjectTable>
               <!-- ComOject Debug Modbus-->
-              <ComObject Id="%AID%_O-%T%000002" Name="DebugModbus" Text="Fehler ModBus Kommunikation" Number="20" FunctionText="Ausgang (bit0-6 = Kanal , bit7 = Status Error (1 = Error)" ObjectSize="1 Byte" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-10" />
+              <ComObject Id="%AID%_O-%T%000002" Name="DebugModbus" Text="Fehler ModBus Kommunikation" Number="20" FunctionText="Diag-Ausgang" ObjectSize="2 Byte" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-7-1" />
             </ComObjectTable>
             <ComObjectRefs>
               <!-- Debug -->

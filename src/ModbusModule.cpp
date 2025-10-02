@@ -140,6 +140,33 @@ int modbusModule::findNextReady(int size, int currentIndex)
     return size; //
 }
 
+void modbusModule::errorHandling()
+{
+    ErrorHandlingLED();
+}
+
+void modbusModule::ErrorHandlingLED()
+{
+    bool error = false;
+    for (int i = 0; i < ParamMOD_VisibleChannels; i++)
+    {
+        if (_error[i])
+        {
+            error = true;
+        }
+    }
+    if (error)
+            // setLED_ERROR(HIGH);
+#ifdef DEVICE_SMARTMF_1TE_MODBUS
+        digitalWrite(SMARTMF_LED, HIGH);
+#endif
+    else
+            // setLED_ERROR(LOW);
+#ifdef DEVICE_SMARTMF_1TE_MODBUS
+        digitalWrite(SMARTMF_LED, LOW);
+#endif
+}
+
 void modbusModule::loop(bool configured)
 {
 
@@ -158,14 +185,16 @@ void modbusModule::loop(bool configured)
         uint8_t processed = 0;
         uint8_t count = 0;
         uint8_t result;
+        uint16_t diag_register = 0;
         do
         {
-            if (delayCheck(_timerCycleSendChannel, 5))
-            {
-                _channels[_currentChannel]->loop(); // loop -> only for KNX send send cyclically
-                _currentChannel = findNextActive(ParamMOD_VisibleChannels, _currentChannel);
-                _timerCycleSendChannel;
-            }
+            errorHandling();
+            // if (delayCheck(_timerCycleSendChannel, 5))
+            //{
+            _channels[_currentChannel]->loop(); // loop -> only for KNX send send cyclically
+            _currentChannel = findNextActive(ParamMOD_VisibleChannels, _currentChannel);
+            //    _timerCycleSendChannel;
+            //}
 
             if (!idle_processing && run_cycle)
             {
@@ -174,18 +203,19 @@ void modbusModule::loop(bool configured)
                     result = _channels[_channel]->readModbus(true); // read cyclically the Modbus-Channels
                     if (result != result_old)
                     {
-                        if(result==1)
+                        if (result == 1)
                         {
-                        logInfoP("CH%i: run again",_channel);
-                        error[_channel] = false;
+                            logInfoP("CH%i: run again", _channel);
+                            _error[_channel] = false;
                         }
                         else
                         {
-                        logInfoP("CH%i: ERROR: %i",_channel, result, HEX);
-                        error[_channel] = true;
+                            logInfoP("CH%i: ERROR: %i", _channel, result, HEX);
+                            _error[_channel] = true;
                         }
                         // Diagnose Objekt schicken
-                        KoMOD_DebugModbus.value(result,DPT_Value_1_Ucount);
+                        diag_register = ((uint16_t)result << 8) | _channel; // Setzt aktuellen CH auf LSB & Error Code auf MSB
+                        KoMOD_DebugModbus.value(result, DPT_Value_1_Ucount);
                         result_old = result;
                     }
 

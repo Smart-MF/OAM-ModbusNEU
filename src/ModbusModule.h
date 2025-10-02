@@ -21,6 +21,7 @@
 class modbusModule : public OpenKNX::Module, public ModbusMaster
 {
 private:
+    bool _error[ParamMOD_VisibleChannels];
     uint32_t _timer1 = 0;
     uint32_t _timer2 = 0;
     uint32_t _timerCycle = 0;
@@ -37,9 +38,11 @@ private:
     void setupChannels();
     int findNextActive(int size, int currentIndex);
     int findNextReady(int size, int currentIndex);
+    void errorHandling();
+    void ErrorHandlingLED();
 #ifdef ARDUINO_ARCH_RP2040
 #ifndef OPENKNX_USB_EXCHANGE_IGNORE
-        void registerUsbExchangeCallbacks();
+    void registerUsbExchangeCallbacks();
 #endif
 #endif
     static void idleCallback();
