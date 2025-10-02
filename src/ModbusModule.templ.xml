@@ -23,7 +23,7 @@
                 <Parameter Id="%AID%_UP-%T%%CCC%002" Name="CH%C%ModBusBusDirection" Offset="2" BitOffset="0" ParameterType="%AID%_PT-ModbusDirection" Text="Richtung" SuffixText="" Value="1" />  <!-- 2bit -->
                 <Parameter Id="%AID%_UP-%T%%CCC%009" Name="CH%C%ModBusRegisterPosDPT5001" Offset="2" BitOffset="2" ParameterType="%AID%_PT-RegisterPosDPT56" Text="Register Position" Value="1" /> <!-- 3bit -->
                 <Parameter Id="%AID%_UP-%T%%CCC%010" Name="CH%C%ModBusRegisterPosDPT5" Offset="2" BitOffset="5" ParameterType="%AID%_PT-RegisterPosDPT56" Text="Register Position" Value="1" /> <!-- 3bit -->
-                <Parameter Id="%AID%_UP-%T%%CCC%003" Name="CH%C%ModbusRegister" Offset="3" BitOffset="0" ParameterType="%AID%_PT-RegisterAddress" Text="Register" SuffixText="" Value="0" /> <!-- 4Byte -->
+                <Parameter Id="%AID%_UP-%T%%CCC%003" Name="CH%C%ModbusRegister" Offset="3" BitOffset="0" ParameterType="%AID%_PT-RegisterAddress" Text="Register(Dezimal)" SuffixText="" Value="0" /> <!-- 4Byte -->
               </Union>
               <Union SizeInBit="45">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="7" BitOffset="0" />

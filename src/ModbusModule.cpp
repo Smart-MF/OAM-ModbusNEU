@@ -58,8 +58,7 @@ void modbusModule::setupChannels()
     pinMode(SMARTMF_MODBUS_DIR_PIN, OUTPUT);
     digitalWrite(SMARTMF_MODBUS_DIR_PIN, 0);
 
-    // for (uint8_t i = 0; i < ParamMOD_VisibleChannels; i++)
-    for (uint8_t i = 0; i < 10; i++)
+    for (uint8_t i = 0; i < ParamMOD_VisibleChannels; i++)
     {
         _channels[i] = new modbusChannel(i, 3, 3, SMARTMF_MODBUS_SERIAL);
         _channels[i]->setup();
@@ -156,12 +155,12 @@ void modbusModule::ErrorHandlingLED()
         }
     }
     if (error)
-            // setLED_ERROR(HIGH);
+    // setLED_ERROR(HIGH);
 #ifdef DEVICE_SMARTMF_1TE_MODBUS
         digitalWrite(SMARTMF_LED, HIGH);
 #endif
     else
-            // setLED_ERROR(LOW);
+    // setLED_ERROR(LOW);
 #ifdef DEVICE_SMARTMF_1TE_MODBUS
         digitalWrite(SMARTMF_LED, LOW);
 #endif

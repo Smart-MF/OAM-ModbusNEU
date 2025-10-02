@@ -13,7 +13,7 @@
 #endif
 #define MAIN_OpenKnxId 0xA2
 #define MAIN_ApplicationNumber 48
-#define MAIN_ApplicationVersion 22
+#define MAIN_ApplicationVersion 23
 #define MAIN_ApplicationEncoding iso-8859-15
 #define MAIN_ParameterSize 10393
 #define MAIN_MaxKoNumber 369
@@ -325,7 +325,7 @@
 #define MOD_CHModBusRegisterPosDPT5              2      // 3 Bits, Bit 2-0
 #define     MOD_CHModBusRegisterPosDPT5Mask 0x07
 #define     MOD_CHModBusRegisterPosDPT5Shift 0
-#define MOD_CHModbusRegister                     3      // int32_t
+#define MOD_CHModbusRegister                     3      // uint32_t
 #define MOD_CHModBusSendDelay                    7      // uint32_t
 #define MOD_CHModBusValueChange                 11      // int32_t
 #define MOD_CHModBusReadCycle                   15      // 8 Bits, Bit 7-0
@@ -393,7 +393,7 @@
 // Register Position
 #define ParamMOD_CHModBusRegisterPosDPT5             (knx.paramByte(MOD_ParamCalcIndex(MOD_CHModBusRegisterPosDPT5)) & MOD_CHModBusRegisterPosDPT5Mask)
 // Register
-#define ParamMOD_CHModbusRegister                    ((int32_t)knx.paramInt(MOD_ParamCalcIndex(MOD_CHModbusRegister)))
+#define ParamMOD_CHModbusRegister                    (knx.paramInt(MOD_ParamCalcIndex(MOD_CHModbusRegister)))
 //    zyklisch senden (0=nicht senden)
 #define ParamMOD_CHModBusSendDelay                   (knx.paramInt(MOD_ParamCalcIndex(MOD_CHModBusSendDelay)))
 //    abs Abweichung senden (0=nicht senden)

@@ -120,7 +120,7 @@
               <!-- *************  -->
               <!-- ModBus ID  -->
               <ParameterType Id="%AID%_PT-BusID" Name="BusID">
-                <TypeNumber SizeInBit="8" Type="unsignedInt" minInclusive="0" maxInclusive="247" /> 
+                <TypeNumber SizeInBit="8" Type="unsignedInt" minInclusive="0" maxInclusive="247" />
               </ParameterType>
               <!-- ModBus DPT  -->
               <ParameterType Id="%AID%_PT-DptSelection" Name="DptSelection">
@@ -181,7 +181,7 @@
               </ParameterType>
               <!-- Set Modbus Register Address KNX -->
               <ParameterType Id="%AID%_PT-RegisterAddress" Name="RegisterAddress">
-                <TypeNumber SizeInBit="32" Type="signedInt" minInclusive="0" maxInclusive="65535" />
+                <TypeNumber SizeInBit="32" Type="unsignedInt" minInclusive="0" maxInclusive="65535" />
               </ParameterType>
               <!-- senden bei Wertänderung -->
               <ParameterType Id="%AID%_PT-ValueChange" Name="ValueChange">
@@ -533,7 +533,7 @@
             </ParameterRefs>
             <ComObjectTable>
               <!-- ComOject Debug Modbus-->
-              <ComObject Id="%AID%_O-%T%000002" Name="DebugModbus" Text="Fehler ModBus Kommunikation" Number="20" FunctionText="Diag-Ausgang" ObjectSize="2 Byte" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-7-1" />
+              <ComObject Id="%AID%_O-%T%000002" Name="DebugModbus" Text="Fehler ModBus Kommunikation" Number="20" FunctionText="Diag-Ausgang" ObjectSize="2 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-7-1" />
             </ComObjectTable>
             <ComObjectRefs>
               <!-- Debug -->

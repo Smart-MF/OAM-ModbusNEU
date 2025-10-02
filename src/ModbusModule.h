@@ -21,7 +21,7 @@
 class modbusModule : public OpenKNX::Module, public ModbusMaster
 {
 private:
-    bool _error[ParamMOD_VisibleChannels];
+    bool _error[200];
     uint32_t _timer1 = 0;
     uint32_t _timer2 = 0;
     uint32_t _timerCycle = 0;

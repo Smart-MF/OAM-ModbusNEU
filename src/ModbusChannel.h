@@ -9,13 +9,13 @@ private:
   uint32_t timer1sec;
 
   uint8_t _modbus_ID;
-  uint16_t _registerAddr; 
+  uint16_t _registerAddr;
   uint8_t _baud_value;
   uint8_t _parity_value;
   uint8_t _readCyclecounter = 0;
   HardwareSerial &_serial;
 
-  bool errorState[ParamMOD_VisibleChannels];
+  bool errorState[2];
   bool valueValid;
   bool _readyToSend;
   uint8_t _skipCounter;
@@ -42,7 +42,7 @@ public:
   bool isActiveCH();
   bool readDone();
   bool isReadyCH();
-  uint8_t modbusChannel::getModbusID();
+  uint8_t getModbusID();
   inline uint16_t adjustRegisterAddress(uint16_t u16ReadAddress, uint8_t RegisterStart);
   uint8_t readModbus(bool readRequest);
   bool sendModbus();
