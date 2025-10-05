@@ -2,3 +2,5 @@ ToDos:
 
 - Register Position rauswerfen 
 - Baudrate/Parity/... in Slave Direkt aufnehmen
+
+- SMARTMF_MODBUS_SERIAL in HW Konfig mit aufnehmen 
