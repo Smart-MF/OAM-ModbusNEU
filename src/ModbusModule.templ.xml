@@ -332,8 +332,8 @@
                                 <choose ParamRefId="%AID%_UP-%T%%CCC%002_R-%T%%CCC%00201">
                                   <!-- KNX - ModBus -->
                                   <when test="0">
-                                    <ParameterRefRef RefId="%AID%_UP-%T%%CCC%009_R-%T%%CCC%00901" />
-                                    <choose ParamRefId="%AID%_UP-%T%%CCC%009_R-%T%%CCC%00901">
+                                    <ParameterRefRef RefId="%AID%_UP-%T%%CCC%010_R-%T%%CCC%01001" />
+                                    <choose ParamRefId="%AID%_UP-%T%%CCC%010_R-%T%%CCC%01001">
                                       <when test="3">
                                         <ParameterRefRef RefId="%AID%_UP-%T%%CCC%020_R-%T%%CCC%02001" />
                                         <ParameterRefRef RefId="%AID%_UP-%T%%CCC%030_R-%T%%CCC%03001" />
@@ -345,8 +345,8 @@
                                   <!-- Modbus - KNX -->
                                   <when test="1">
                                     <ComObjectRefRef RefId="%AID%_O-%T%%CCC%001_R-%T%%CCC%00116" />
-                                    <ParameterRefRef RefId="%AID%_UP-%T%%CCC%009_R-%T%%CCC%00901" />
-                                    <choose ParamRefId="%AID%_UP-%T%%CCC%009_R-%T%%CCC%00901">
+                                    <ParameterRefRef RefId="%AID%_UP-%T%%CCC%010_R-%T%%CCC%01001" />
+                                    <choose ParamRefId="%AID%_UP-%T%%CCC%010_R-%T%%CCC%01001">
                                       <when test="3">
                                         <ParameterRefRef RefId="%AID%_UP-%T%%CCC%020_R-%T%%CCC%02001" />
                                         <ParameterRefRef RefId="%AID%_UP-%T%%CCC%030_R-%T%%CCC%03001" />

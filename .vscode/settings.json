@@ -3,6 +3,10 @@
         "*.yaml": "esphome",
         "ostream": "cpp",
         "chrono": "cpp",
-        "functional": "cpp"
+        "functional": "cpp",
+        "optional": "cpp",
+        "format": "cpp",
+        "system_error": "cpp",
+        "regex": "cpp"
     }
 }

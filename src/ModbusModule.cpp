@@ -115,6 +115,21 @@ void modbusModule::postTransmission()
     digitalWrite(SMARTMF_MODBUS_DIR_PIN, 0);
 }
 
+uint8_t modbusModule::findNextReadyToSend(int size, int currentIndex)
+{
+    for (int i = 1; i <= size; i++) // i=1, damit wir nicht wieder currentIndex selbst nehmen
+    {
+        // int idx = (currentIndex + i) % size;
+        if (readyToSendModbus[i])
+        {
+            // logInfoP("next: %i", idx);
+            readyToSendModbus[i] = false;
+            return i; // idx; // hier haben wir den nächsten activen CH gefunden
+        }
+    }
+    return 0;
+}
+
 int modbusModule::findNextActive(int size, int currentIndex)
 {
     for (int i = 1; i <= size; i++) // i=1, damit wir nicht wieder currentIndex selbst nehmen
@@ -192,6 +207,16 @@ void modbusModule::loop(bool configured)
         do
         {
             errorHandling();
+
+            if (!idle_processing)
+            {
+                uint8_t ch = findNextReadyToSend(ParamMOD_VisibleChannels, _currentChannel);
+
+                if (ch != 0)
+                {
+                    _channels[ch - 1]->knxToModbus();
+                }
+            }
             // if (delayCheck(_timerCycleSendChannel, 5))
             //{
             _channels[_currentChannel]->loop(); // loop -> only for KNX send send cyclically
@@ -269,8 +294,22 @@ void modbusModule::loop1(bool configured)
 
 void modbusModule::processInputKo(GroupObject &ko)
 {
-    // logDebugP("processInputKo GA%04X", ko.asap());
-    // logHexDebugP(ko.valueRef(), ko.valueSize());
+    logDebugP("processInputKo GA%04X", ko.asap());
+    logHexDebugP(ko.valueRef(), ko.valueSize());
+
+    // #define MOD_KoCalcNumber(index) (index + MOD_KoBlockOffset + _channelIndex * MOD_KoBlockSize)
+    // #define MOD_KoCalcIndex(number) ((number >= MOD_KoCalcNumber(0) && number < MOD_KoCalcNumber(MOD_KoBlockSize)) ? (number - MOD_KoBlockOffset) % MOD_KoBlockSize : -1)
+    // #define MOD_KoCalcChannel(number) ((number >= MOD_KoBlockOffset && number < MOD_KoBlockOffset + MOD_ChannelCount * MOD_KoBlockSize) ? (number - MOD_KoBlockOffset) / MOD_KoBlockSize : -1)
+
+    // Compute modbus channel number
+    // int channel = (iKo.asap() - MOD_KoOffset - MOD_KoGO_BASE_) / MOD_KoBlockSize;
+    int channel = MOD_KoCalcChannel(ko.asap());
+    if (channel >= 0 && channel < MOD_ChannelCount && _channels[channel]->getDirection() == 0)
+    {
+        logDebugP("->KO: %i", channel + 1);
+        readyToSendModbus[channel + 1] = true;
+        //_channels[_currentChannel]->knxToModbus();
+    }
 }
 
 void modbusModule::showHelp()

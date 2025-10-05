@@ -43,11 +43,12 @@ public:
   bool readDone();
   bool isReadyCH();
   uint8_t getModbusID();
+  bool getDirection();
   inline uint16_t adjustRegisterAddress(uint16_t u16ReadAddress, uint8_t RegisterStart);
   uint8_t readModbus(bool readRequest);
   bool sendModbus();
   uint8_t modbusToKnx(uint8_t dpt, bool readRequest);
-  uint8_t knxToModbus(uint8_t dpt, bool readRequest);
+  uint8_t knxToModbus();
   void printDebugResult(const char *dpt, uint16_t registerAddr, uint8_t result);
   uint8_t sendProtocol(uint16_t registerAddr, uint16_t u16value);
   const std::string name() override;

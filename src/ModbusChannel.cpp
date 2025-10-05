@@ -137,6 +137,11 @@ uint8_t modbusChannel::getModbusID()
     return _modbus_ID;
 }
 
+bool modbusChannel::getDirection()
+{
+    return ParamMOD_CHModBusBusDirection;
+}
+
 uint8_t modbusChannel::readModbus(bool readRequest)
 {
     // 1. DPT auslesen: bei 0 abbrechen
@@ -175,7 +180,7 @@ uint8_t modbusChannel::readModbus(bool readRequest)
         if (_readyToSend)
         {
             _readyToSend = false;
-            return sendModbus();
+            // return sendModbus();
         }
         return false;
         break;
@@ -190,16 +195,16 @@ uint8_t modbusChannel::readModbus(bool readRequest)
     }
 }
 
-bool modbusChannel::sendModbus()
-{
-    uint8_t dpt = ParamMOD_CHModBusDptSelection;
-    if (dpt == 0) // Kein DPT ausgewählt, daher abbruch
-        return false;
-    else if (dpt > 14) // >14 dann ist der dpt nicht in Spec, damit abbruch
-        return false;
-
-    return knxToModbus(dpt, true);
-}
+// bool modbusChannel::sendModbus()
+//{
+//     uint8_t dpt = ParamMOD_CHModBusDptSelection;
+//     if (dpt == 0) // Kein DPT ausgewählt, daher abbruch
+//         return false;
+//     else if (dpt > 14) // >14 dann ist der dpt nicht in Spec, damit abbruch
+//         return false;
+//
+//     return knxToModbus(dpt, true);
+// }
 
 // void modbusChannel::ErrorHandling()
 //{
@@ -1348,11 +1353,14 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
 //
 //*****************************************************************************************************************************************
 //*****************************************************************************************************************************************
-
-uint8_t modbusChannel::knxToModbus(uint8_t dpt, bool readRequest)
+uint8_t modbusChannel::knxToModbus()
 {
+    if (ParamMOD_CHModBusBusDirection != 0)
+        return 0xFF;
+
     uint8_t result = 0;
     uint16_t _registerAddr = ParamMOD_CHModbusRegister; // adjustRegisterAddress(ParamMOD_CHModbusRegister);
+    // GroupObject ko = KoMOD_GO_BASE_;
 
 #ifdef Serial_Debug_Modbus_Min
     logDebugP("KNX: CH%i", (_channelIndex + 1));
@@ -1361,9 +1369,9 @@ uint8_t modbusChannel::knxToModbus(uint8_t dpt, bool readRequest)
     //*****************************************************************************************************************************************
     //*****************************************  DPT 1.001 ************************************************************************************
     //*****************************************************************************************************************************************
-    if (dpt == 1)
+    if (ParamMOD_CHModBusDptSelection == 1)
     {
-        if (readRequest)
+        if (true)
         {
             bool v = (bool)KoMOD_GO_BASE_.value(DPT_Switch) ^ (ParamMOD_CHModBusInputTypInvDpt1);
 
@@ -1391,9 +1399,9 @@ uint8_t modbusChannel::knxToModbus(uint8_t dpt, bool readRequest)
     //*****************************************************************************************************************************************
     //*****************************************  DPT 5.004 ************************************************************************************
     //*****************************************************************************************************************************************
-    else if (4 == dpt)
+    else if (4 == ParamMOD_CHModBusDptSelection)
     {
-        if (readRequest)
+        if (true)
         {
             result = sendProtocol(_registerAddr, KoMOD_GO_BASE_.value(DPT_Percent_U8));
             printDebugResult("5.004", _registerAddr, result);
@@ -1402,38 +1410,41 @@ uint8_t modbusChannel::knxToModbus(uint8_t dpt, bool readRequest)
     //*****************************************************************************************************************************************
     //*****************************************  DPT 5.010 ************************************************************************************
     //*****************************************************************************************************************************************
-    else if (5 == dpt)
+    else if (5 == ParamMOD_CHModBusDptSelection)
     {
-        if (readRequest)
+
+        uint16_t v = KoMOD_GO_BASE_.value(DPT_Value_1_Ucount);
+
+        logDebugP("DPT5.10  value: %i", v);
+
+        switch (ParamMOD_CHModBusRegisterPosDPT5)
         {
-            uint16_t v = KoMOD_GO_BASE_.value(DPT_Value_1_Ucount);
+        case 1: // High Byte
+            v <<= 8;
+            break;
+        case 2: // Low Byte
+            // already at correct position
+            break;
+        case 3: // frei Wählbar
+            v &= ParamMOD_CHModbusCountBitsDPT56;
+            v <<= ParamMOD_CHModBusOffsetRight5;
+            break;
+        default:
+            logDebugP("DPT5: ER: %i", ParamMOD_CHModBusRegisterPosDPT5);
+            return 0x02;
+        } // Ende Register Pos
 
-            switch (ParamMOD_CHModBusRegisterPosDPT5)
-            {
-            case 1: // High Byte
-                v <<= 8;
-                break;
-            case 2: // Low Byte
-                // already at correct position
-                break;
-            case 3: // frei Wählbar
-                v &= ParamMOD_CHModbusCountBitsDPT56;
-                v <<= ParamMOD_CHModBusOffsetRight5;
-                break;
-            default:
-                return result;
-            } // Ende Register Pos
-
-            result = sendProtocol(_registerAddr, v);
-            printDebugResult("5.001", _registerAddr, result);
-        }
+        logDebugP("start");
+        result = sendProtocol(_registerAddr, v);
+        logDebugP("stopp");
+        printDebugResult("5.001", _registerAddr, result);
     }
     //*****************************************************************************************************************************************
     //*****************************************  DPT 7 ***************************************************************************************
     //*****************************************************************************************************************************************
-    else if (7 == dpt)
+    else if (7 == ParamMOD_CHModBusDptSelection)
     {
-        if (readRequest)
+        if (true)
         {
             uint16_t v = KoMOD_GO_BASE_.value(DPT_Value_2_Ucount);
 
@@ -1457,9 +1468,9 @@ uint8_t modbusChannel::knxToModbus(uint8_t dpt, bool readRequest)
     //*****************************************************************************************************************************************
     //*****************************************  DPT 8 signed 16Bit ***************************************************************************
     //*****************************************************************************************************************************************
-    else if (8 == dpt)
+    else if (8 == ParamMOD_CHModBusDptSelection)
     {
-        if (readRequest)
+        if (true)
         {
             result = sendProtocol(_registerAddr, KoMOD_GO_BASE_.value(DPT_Value_2_Count));
             printDebugResult("8", _registerAddr, result);
@@ -1468,9 +1479,9 @@ uint8_t modbusChannel::knxToModbus(uint8_t dpt, bool readRequest)
     //*****************************************************************************************************************************************
     //*****************************************  DPT 9 ***************************************************************************************
     //*****************************************************************************************************************************************
-    else if (9 == dpt)
+    else if (9 == ParamMOD_CHModBusDptSelection)
     {
-        if (readRequest)
+        if (true)
         {
             float raw = KoMOD_GO_BASE_.value(DPT_Value_Temp);
             uint16_t v;
@@ -1505,9 +1516,9 @@ uint8_t modbusChannel::knxToModbus(uint8_t dpt, bool readRequest)
     //*****************************************************************************************************************************************
     //*****************************************  DPT 12 ***************************************************************************************
     //*****************************************************************************************************************************************
-    else if (12 == dpt)
+    else if (12 == ParamMOD_CHModBusDptSelection)
     {
-        if (readRequest)
+        if (true)
         {
             uint32_t v = KoMOD_GO_BASE_.value(DPT_Value_4_Ucount);
             setTransmitBuffer(0, v >> 16);
@@ -1519,9 +1530,9 @@ uint8_t modbusChannel::knxToModbus(uint8_t dpt, bool readRequest)
     //*****************************************************************************************************************************************
     //*****************************************  DPT 13 ***************************************************************************************
     //*****************************************************************************************************************************************
-    else if (13 == dpt)
+    else if (13 == ParamMOD_CHModBusDptSelection)
     {
-        if (readRequest)
+        if (true)
         {
             int32_t v = KoMOD_GO_BASE_.value(DPT_Value_4_Count);
             setTransmitBuffer(0, v >> 16);
@@ -1533,9 +1544,9 @@ uint8_t modbusChannel::knxToModbus(uint8_t dpt, bool readRequest)
     //*****************************************************************************************************************************************
     //*****************************************  DPT 14 ***************************************************************************************
     //*****************************************************************************************************************************************
-    else if (14 == dpt)
+    else if (14 == ParamMOD_CHModBusDptSelection)
     {
-        if (readRequest)
+        if (true)
         {
             float raw = KoMOD_GO_BASE_.value(DPT_Value_Acceleration_Angular);
             union floatint
