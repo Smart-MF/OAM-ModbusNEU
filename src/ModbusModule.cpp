@@ -5,8 +5,8 @@
 // #define DEVICE_SMARTMF_MODBUS_RTU_3BE
 #define SMARTMF_MODBUS_SERIAL Serial2
 
-uint32_t timer_time_between_Reg_Reads;
-uint32_t timer_time_between_Cycle_Reads;
+// uint32_t timer_time_between_Reg_Reads;
+// uint32_t timer_time_between_Cycle_Reads;
 
 bool run_cycle = true;
 
@@ -115,7 +115,7 @@ void modbusModule::postTransmission()
     digitalWrite(SMARTMF_MODBUS_DIR_PIN, 0);
 }
 
-uint8_t modbusModule::findNextReadyToSend(int size, int currentIndex)
+uint8_t modbusModule::findNextReadyToSend(int size)
 {
     for (int i = 1; i <= size; i++) // i=1, damit wir nicht wieder currentIndex selbst nehmen
     {
@@ -208,57 +208,70 @@ void modbusModule::loop(bool configured)
         {
             errorHandling();
 
-            if (!idle_processing)
-            {
-                uint8_t ch = findNextReadyToSend(ParamMOD_VisibleChannels, _currentChannel);
-
-                if (ch != 0)
-                {
-                    _channels[ch - 1]->knxToModbus();
-                }
-            }
-            // if (delayCheck(_timerCycleSendChannel, 5))
-            //{
             _channels[_currentChannel]->loop(); // loop -> only for KNX send send cyclically
             _currentChannel = findNextActive(ParamMOD_VisibleChannels, _currentChannel);
-            //    _timerCycleSendChannel;
+
+            // if (!idle_processing)
+            //{
+            //     uint8_t ch = findNextReadyToSend(ParamMOD_VisibleChannels, _currentChannel);
+            //
+            //    if (ch != 0)
+            //    {
+            //        if (delayCheck(_timerCycleSendChannel, 10))
+            //        {
+            //            _channels[ch - 1]->knxToModbus();
+            //            _timerCycleSendChannel;
+            //        }
+            //    }
             //}
 
-            if (!idle_processing && run_cycle)
+            if (!idle_processing) //&& run_cycle)
             {
                 if (delayCheck(_timerCycleChannel, 35 + (ParamMOD_BusDelayRequest * 10))) // Zeit zwischen zwei Modbus Register Abfragen
                 {
-                    result = _channels[_channel]->readModbus(true); // read cyclically the Modbus-Channels
-                    if (result != result_old[_channel])
+                    // KNX to MODBUS Abfrage
+                    uint8_t ch = findNextReadyToSend(ParamMOD_VisibleChannels);
+
+                    if (ch != 0)
                     {
-                        if (result == 1)
-                        {
-                            logInfoP("CH%i: run again", _channel);
-                            _error[_channel] = false;
-                        }
-                        else
-                        {
-                            logInfoP("CH%i: ERROR: %i", _channel, result, HEX);
-                            _error[_channel] = true;
-                        }
-                        // Diagnose Objekt schicken
-                        diag_register = ((uint16_t)result << 8) | _channel; // Setzt aktuellen CH auf LSB & Error Code auf MSB
-                        KoMOD_DebugModbus.value(diag_register, DPT_Value_2_Ucount);
-                        result_old[_channel] = result;
+                        _channels[ch - 1]->knxToModbus();
                     }
-
-                    // Sucht nächsten aktiven und wartenden Channel
-                    _channel = findNextReady(ParamMOD_VisibleChannels, _channel);
-
-                    // setzt _channel counter wieder zurück
-                    if (_channel >= ParamMOD_VisibleChannels)
+                    else if (run_cycle) // normale Channel Abfrage
                     {
-                        _channel = 0;
-                        // if (ParamMOD_BusDelayCycle != 0) // Bei Abfrage ohne Pause wird direkt ein neuer Abfragezyklus gestartet
-                        //{
-                        run_cycle = false;
-                        _timerCycle = millis();
-                        //}
+
+                        result = _channels[_channel]->readModbus(true); // read cyclically the Modbus-Channels
+                        if (result != result_old[_channel])
+                        {
+                            if (result == 1)
+                            {
+                                logInfoP("CH%i: run again", _channel);
+                                _error[_channel] = false;
+                            }
+                            else
+                            {
+                                logInfoP("CH%i: ERROR: %i", _channel, result, HEX);
+                                _error[_channel] = true;
+                            }
+                            // Diagnose Objekt schicken
+                            diag_register = ((uint16_t)result << 8) | _channel; // Setzt aktuellen CH auf LSB & Error Code auf MSB
+                            KoMOD_DebugModbus.value(diag_register, DPT_Value_2_Ucount);
+                            result_old[_channel] = result;
+                        }
+
+                        // Sucht nächsten aktiven und wartenden Channel
+                        _channel = findNextReady(ParamMOD_VisibleChannels, _channel);
+
+                        // setzt _channel counter wieder zurück
+                        if (_channel >= ParamMOD_VisibleChannels)
+                        {
+                            _channel = 0;
+                            // if (ParamMOD_BusDelayCycle != 0) // Bei Abfrage ohne Pause wird direkt ein neuer Abfragezyklus gestartet
+                            //{
+                            run_cycle = false;
+                            _timerCycle = millis();
+
+                            //}
+                        }
                     }
                     _timerCycleChannel = millis();
                 }
@@ -269,7 +282,6 @@ void modbusModule::loop(bool configured)
             {
                 run_cycle = true;
             }
-
         } while (openknx.freeLoopIterate(ParamMOD_VisibleChannels, count, processed));
     }
 }

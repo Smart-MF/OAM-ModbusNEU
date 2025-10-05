@@ -40,7 +40,7 @@ private:
     void setupChannels();
     int findNextActive(int size, int currentIndex);
     int findNextReady(int size, int currentIndex);
-    uint8_t findNextReadyToSend(int size, int currentIndex);
+    uint8_t findNextReadyToSend(int size);
     void errorHandling();
     void ErrorHandlingLED();
 #ifdef ARDUINO_ARCH_RP2040
