@@ -34,62 +34,62 @@ void modbusChannel::setup()
     {
     case 1:
         _modbus_ID = ParamMOD_BusID_Slave1;
-        _baud_value = ParamMOD_BusBaudrateSelection_Slave1;
-        _parity_value = ParamMOD_BusParitySelection_Slave1;
+        //_baud_value = ParamMOD_BusBaudrateSelection_Slave1;
+        //_parity_value = ParamMOD_BusParitySelection_Slave1;
         _registerAddr = adjustRegisterAddress(ParamMOD_CHModbusRegister, ParamMOD_BusWordOrderSelectionSlave1);
         break;
     case 2:
         _modbus_ID = ParamMOD_BusID_Slave2;
-        _baud_value = ParamMOD_BusBaudrateSelection_Slave2;
-        _parity_value = ParamMOD_BusParitySelection_Slave2;
+        //_baud_value = ParamMOD_BusBaudrateSelection_Slave2;
+        //_parity_value = ParamMOD_BusParitySelection_Slave2;
         _registerAddr = adjustRegisterAddress(ParamMOD_CHModbusRegister, ParamMOD_BusWordOrderSelectionSlave2);
         break;
     case 3:
         _modbus_ID = ParamMOD_BusID_Slave3;
-        _baud_value = ParamMOD_BusBaudrateSelection_Slave3;
-        _parity_value = ParamMOD_BusParitySelection_Slave3;
+        //_baud_value = ParamMOD_BusBaudrateSelection_Slave3;
+        //_parity_value = ParamMOD_BusParitySelection_Slave3;
         _registerAddr = adjustRegisterAddress(ParamMOD_CHModbusRegister, ParamMOD_BusWordOrderSelectionSlave3);
         break;
     case 4:
         _modbus_ID = ParamMOD_BusID_Slave4;
-        _baud_value = ParamMOD_BusBaudrateSelection_Slave4;
-        _parity_value = ParamMOD_BusParitySelection_Slave4;
+        //_baud_value = ParamMOD_BusBaudrateSelection_Slave4;
+        //_parity_value = ParamMOD_BusParitySelection_Slave4;
         _registerAddr = adjustRegisterAddress(ParamMOD_CHModbusRegister, ParamMOD_BusWordOrderSelectionSlave4);
         break;
     case 5:
         _modbus_ID = ParamMOD_BusID_Slave5;
-        _baud_value = ParamMOD_BusBaudrateSelection_Slave5;
-        _parity_value = ParamMOD_BusParitySelection_Slave5;
+        //_baud_value = ParamMOD_BusBaudrateSelection_Slave5;
+        //_parity_value = ParamMOD_BusParitySelection_Slave5;
         _registerAddr = adjustRegisterAddress(ParamMOD_CHModbusRegister, ParamMOD_BusWordOrderSelectionSlave5);
         break;
     case 6:
         _modbus_ID = ParamMOD_BusID_Slave6;
-        _baud_value = ParamMOD_BusBaudrateSelection_Slave6;
-        _parity_value = ParamMOD_BusParitySelection_Slave6;
+        //_baud_value = ParamMOD_BusBaudrateSelection_Slave6;
+        //_parity_value = ParamMOD_BusParitySelection_Slave6;
         _registerAddr = adjustRegisterAddress(ParamMOD_CHModbusRegister, ParamMOD_BusWordOrderSelectionSlave6);
         break;
     case 7:
         _modbus_ID = ParamMOD_BusID_Slave7;
-        _baud_value = ParamMOD_BusBaudrateSelection_Slave7;
-        _parity_value = ParamMOD_BusParitySelection_Slave7;
+        //_baud_value = ParamMOD_BusBaudrateSelection_Slave7;
+        //_parity_value = ParamMOD_BusParitySelection_Slave7;
         _registerAddr = adjustRegisterAddress(ParamMOD_CHModbusRegister, ParamMOD_BusWordOrderSelectionSlave7);
         break;
     case 8:
         _modbus_ID = ParamMOD_BusID_Slave8;
-        _baud_value = ParamMOD_BusBaudrateSelection_Slave8;
-        _parity_value = ParamMOD_BusParitySelection_Slave8;
+        //_baud_value = ParamMOD_BusBaudrateSelection_Slave8;
+        //_parity_value = ParamMOD_BusParitySelection_Slave8;
         _registerAddr = adjustRegisterAddress(ParamMOD_CHModbusRegister, ParamMOD_BusWordOrderSelectionSlave8);
         break;
     case 9:
         _modbus_ID = ParamMOD_BusID_Slave9;
-        _baud_value = ParamMOD_BusBaudrateSelection_Slave9;
-        _parity_value = ParamMOD_BusParitySelection_Slave9;
+        //_baud_value = ParamMOD_BusBaudrateSelection_Slave9;
+        //_parity_value = ParamMOD_BusParitySelection_Slave9;
         _registerAddr = adjustRegisterAddress(ParamMOD_CHModbusRegister, ParamMOD_BusWordOrderSelectionSlave9);
         break;
     case 10:
         _modbus_ID = ParamMOD_BusID_Slave10;
-        _baud_value = ParamMOD_BusBaudrateSelection_Slave10;
-        _parity_value = ParamMOD_BusParitySelection_Slave10;
+        //_baud_value = ParamMOD_BusBaudrateSelection_Slave10;
+        //_parity_value = ParamMOD_BusParitySelection_Slave10;
         _registerAddr = adjustRegisterAddress(ParamMOD_CHModbusRegister, ParamMOD_BusWordOrderSelectionSlave10);
         break;
 
@@ -158,8 +158,8 @@ uint8_t modbusChannel::readModbus(bool readRequest)
     _readCyclecounter = ParamMOD_CHModBusReadCycle; // setzt Abfragezähler wieder zurück
 
     // Konfigure BAUD & Parity
-    _serial.end();
-    modbusInitSerial(_serial);
+    //_serial.end();
+    // modbusInitSerial(_serial);
 
     // Richtungsauswahl: KNX - Modbus oder Modbus - KNX
     switch (ParamMOD_CHModBusBusDirection)

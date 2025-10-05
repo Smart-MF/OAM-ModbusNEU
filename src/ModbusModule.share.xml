@@ -584,6 +584,9 @@
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="Modbus RTU" UIHint="Headline" />
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="Version: %ModuleVersion%" />
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
+                <ParameterSeparator Id="%AID%_PS-nnn" Text="Modbus" UIHint="Headline" />
+                <ParameterRefRef RefId="%AID%_UP-%T%000010_R-%T%00001001" HelpContext="Empty" />
+                <ParameterRefRef RefId="%AID%_UP-%T%000011_R-%T%00001101" HelpContext="Empty" />
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="Kanalauswahl" UIHint="Headline" />
                 <ParameterRefRef RefId="%AID%_UP-%T%000001_R-%T%00000101" HelpContext="BASE-Verfuegbare-Kanaele" IndentLevel="1" />
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
@@ -600,8 +603,7 @@
                 <ParameterRefRef RefId="%AID%_UP-%T%000014_R-%T%00001401" HelpContext="Empty" />
                 <choose ParamRefId="%AID%_UP-%T%000014_R-%T%00001401">
                   <when test="&gt;0">
-                    <ParameterRefRef RefId="%AID%_UP-%T%000010_R-%T%00001001" HelpContext="Empty" />
-                    <ParameterRefRef RefId="%AID%_UP-%T%000011_R-%T%00001101" HelpContext="Empty" />
+
                     <ParameterRefRef RefId="%AID%_UP-%T%000016_R-%T%00001601" />
                   </when>
                 </choose>
@@ -609,8 +611,8 @@
                 <ParameterRefRef RefId="%AID%_UP-%T%000017_R-%T%00001701" />
                 <choose ParamRefId="%AID%_UP-%T%000017_R-%T%00001701">
                   <when test="&gt;0">
-                    <ParameterRefRef RefId="%AID%_UP-%T%000081_R-%T%00008101" HelpContext="Empty" />
-                    <ParameterRefRef RefId="%AID%_UP-%T%000091_R-%T%00009101" HelpContext="Empty" />
+                    <!-- <ParameterRefRef RefId="%AID%_UP-%T%000081_R-%T%00008101" HelpContext="Empty" /> -->
+                    <!-- <ParameterRefRef RefId="%AID%_UP-%T%000091_R-%T%00009101" HelpContext="Empty" />-->
                     <ParameterRefRef RefId="%AID%_UP-%T%000019_R-%T%00001901" />
                   </when>
                 </choose>
@@ -618,8 +620,8 @@
                 <ParameterRefRef RefId="%AID%_UP-%T%000020_R-%T%00002001" />
                 <choose ParamRefId="%AID%_UP-%T%000020_R-%T%00002001">
                   <when test="&gt;0">
-                    <ParameterRefRef RefId="%AID%_UP-%T%000082_R-%T%00008201" HelpContext="Empty" />
-                    <ParameterRefRef RefId="%AID%_UP-%T%000092_R-%T%00009201" HelpContext="Empty" />
+                    <!-- <ParameterRefRef RefId="%AID%_UP-%T%000082_R-%T%00008201" HelpContext="Empty" /> -->
+                    <!-- <ParameterRefRef RefId="%AID%_UP-%T%000092_R-%T%00009201" HelpContext="Empty" /> -->
                     <ParameterRefRef RefId="%AID%_UP-%T%000022_R-%T%00002201" />
                   </when>
                 </choose>
@@ -627,8 +629,8 @@
                 <ParameterRefRef RefId="%AID%_UP-%T%000023_R-%T%00002301" />
                 <choose ParamRefId="%AID%_UP-%T%000023_R-%T%00002301">
                   <when test="&gt;0">
-                    <ParameterRefRef RefId="%AID%_UP-%T%000083_R-%T%00008301" HelpContext="Empty" />
-                    <ParameterRefRef RefId="%AID%_UP-%T%000093_R-%T%00009301" HelpContext="Empty" />
+                    <!-- <ParameterRefRef RefId="%AID%_UP-%T%000083_R-%T%00008301" HelpContext="Empty" /> -->
+                    <!-- <ParameterRefRef RefId="%AID%_UP-%T%000093_R-%T%00009301" HelpContext="Empty" /> -->
                     <ParameterRefRef RefId="%AID%_UP-%T%000025_R-%T%00002501" />
                   </when>
                 </choose>
@@ -636,8 +638,8 @@
                 <ParameterRefRef RefId="%AID%_UP-%T%000026_R-%T%00002601" />
                 <choose ParamRefId="%AID%_UP-%T%000026_R-%T%00002601">
                   <when test="&gt;0">
-                    <ParameterRefRef RefId="%AID%_UP-%T%000084_R-%T%00008401" HelpContext="Empty" />
-                    <ParameterRefRef RefId="%AID%_UP-%T%000094_R-%T%00009401" HelpContext="Empty" />
+                    <!-- <ParameterRefRef RefId="%AID%_UP-%T%000084_R-%T%00008401" HelpContext="Empty" /> -->
+                    <!-- <ParameterRefRef RefId="%AID%_UP-%T%000094_R-%T%00009401" HelpContext="Empty" /> -->
                     <ParameterRefRef RefId="%AID%_UP-%T%000028_R-%T%00002801" />
                   </when>
                 </choose>
@@ -645,8 +647,8 @@
                 <ParameterRefRef RefId="%AID%_UP-%T%000029_R-%T%00002901" />
                 <choose ParamRefId="%AID%_UP-%T%000029_R-%T%00002901">
                   <when test="&gt;0">
-                    <ParameterRefRef RefId="%AID%_UP-%T%000085_R-%T%00008501" HelpContext="Empty" />
-                    <ParameterRefRef RefId="%AID%_UP-%T%000095_R-%T%00009501" HelpContext="Empty" />
+                    <!-- <ParameterRefRef RefId="%AID%_UP-%T%000085_R-%T%00008501" HelpContext="Empty" /> -->
+                    <!-- <ParameterRefRef RefId="%AID%_UP-%T%000095_R-%T%00009501" HelpContext="Empty" /> -->
                     <ParameterRefRef RefId="%AID%_UP-%T%000031_R-%T%00003101" />
                   </when>
                 </choose>
@@ -654,8 +656,8 @@
                 <ParameterRefRef RefId="%AID%_UP-%T%000032_R-%T%00003201" />
                 <choose ParamRefId="%AID%_UP-%T%000032_R-%T%00003201">
                   <when test="&gt;0">
-                    <ParameterRefRef RefId="%AID%_UP-%T%000086_R-%T%00008601" HelpContext="Empty" />
-                    <ParameterRefRef RefId="%AID%_UP-%T%000096_R-%T%00009601" HelpContext="Empty" />
+                    <!-- <ParameterRefRef RefId="%AID%_UP-%T%000086_R-%T%00008601" HelpContext="Empty" /> -->
+                    <!-- <ParameterRefRef RefId="%AID%_UP-%T%000096_R-%T%00009601" HelpContext="Empty" /> -->
                     <ParameterRefRef RefId="%AID%_UP-%T%000034_R-%T%00003401" />
                   </when>
                 </choose>
@@ -663,8 +665,8 @@
                 <ParameterRefRef RefId="%AID%_UP-%T%000035_R-%T%00003501" />
                 <choose ParamRefId="%AID%_UP-%T%000035_R-%T%00003501">
                   <when test="&gt;0">
-                    <ParameterRefRef RefId="%AID%_UP-%T%000087_R-%T%00008701" HelpContext="Empty" />
-                    <ParameterRefRef RefId="%AID%_UP-%T%000097_R-%T%00009701" HelpContext="Empty" />
+                    <!-- <ParameterRefRef RefId="%AID%_UP-%T%000087_R-%T%00008701" HelpContext="Empty" /> -->
+                    <!-- <ParameterRefRef RefId="%AID%_UP-%T%000097_R-%T%00009701" HelpContext="Empty" /> -->
                     <ParameterRefRef RefId="%AID%_UP-%T%000037_R-%T%00003701" />
                   </when>
                 </choose>
@@ -672,8 +674,8 @@
                 <ParameterRefRef RefId="%AID%_UP-%T%000038_R-%T%00003801" />
                 <choose ParamRefId="%AID%_UP-%T%000038_R-%T%00003801">
                   <when test="&gt;0">
-                    <ParameterRefRef RefId="%AID%_UP-%T%000088_R-%T%00008801" HelpContext="Empty" />
-                    <ParameterRefRef RefId="%AID%_UP-%T%000098_R-%T%00009801" HelpContext="Empty" />
+                    <!-- <ParameterRefRef RefId="%AID%_UP-%T%000088_R-%T%00008801" HelpContext="Empty" /> -->
+                    <!-- <ParameterRefRef RefId="%AID%_UP-%T%000098_R-%T%00009801" HelpContext="Empty" />-->
                     <ParameterRefRef RefId="%AID%_UP-%T%000040_R-%T%00004001" />
                   </when>
                 </choose>
@@ -681,8 +683,8 @@
                 <ParameterRefRef RefId="%AID%_UP-%T%000041_R-%T%00004101" />
                 <choose ParamRefId="%AID%_UP-%T%000041_R-%T%00004101">
                   <when test="&gt;0">
-                    <ParameterRefRef RefId="%AID%_UP-%T%000089_R-%T%00008901" HelpContext="Empty" />
-                    <ParameterRefRef RefId="%AID%_UP-%T%000099_R-%T%00009901" HelpContext="Empty" />
+                    <!-- <ParameterRefRef RefId="%AID%_UP-%T%000089_R-%T%00008901" HelpContext="Empty" /> -->
+                    <!-- <ParameterRefRef RefId="%AID%_UP-%T%000099_R-%T%00009901" HelpContext="Empty" /> -->
                     <ParameterRefRef RefId="%AID%_UP-%T%000043_R-%T%00004301" />
                   </when>
                 </choose>

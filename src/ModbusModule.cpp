@@ -43,6 +43,8 @@ void modbusModule::setup(bool configured)
     SMARTMF_MODBUS_SERIAL.setRX(SMARTMF_MODBUS_RX_PIN);
     SMARTMF_MODBUS_SERIAL.setTX(SMARTMF_MODBUS_TX_PIN);
 
+    modbusInitSerial(SMARTMF_MODBUS_SERIAL);
+
     if (configured)
     {
         // setupCustomFlash();                               // ********************************* anpassen wenn notwendig *********************
@@ -199,7 +201,7 @@ void modbusModule::loop(bool configured)
 
             if (!idle_processing && run_cycle)
             {
-                if (delayCheck(_timerCycleChannel, 0 + (ParamMOD_BusDelayRequest * 10))) // Zeit zwischen zwei Modbus Register Abfragen
+                if (delayCheck(_timerCycleChannel, 35 + (ParamMOD_BusDelayRequest * 10))) // Zeit zwischen zwei Modbus Register Abfragen
                 {
                     result = _channels[_channel]->readModbus(true); // read cyclically the Modbus-Channels
                     if (result != result_old[_channel])
@@ -238,7 +240,7 @@ void modbusModule::loop(bool configured)
             }
 
             // Wartet xsek bis der nächste komplette Abfragezyklus gestartet wird
-            if (delayCheck(_timerCycle, 50 + (ParamMOD_BusDelayCycle * 1000)) && !run_cycle)
+            if (delayCheck(_timerCycle, 0 + (ParamMOD_BusDelayCycle * 1000)) && !run_cycle)
             {
                 run_cycle = true;
             }
@@ -316,81 +318,81 @@ void modbusModule::registerUsbExchangeCallbacks()
 #endif
 #endif
 
-// bool modbusModule::modbusParitySerial(uint32_t baud, HardwareSerial &serial)
-//{
-//     switch (ParamMOD_BusParitySelection)
-//     {
-//     case 0: // Even (1 stop bit)
-//         serial.begin(baud, SERIAL_8E1);
-//         logInfoP("Parity: Even (1 stop bit)");
-//         return true;
-//         break;
-//     case 1: // Odd (1 stop bit)
-//         serial.begin(baud, SERIAL_8O1);
-//         logInfoP("Parity: Odd (1 stop bit)");
-//         return true;
-//         break;
-//     case 2: // None (2 stop bits)
-//         serial.begin(baud, SERIAL_8N2);
-//         logInfoP("Parity: None (2 stop bits)");
-//         return true;
-//         break;
-//     case 3: // None (1 stop bit)
-//         serial.begin(baud, SERIAL_8N1);
-//         logInfoP("Parity: None (1 stop bit)");
-//         return true;
-//         break;
-//
-//     default:
-//         logInfoP("Parity: Error: %i", ParamMOD_BusParitySelection);
-//         return false;
-//         break;
-//     }
-// }
-//
-// bool modbusModule::modbusInitSerial(HardwareSerial &serial)
-//{
-//     // Set Modbus communication baudrate
-//     switch (_baud)
-//     {
-//     case 0:
-//         logInfoP("Baudrate: 1200kBit/s");
-//         return modbusParitySerial(1200, serial);
-//
-//         break;
-//     case 1:
-//         logInfoP("Baudrate: 2400kBit/s");
-//         return modbusParitySerial(2400, serial);
-//         break;
-//     case 2:
-//         logInfoP("Baudrate: 4800kBit/s");
-//         return modbusParitySerial(4800, serial);
-//         break;
-//     case 3:
-//         logInfoP("Baudrate: 9600kBit/s");
-//         return modbusParitySerial(9600, serial);
-//         break;
-//     case 4:
-//         logInfoP("Baudrate: 19200kBit/s");
-//         return modbusParitySerial(19200, serial);
-//         break;
-//     case 5:
-//         logInfoP("Baudrate: 38400kBit/s");
-//         return modbusParitySerial(38400, serial);
-//         break;
-//     case 6:
-//         logInfoP("Baudrate: 56000kBit/s");
-//         return modbusParitySerial(56000, serial);
-//         break;
-//     case 7:
-//         logInfoP("Baudrate: 115200kBit/s");
-//         return modbusParitySerial(115200, serial);
-//         break;
-//     default:
-//         logInfoP("Baudrate: Error: %i", ParamMOD_BusBaudrateSelection);
-//         return false;
-//         break;
-//     }
-// }
+bool modbusModule::modbusParitySerial(uint32_t baud, HardwareSerial &serial)
+{
+    switch (ParamMOD_BusParitySelection_Slave1)
+    {
+    case 0: // Even (1 stop bit)
+        serial.begin(baud, SERIAL_8E1);
+        logInfoP("Parity: Even (1 stop bit)");
+        return true;
+        break;
+    case 1: // Odd (1 stop bit)
+        serial.begin(baud, SERIAL_8O1);
+        logInfoP("Parity: Odd (1 stop bit)");
+        return true;
+        break;
+    case 2: // None (2 stop bits)
+        serial.begin(baud, SERIAL_8N2);
+        logInfoP("Parity: None (2 stop bits)");
+        return true;
+        break;
+    case 3: // None (1 stop bit)
+        serial.begin(baud, SERIAL_8N1);
+        logInfoP("Parity: None (1 stop bit)");
+        return true;
+        break;
+
+    default:
+        logInfoP("Parity: Error: %i", ParamMOD_BusParitySelection_Slave1);
+        return false;
+        break;
+    }
+}
+
+bool modbusModule::modbusInitSerial(HardwareSerial &serial)
+{
+    // Set Modbus communication baudrate
+    switch (ParamMOD_BusBaudrateSelection_Slave1)
+    {
+    case 0:
+        logInfoP("Baudrate: 1200kBit/s");
+        return modbusParitySerial(1200, serial);
+
+        break;
+    case 1:
+        logInfoP("Baudrate: 2400kBit/s");
+        return modbusParitySerial(2400, serial);
+        break;
+    case 2:
+        logInfoP("Baudrate: 4800kBit/s");
+        return modbusParitySerial(4800, serial);
+        break;
+    case 3:
+        logInfoP("Baudrate: 9600kBit/s");
+        return modbusParitySerial(9600, serial);
+        break;
+    case 4:
+        logInfoP("Baudrate: 19200kBit/s");
+        return modbusParitySerial(19200, serial);
+        break;
+    case 5:
+        logInfoP("Baudrate: 38400kBit/s");
+        return modbusParitySerial(38400, serial);
+        break;
+    case 6:
+        logInfoP("Baudrate: 56000kBit/s");
+        return modbusParitySerial(56000, serial);
+        break;
+    case 7:
+        logInfoP("Baudrate: 115200kBit/s");
+        return modbusParitySerial(115200, serial);
+        break;
+    default:
+        logInfoP("Baudrate: Error: %i", ParamMOD_BusBaudrateSelection_Slave1);
+        return false;
+        break;
+    }
+}
 
 modbusModule openknxmodbusModule;
