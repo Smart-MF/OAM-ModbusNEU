@@ -230,7 +230,7 @@ void modbusChannel::sendKNX()
     // if cyclic sending is requested, send the last value if one is available
     if (lCycle && delayCheck(sendDelay, lCycle))
     {
-        logInfoP("CH%i", _channelIndex);
+        logInfoP("CH%i send", _channelIndex);
         KoMOD_GO_BASE_.objectWritten();
         sendDelay = millis();
     }

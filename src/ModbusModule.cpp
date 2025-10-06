@@ -11,6 +11,7 @@
 bool run_cycle = true;
 
 bool modbusModule::idle_processing = false;
+unsigned long modbusModule::_timerCycleChannel = 0;
 
 modbusModule::modbusModule()
 {
@@ -103,7 +104,7 @@ void modbusModule::idleCallback()
     idle_processing = true;
     openknx.loop();
     idle_processing = false;
-    _timerSendDelay = millis();
+    _timerCycleChannel = millis();
 }
 
 void modbusModule::preTransmission()
@@ -123,7 +124,7 @@ uint8_t modbusModule::findNextReadyToSend(int size)
         if (readyToSendModbus[i])
         {
             readyToSendModbus[i] = false;
-            return i; 
+            return i;
         }
     }
     return 0;
@@ -149,7 +150,7 @@ int modbusModule::findNextReady(int size, int currentIndex)
         if (_channels[i]->isReadyCH())
             return i;
     }
-    return size; 
+    return size;
 }
 
 void modbusModule::errorHandling()
@@ -223,9 +224,10 @@ void modbusModule::loop(bool configured)
             //    }
             //}
 
-            if (!idle_processing && delayCheck(_timerSendDelay, 15)) // Wartet immer 15ms zwischen letztener empfangener Nachricht, bis wieder neu gesendet werden darf.
+            if (!idle_processing)
             {
-                if (delayCheck(_timerCycleChannel, (ParamMOD_BusDelayRequest * 10))) // Zeit zwischen zwei Modbus Register Abfragen
+
+                if (delayCheck(_timerCycleChannel, 50 + (ParamMOD_BusDelayRequest * 10))) // Zeit zwischen zwei Modbus Register Abfragen +50ms default Wartezeit
                 {
                     // prüft ob ein CH eine Modbus Botschaft senden will und gibt diese CH-nummer zurück
                     uint8_t ch = findNextReadyToSend(ParamMOD_VisibleChannels);
@@ -235,17 +237,17 @@ void modbusModule::loop(bool configured)
                     }
                     else if (run_cycle) // MODBUS to KNX Abfrage
                     {
-                        result = _channels[_channel]->readModbus(true); // read cyclically the Modbus-Channels
-                        if (result != result_old[_channel])
+                        result = _channels[_channel]->readModbus(true);                                 // read cyclically the Modbus-Channels
+                        if (result != result_old[_channel] && _channels[_channel]->getDirection() == 1) // Prüft auf änderung und ob CH ModbusToKnx ist
                         {
                             if (result == 1)
                             {
-                                logInfoP("CH%i: run again", _channel);
+                                logInfoP("CH%i: run again", _channel + 1);
                                 _error[_channel] = false;
                             }
                             else
                             {
-                                logInfoP("CH%i: ERROR: %i", _channel, result, HEX);
+                                logInfoP("CH%i: ERROR: %i", _channel + 1, result, HEX);
                                 _error[_channel] = true;
                             }
                             // Diagnose Objekt schicken
@@ -267,7 +269,6 @@ void modbusModule::loop(bool configured)
                     }
                     _timerCycleChannel = millis();
                 }
-                _timerSendDelay = millis();
             }
 
             // Wartet xsek bis der nächste komplette Abfragezyklus gestartet wird
