@@ -1,6 +1,9 @@
 ToDos:
 
-- Register Position rauswerfen 
+- TExt für jeden SLAVe als Bezeichner für Infos 
+
+
+
 - Baudrate/Parity/... in Slave Direkt aufnehmen
 
 - SMARTMF_MODBUS_SERIAL in HW Konfig mit aufnehmen 
