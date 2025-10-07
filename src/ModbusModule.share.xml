@@ -424,7 +424,6 @@
                 <Parameter Id="%AID%_UP-%T%000099" Name="BusParitySelection_Slave10" Offset="6" BitOffset="0" ParameterType="%AID%_PT-ParitySelection" Text="Parity" SuffixText="" Value="0" /> <!-- 2 Bit -->
                 <!-- 6 Bit frei -->
               </Union>
-
               <!-- Set Modbus Slaves ID 10 -->
               <!--
               <Parameter Id="%AID%_P-%T%000073" Name="ModBusZaehler1SendDelay"
@@ -463,6 +462,16 @@
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="130" BitOffset="0" />
               </Parameter>
             -->
+              <Parameter Id="%AID%_P-%T%000102" Name="Slave%C%Name1" ParameterType="%AID%_PT-Text40Byte" Text="Beschreibung" Value="" />
+              <Parameter Id="%AID%_P-%T%000103" Name="Slave%C%Name2" ParameterType="%AID%_PT-Text40Byte" Text="Beschreibung" Value="" />
+              <Parameter Id="%AID%_P-%T%000104" Name="Slave%C%Name3" ParameterType="%AID%_PT-Text40Byte" Text="Beschreibung" Value="" />
+              <Parameter Id="%AID%_P-%T%000105" Name="Slave%C%Name4" ParameterType="%AID%_PT-Text40Byte" Text="Beschreibung" Value="" />
+              <Parameter Id="%AID%_P-%T%000106" Name="Slave%C%Name5" ParameterType="%AID%_PT-Text40Byte" Text="Beschreibung" Value="" />
+              <Parameter Id="%AID%_P-%T%000107" Name="Slave%C%Name6" ParameterType="%AID%_PT-Text40Byte" Text="Beschreibung" Value="" />
+              <Parameter Id="%AID%_P-%T%000108" Name="Slave%C%Name7" ParameterType="%AID%_PT-Text40Byte" Text="Beschreibung" Value="" />
+              <Parameter Id="%AID%_P-%T%000109" Name="Slave%C%Name8" ParameterType="%AID%_PT-Text40Byte" Text="Beschreibung" Value="" />
+              <Parameter Id="%AID%_P-%T%000110" Name="Slave%C%Name9" ParameterType="%AID%_PT-Text40Byte" Text="Beschreibung" Value="" />
+              <Parameter Id="%AID%_P-%T%000111" Name="Slave%C%Name10" ParameterType="%AID%_PT-Text40Byte" Text="Beschreibung" Value="" />
 
 
             </Parameters>
@@ -550,7 +559,18 @@
               <ParameterRef Id="%AID%_UP-%T%000097_R-%T%00009701" RefId="%AID%_UP-%T%000097" />
               <ParameterRef Id="%AID%_UP-%T%000098_R-%T%00009801" RefId="%AID%_UP-%T%000098" />
               <ParameterRef Id="%AID%_UP-%T%000099_R-%T%00009901" RefId="%AID%_UP-%T%000099" />
+              <!--  100 noch frei -->
               <!--  <ParameterRef Id="%AID%_UP-%T%000101_R-%T%00010101" RefId="%AID%_UP-%T%000101" />  --> <!-- CheckBox Vcounter -->
+              <ParameterRef Id="%AID%_P-%T%000102_R-%T%00010201" RefId="%AID%_UP-%T%000102" />
+              <ParameterRef Id="%AID%_P-%T%000103_R-%T%00010301" RefId="%AID%_UP-%T%000103" />
+              <ParameterRef Id="%AID%_P-%T%000104_R-%T%00010401" RefId="%AID%_UP-%T%000104" />
+              <ParameterRef Id="%AID%_P-%T%000105_R-%T%00010501" RefId="%AID%_UP-%T%000105" />
+              <ParameterRef Id="%AID%_P-%T%000106_R-%T%00010601" RefId="%AID%_UP-%T%000106" />
+              <ParameterRef Id="%AID%_P-%T%000107_R-%T%00010701" RefId="%AID%_UP-%T%000107" />
+              <ParameterRef Id="%AID%_P-%T%000108_R-%T%00010801" RefId="%AID%_UP-%T%000108" />
+              <ParameterRef Id="%AID%_P-%T%000109_R-%T%00010901" RefId="%AID%_UP-%T%000109" />
+              <ParameterRef Id="%AID%_P-%T%000110_R-%T%00011001" RefId="%AID%_UP-%T%000110" />
+              <ParameterRef Id="%AID%_P-%T%000111_R-%T%00011101" RefId="%AID%_UP-%T%000111" />
             </ParameterRefs>
             <ComObjectTable>
               <!-- ComOject Debug Modbus-->
@@ -601,14 +621,15 @@
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="IDs   (0=deaktiviert)" UIHint="Headline" />
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="Hinweis: Die ETS erkennt keine Doppelbelegungen von Slave-IDs -> sollten zwei Slaves die gleiche ID haben, dann ist das kein Problem, solange die Register Position/Start identisch sind." />
                 <ParameterRefRef RefId="%AID%_UP-%T%000014_R-%T%00001401" HelpContext="Empty" />
+                <ParameterRefRef RefId="%AID%_P-%T%000102_R-%T%00010201" />
                 <choose ParamRefId="%AID%_UP-%T%000014_R-%T%00001401">
                   <when test="&gt;0">
-
                     <ParameterRefRef RefId="%AID%_UP-%T%000016_R-%T%00001601" />
                   </when>
                 </choose>
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
                 <ParameterRefRef RefId="%AID%_UP-%T%000017_R-%T%00001701" />
+                <ParameterRefRef RefId="%AID%_P-%T%000103_R-%T%00010301" />
                 <choose ParamRefId="%AID%_UP-%T%000017_R-%T%00001701">
                   <when test="&gt;0">
                     <!-- <ParameterRefRef RefId="%AID%_UP-%T%000081_R-%T%00008101" HelpContext="Empty" /> -->
@@ -618,6 +639,7 @@
                 </choose>
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
                 <ParameterRefRef RefId="%AID%_UP-%T%000020_R-%T%00002001" />
+                <ParameterRefRef RefId="%AID%_P-%T%000104_R-%T%00010401" />
                 <choose ParamRefId="%AID%_UP-%T%000020_R-%T%00002001">
                   <when test="&gt;0">
                     <!-- <ParameterRefRef RefId="%AID%_UP-%T%000082_R-%T%00008201" HelpContext="Empty" /> -->
@@ -627,6 +649,7 @@
                 </choose>
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
                 <ParameterRefRef RefId="%AID%_UP-%T%000023_R-%T%00002301" />
+                <ParameterRefRef RefId="%AID%_P-%T%000105_R-%T%00010501" />
                 <choose ParamRefId="%AID%_UP-%T%000023_R-%T%00002301">
                   <when test="&gt;0">
                     <!-- <ParameterRefRef RefId="%AID%_UP-%T%000083_R-%T%00008301" HelpContext="Empty" /> -->
@@ -636,6 +659,7 @@
                 </choose>
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
                 <ParameterRefRef RefId="%AID%_UP-%T%000026_R-%T%00002601" />
+                <ParameterRefRef RefId="%AID%_P-%T%000106_R-%T%00010601" />
                 <choose ParamRefId="%AID%_UP-%T%000026_R-%T%00002601">
                   <when test="&gt;0">
                     <!-- <ParameterRefRef RefId="%AID%_UP-%T%000084_R-%T%00008401" HelpContext="Empty" /> -->
@@ -645,6 +669,7 @@
                 </choose>
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
                 <ParameterRefRef RefId="%AID%_UP-%T%000029_R-%T%00002901" />
+                <ParameterRefRef RefId="%AID%_P-%T%000107_R-%T%00010701" />
                 <choose ParamRefId="%AID%_UP-%T%000029_R-%T%00002901">
                   <when test="&gt;0">
                     <!-- <ParameterRefRef RefId="%AID%_UP-%T%000085_R-%T%00008501" HelpContext="Empty" /> -->
@@ -654,6 +679,7 @@
                 </choose>
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
                 <ParameterRefRef RefId="%AID%_UP-%T%000032_R-%T%00003201" />
+                <ParameterRefRef RefId="%AID%_P-%T%000108_R-%T%00010801" />
                 <choose ParamRefId="%AID%_UP-%T%000032_R-%T%00003201">
                   <when test="&gt;0">
                     <!-- <ParameterRefRef RefId="%AID%_UP-%T%000086_R-%T%00008601" HelpContext="Empty" /> -->
@@ -663,6 +689,7 @@
                 </choose>
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
                 <ParameterRefRef RefId="%AID%_UP-%T%000035_R-%T%00003501" />
+                <ParameterRefRef RefId="%AID%_P-%T%000109_R-%T%00010901" />
                 <choose ParamRefId="%AID%_UP-%T%000035_R-%T%00003501">
                   <when test="&gt;0">
                     <!-- <ParameterRefRef RefId="%AID%_UP-%T%000087_R-%T%00008701" HelpContext="Empty" /> -->
@@ -672,6 +699,7 @@
                 </choose>
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
                 <ParameterRefRef RefId="%AID%_UP-%T%000038_R-%T%00003801" />
+                <ParameterRefRef RefId="%AID%_P-%T%000110_R-%T%00011001" />
                 <choose ParamRefId="%AID%_UP-%T%000038_R-%T%00003801">
                   <when test="&gt;0">
                     <!-- <ParameterRefRef RefId="%AID%_UP-%T%000088_R-%T%00008801" HelpContext="Empty" /> -->
@@ -681,6 +709,7 @@
                 </choose>
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
                 <ParameterRefRef RefId="%AID%_UP-%T%000041_R-%T%00004101" />
+                <ParameterRefRef RefId="%AID%_P-%T%000111_R-%T%00011101" />
                 <choose ParamRefId="%AID%_UP-%T%000041_R-%T%00004101">
                   <when test="&gt;0">
                     <!-- <ParameterRefRef RefId="%AID%_UP-%T%000089_R-%T%00008901" HelpContext="Empty" /> -->
@@ -690,7 +719,6 @@
                 </choose>
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
               </ParameterBlock>
-
               <op:include href="ModbusModule.templ.xml" xpath="//Dynamic/ChannelIndependentBlock/*"
                 type="template" prefix="MOD" IsInner="true" />
 
