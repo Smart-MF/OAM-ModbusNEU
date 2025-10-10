@@ -13,7 +13,7 @@
 #endif
 #define MAIN_OpenKnxId 0xA2
 #define MAIN_ApplicationNumber 48
-#define MAIN_ApplicationVersion 33
+#define MAIN_ApplicationVersion 34
 #define MAIN_ApplicationEncoding iso-8859-15
 #define MAIN_ParameterSize 10396
 #define MAIN_MaxKoNumber 369
@@ -401,18 +401,18 @@
 #define MOD_CHModBusWordPosDpt14                20      // 1 Bit, Bit 5
 #define     MOD_CHModBusWordPosDpt14Mask 0x20
 #define     MOD_CHModBusWordPosDpt14Shift 5
-#define MOD_CHModBusWordTyp12                   20      // 1 Bit, Bit 4
-#define     MOD_CHModBusWordTyp12Mask 0x10
-#define     MOD_CHModBusWordTyp12Shift 4
-#define MOD_CHModBusWordTyp13                   20      // 1 Bit, Bit 3
-#define     MOD_CHModBusWordTyp13Mask 0x08
-#define     MOD_CHModBusWordTyp13Shift 3
-#define MOD_CHModBusWordTyp14                   20      // 1 Bit, Bit 2
-#define     MOD_CHModBusWordTyp14Mask 0x04
-#define     MOD_CHModBusWordTyp14Shift 2
-#define MOD_CHModBusRegisterValueTypDpt14       20      // 2 Bits, Bit 1-0
-#define     MOD_CHModBusRegisterValueTypDpt14Mask 0x03
-#define     MOD_CHModBusRegisterValueTypDpt14Shift 0
+#define MOD_CHModBusWordTyp12                   20      // 2 Bits, Bit 4-3
+#define     MOD_CHModBusWordTyp12Mask 0x18
+#define     MOD_CHModBusWordTyp12Shift 3
+#define MOD_CHModBusWordTyp13                   20      // 2 Bits, Bit 2-1
+#define     MOD_CHModBusWordTyp13Mask 0x06
+#define     MOD_CHModBusWordTyp13Shift 1
+#define MOD_CHModBusWordTyp14                   21      // 2 Bits, Bit 7-6
+#define     MOD_CHModBusWordTyp14Mask 0xC0
+#define     MOD_CHModBusWordTyp14Shift 6
+#define MOD_CHModBusRegisterValueTypDpt14       21      // 2 Bits, Bit 5-4
+#define     MOD_CHModBusRegisterValueTypDpt14Mask 0x30
+#define     MOD_CHModBusRegisterValueTypDpt14Shift 4
 #define MOD_CHModBusBitPosDpt1                  22      // 8 Bits, Bit 7-0
 #define MOD_CHModBusOffsetRight5                23      // 8 Bits, Bit 7-0
 #define MOD_CHModBusOffsetRight7                24      // 8 Bits, Bit 7-0
@@ -458,20 +458,20 @@
 #define ParamMOD_CHModbusCountBitsDPT56              (knx.paramByte(MOD_ParamCalcIndex(MOD_CHModbusCountBitsDPT56)))
 // Anzahl Bits
 #define ParamMOD_CHModbusCountBitsDPT7               (knx.paramByte(MOD_ParamCalcIndex(MOD_CHModbusCountBitsDPT7)))
-// Word Reihenfolge
+// Byte Reihenfolge
 #define ParamMOD_CHModBusWordPosDpt12                ((bool)(knx.paramByte(MOD_ParamCalcIndex(MOD_CHModBusWordPosDpt12)) & MOD_CHModBusWordPosDpt12Mask))
-// Word Reihenfolge
+// Byte Reihenfolge
 #define ParamMOD_CHModBusWordPosDpt13                ((bool)(knx.paramByte(MOD_ParamCalcIndex(MOD_CHModBusWordPosDpt13)) & MOD_CHModBusWordPosDpt13Mask))
-// Word Reihenfolge
+// Byte Reihenfolge
 #define ParamMOD_CHModBusWordPosDpt14                ((bool)(knx.paramByte(MOD_ParamCalcIndex(MOD_CHModBusWordPosDpt14)) & MOD_CHModBusWordPosDpt14Mask))
 // Register Typ
-#define ParamMOD_CHModBusWordTyp12                   ((bool)(knx.paramByte(MOD_ParamCalcIndex(MOD_CHModBusWordTyp12)) & MOD_CHModBusWordTyp12Mask))
+#define ParamMOD_CHModBusWordTyp12                   ((knx.paramByte(MOD_ParamCalcIndex(MOD_CHModBusWordTyp12)) & MOD_CHModBusWordTyp12Mask) >> MOD_CHModBusWordTyp12Shift)
 // Register Typ
-#define ParamMOD_CHModBusWordTyp13                   ((bool)(knx.paramByte(MOD_ParamCalcIndex(MOD_CHModBusWordTyp13)) & MOD_CHModBusWordTyp13Mask))
+#define ParamMOD_CHModBusWordTyp13                   ((knx.paramByte(MOD_ParamCalcIndex(MOD_CHModBusWordTyp13)) & MOD_CHModBusWordTyp13Mask) >> MOD_CHModBusWordTyp13Shift)
 // Register Typ
-#define ParamMOD_CHModBusWordTyp14                   ((bool)(knx.paramByte(MOD_ParamCalcIndex(MOD_CHModBusWordTyp14)) & MOD_CHModBusWordTyp14Mask))
+#define ParamMOD_CHModBusWordTyp14                   ((knx.paramByte(MOD_ParamCalcIndex(MOD_CHModBusWordTyp14)) & MOD_CHModBusWordTyp14Mask) >> MOD_CHModBusWordTyp14Shift)
 // Registerwert-Typ
-#define ParamMOD_CHModBusRegisterValueTypDpt14       (knx.paramByte(MOD_ParamCalcIndex(MOD_CHModBusRegisterValueTypDpt14)) & MOD_CHModBusRegisterValueTypDpt14Mask)
+#define ParamMOD_CHModBusRegisterValueTypDpt14       ((knx.paramByte(MOD_ParamCalcIndex(MOD_CHModBusRegisterValueTypDpt14)) & MOD_CHModBusRegisterValueTypDpt14Mask) >> MOD_CHModBusRegisterValueTypDpt14Shift)
 // Position Bit
 #define ParamMOD_CHModBusBitPosDpt1                  (knx.paramByte(MOD_ParamCalcIndex(MOD_CHModBusBitPosDpt1)))
 // offset von rechts

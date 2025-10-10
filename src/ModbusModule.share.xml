@@ -190,8 +190,8 @@
               <!-- DPT1 Typ -->
               <ParameterType Id="%AID%_PT-InputTypDpt1" Name="InputTypDpt1">
                 <TypeRestriction Base="Value" SizeInBit="2">
-                  <Enumeration Text="Bit Register" Value="0" Id="%ENID%" />
-                  <Enumeration Text="Bit in Word Register" Value="1" Id="%ENID%" />
+                  <Enumeration Text="16Bit Register" Value="0" Id="%ENID%" />
+                  <Enumeration Text="32Bit Register" Value="1" Id="%ENID%" />
                 </TypeRestriction>
               </ParameterType>
               <ParameterType Id="%AID%_PT-InputTypInvDpt1" Name="InputTypInvDpt1">
@@ -270,9 +270,10 @@
               <!-- DPT14 Typ -->
               <!-- Typ Word / double Word -->
               <ParameterType Id="%AID%_PT-WordTyp" Name="WordTyp">
-                <TypeRestriction Base="Value" SizeInBit="1">
-                  <Enumeration Text="Word Register" Value="0" Id="%ENID%" />
-                  <Enumeration Text="Double Word Register" Value="1" Id="%ENID%" />
+                <TypeRestriction Base="Value" SizeInBit="2">
+                  <Enumeration Text="16Bit Register" Value="0" Id="%ENID%" />
+                  <Enumeration Text="32Bit Register" Value="1" Id="%ENID%" />
+                  <Enumeration Text="64Bit Register" Value="2" Id="%ENID%" />
                 </TypeRestriction>
               </ParameterType>
               <!-- Position Register -->
@@ -309,8 +310,8 @@
               </ParameterType>
               <ParameterType Id="%AID%_PT-WordPosDpt14" Name="WordPosDpt14">
                 <TypeRestriction Base="Value" SizeInBit="1">
-                  <Enumeration Text="HI Word / LO Word" Value="0" Id="%ENID%" />
-                  <Enumeration Text="LO Word / HI Word" Value="1" Id="%ENID%" />
+                  <Enumeration Text="MSB / LSB" Value="0" Id="%ENID%" />
+                  <Enumeration Text="LSB / MSB" Value="1" Id="%ENID%" />
                 </TypeRestriction>
               </ParameterType>
               <!-- Abfrage Zyklus ModBus-->
@@ -561,16 +562,16 @@
               <ParameterRef Id="%AID%_UP-%T%000099_R-%T%00009901" RefId="%AID%_UP-%T%000099" />
               <!--  100 noch frei -->
               <!--  <ParameterRef Id="%AID%_UP-%T%000101_R-%T%00010101" RefId="%AID%_UP-%T%000101" />  --> <!-- CheckBox Vcounter -->
-              <ParameterRef Id="%AID%_P-%T%000102_R-%T%00010201" RefId="%AID%_UP-%T%000102" />
-              <ParameterRef Id="%AID%_P-%T%000103_R-%T%00010301" RefId="%AID%_UP-%T%000103" />
-              <ParameterRef Id="%AID%_P-%T%000104_R-%T%00010401" RefId="%AID%_UP-%T%000104" />
-              <ParameterRef Id="%AID%_P-%T%000105_R-%T%00010501" RefId="%AID%_UP-%T%000105" />
-              <ParameterRef Id="%AID%_P-%T%000106_R-%T%00010601" RefId="%AID%_UP-%T%000106" />
-              <ParameterRef Id="%AID%_P-%T%000107_R-%T%00010701" RefId="%AID%_UP-%T%000107" />
-              <ParameterRef Id="%AID%_P-%T%000108_R-%T%00010801" RefId="%AID%_UP-%T%000108" />
-              <ParameterRef Id="%AID%_P-%T%000109_R-%T%00010901" RefId="%AID%_UP-%T%000109" />
-              <ParameterRef Id="%AID%_P-%T%000110_R-%T%00011001" RefId="%AID%_UP-%T%000110" />
-              <ParameterRef Id="%AID%_P-%T%000111_R-%T%00011101" RefId="%AID%_UP-%T%000111" />
+              <ParameterRef Id="%AID%_P-%T%000102_R-%T%00010201" RefId="%AID%_P-%T%000102" />
+              <ParameterRef Id="%AID%_P-%T%000103_R-%T%00010301" RefId="%AID%_P-%T%000103" />
+              <ParameterRef Id="%AID%_P-%T%000104_R-%T%00010401" RefId="%AID%_P-%T%000104" />
+              <ParameterRef Id="%AID%_P-%T%000105_R-%T%00010501" RefId="%AID%_P-%T%000105" />
+              <ParameterRef Id="%AID%_P-%T%000106_R-%T%00010601" RefId="%AID%_P-%T%000106" />
+              <ParameterRef Id="%AID%_P-%T%000107_R-%T%00010701" RefId="%AID%_P-%T%000107" />
+              <ParameterRef Id="%AID%_P-%T%000108_R-%T%00010801" RefId="%AID%_P-%T%000108" />
+              <ParameterRef Id="%AID%_P-%T%000109_R-%T%00010901" RefId="%AID%_P-%T%000109" />
+              <ParameterRef Id="%AID%_P-%T%000110_R-%T%00011001" RefId="%AID%_P-%T%000110" />
+              <ParameterRef Id="%AID%_P-%T%000111_R-%T%00011101" RefId="%AID%_P-%T%000111" />
             </ParameterRefs>
             <ComObjectTable>
               <!-- ComOject Debug Modbus-->

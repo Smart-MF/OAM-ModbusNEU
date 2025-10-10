@@ -821,14 +821,14 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
             // clear Responsebuffer before revicing a new message
             clearResponseBuffer();
 
-            uint32_t v;
+            uint64_t v;
 
-            // Bestimmt ob Register-Typ: Word oder Double Word
-            switch (ParamMOD_CHModBusWordTyp12) // Choose Word Register OR Double Word Register
+            // Bestimmt ob Register-Typ: 16Bit, 32Bit oder 64Bit
+            switch (ParamMOD_CHModBusWordTyp12)
             {
-            case 0: // Word Register
+            case 0: // 16Bit Register
 #ifdef Serial_Debug_Modbus
-                logDebugP("| Word ");
+                logDebugP("| 16Bit ");
 #endif
                 // Choose Modbus Funktion (0x03 readHoldingRegisters ODER 0x04 readInputRegisters)
                 switch (ParamMOD_CHModBusReadWordFunktion)
@@ -882,9 +882,9 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                 }
 
                 break;
-            case 1: // Double Word Register
+            case 1: // 32Bit Register
 #ifdef Serial_Debug_Modbus
-                logDebugP("| Double Word ");
+                logDebugP("| 32Bit ");
 #endif
                 // Choose Modbus Funktion (0x03 readHoldingRegisters ODER 0x04 readInputRegisters)
                 switch (ParamMOD_CHModBusReadWordFunktion)
@@ -932,6 +932,63 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                     return result;
                 }
                 break; // Ende Case 1 Double Register
+            case 3:    // *****************************************   64Bit Register  *************************************************
+#ifdef Serial_Debug_Modbus
+                logDebugP("| 64Bit ");
+#endif
+                // Choose Modbus Funktion (0x03 readHoldingRegisters ODER 0x04 readInputRegisters)
+                switch (ParamMOD_CHModBusReadWordFunktion)
+                {
+                case 3: // 0x03 Lese holding registers
+#ifdef Serial_Debug_Modbus
+                    logDebugP(" 0x03 ");
+#endif
+                    result = readHoldingRegisters(_registerAddr, 4);
+                    break;
+
+                case 4:
+#ifdef Serial_Debug_Modbus
+                    logDebugP(" 0x04 ");
+#endif
+                    result = readInputRegisters(_registerAddr, 4);
+                    break;
+                default:
+                    return result;
+                }
+
+                if (result == ku8MBSuccess)
+                {
+                    // check HI / LO   OR   LO / Hi  order
+                    switch (ParamMOD_CHModBusWordPosDpt12)
+                    {
+                        //  ************************************************************************** MUSS NOCH GEPRÜFT WERDEN !!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    case 0: // HI Word / LO Word
+                        v = ((uint64_t)getResponseBuffer(0) << 48) |
+                            ((uint64_t)getResponseBuffer(1) << 32) |
+                            ((uint64_t)getResponseBuffer(2) << 16) |
+                            ((uint64_t)getResponseBuffer(3));
+                        break;
+                    case 1: // LO Word / HI Word
+                        v = ((uint64_t)getResponseBuffer(0)) |
+                            ((uint64_t)getResponseBuffer(1) << 16) |
+                            ((uint64_t)getResponseBuffer(2) << 32) |
+                            ((uint64_t)getResponseBuffer(3) << 48);
+
+                        //  ************************************************************************** MUSS NOCH GEPRÜFT WERDEN !!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        break;
+                    default:
+                        return result;
+                    } // Ende // HI / LO Word
+                }
+                else // Fehler
+                {
+#ifdef Serial_Debug_Modbus_Min
+                    logInfoP("ERROR: %I", result, HEX);
+#endif
+
+                    return result;
+                }
+                break; // ********************************* Ende Case 3 64 Bit Register *************************************************
             default:
                 return result;
             } // ENDE ENDE Word / Double Word Register
@@ -941,7 +998,7 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                 // senden bei Wertänderung
                 uint32_t lAbsolute = ParamMOD_CHModBusValueChange;
                 int absVAlue = (v - lastSentValue.lValueUint32_t);
-                uint32_t lDiff = abs(absVAlue);
+                uint64_t lDiff = abs(absVAlue);
                 if (lAbsolute > 0 && lDiff >= lAbsolute)
                     lSend = true;
 
@@ -983,7 +1040,7 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
             {
             case 0: // Word Register
 #ifdef Serial_Debug_Modbus
-                logDebugP("| Word ");
+                logDebugP("| 16Bit ");
 #endif
                 // Choose Modbus Funktion (0x03 readHoldingRegisters ODER 0x04 readInputRegisters)
                 switch (ParamMOD_CHModBusReadWordFunktion)
@@ -1036,7 +1093,7 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                 break;
             case 1: // Double Word Register
 #ifdef Serial_Debug_Modbus
-                logDebugP("| Double Word ");
+                logDebugP("| 32Bit ");
 #endif
                 // Choose Modbus Funktion (0x03 readHoldingRegisters ODER 0x04 readInputRegisters)
                 switch (ParamMOD_CHModBusReadWordFunktion)
@@ -1083,7 +1140,64 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
 
                     return result;
                 }
-                break; // Ende Case 1 Double Register
+                break; // Ende Case 2 32Bit Register
+            case 3:    // *****************************************   64Bit Register  *************************************************
+#ifdef Serial_Debug_Modbus
+                logDebugP("| 64Bit ");
+#endif
+                // Choose Modbus Funktion (0x03 readHoldingRegisters ODER 0x04 readInputRegisters)
+                switch (ParamMOD_CHModBusReadWordFunktion)
+                {
+                case 3: // 0x03 Lese holding registers
+#ifdef Serial_Debug_Modbus
+                    logDebugP(" 0x03 ");
+#endif
+                    result = readHoldingRegisters(_registerAddr, 4);
+                    break;
+
+                case 4:
+#ifdef Serial_Debug_Modbus
+                    logDebugP(" 0x04 ");
+#endif
+                    result = readInputRegisters(_registerAddr, 4);
+                    break;
+                default:
+                    return result;
+                }
+
+                if (result == ku8MBSuccess)
+                {
+                    // check HI / LO   OR   LO / Hi  order
+                    switch (ParamMOD_CHModBusWordPosDpt12)
+                    {
+                        //  ************************************************************************** MUSS NOCH GEPRÜFT WERDEN !!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    case 0: // HI Word / LO Word
+                        v = ((int64_t)getResponseBuffer(0) << 48) |
+                            ((int64_t)getResponseBuffer(1) << 32) |
+                            ((int64_t)getResponseBuffer(2) << 16) |
+                            ((int64_t)getResponseBuffer(3));
+                        break;
+                    case 1: // LO Word / HI Word
+                        v = ((int64_t)getResponseBuffer(0)) |
+                            ((int64_t)getResponseBuffer(1) << 16) |
+                            ((int64_t)getResponseBuffer(2) << 32) |
+                            ((int64_t)getResponseBuffer(3) << 48);
+
+                        //  ************************************************************************** MUSS NOCH GEPRÜFT WERDEN !!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        break;
+                    default:
+                        return result;
+                    } // Ende // HI / LO Word
+                }
+                else // Fehler
+                {
+#ifdef Serial_Debug_Modbus_Min
+                    logInfoP("ERROR: %I", result, HEX);
+#endif
+
+                    return result;
+                }
+                break; // ********************************* Ende Case 3 64 Bit Register *************************************************
             default:
                 return result;
             } // ENDE ENDE Word / Double Word Register
@@ -1128,15 +1242,15 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
             float v;
 
             // Bestimmt ob Register-Typ: Word oder Double Word
-            switch (ParamMOD_CHModBusWordTyp14) // Choose Word Register OR Double Word Register
+            switch (ParamMOD_CHModBusWordTyp14) // Choose 26bit, 32bit Register OR 64Bit Register
             {
-            case 0: // Word Register
-                // Choose Modbus Funktion (0x03 readHoldingRegisters ODER 0x04 readInputRegisters)
-                switch (ParamMOD_CHModBusReadWordFunktion)
+            case 0: // ************************************************  16bit  Register *********************************************************
+
+                switch (ParamMOD_CHModBusReadWordFunktion) // Choose Modbus Funktion (0x03 readHoldingRegisters ODER 0x04 readInputRegisters)
                 {
                 case 3: // 0x03 Lese holding registers
 #ifdef Serial_Debug_Modbus
-                    logDebugP("DPT14| Word 0x03 ");
+                    logDebugP("DPT14| 16Bit 0x03 ");
 #endif
                     result = readHoldingRegisters(_registerAddr, 1);
                     break;
@@ -1144,7 +1258,7 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                 case 4:
 
 #ifdef Serial_Debug_Modbus
-                    logDebugP("DPT14| Word 0x04 ");
+                    logDebugP("DPT14| 16Bit 0x04 ");
 #endif
                     result = readInputRegisters(_registerAddr, 1);
                     break;
@@ -1216,20 +1330,19 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                 }
 
                 break;
-            case 1: // Double Word Register
-                // Choose Modbus Funktion (0x03 readHoldingRegisters ODER 0x04 readInputRegisters)
-                switch (ParamMOD_CHModBusReadWordFunktion)
+            case 1:                                        // *********************************** 32Bit Register ******************************************************
+                switch (ParamMOD_CHModBusReadWordFunktion) // Choose Modbus Funktion (0x03 readHoldingRegisters ODER 0x04 readInputRegisters)
                 {
                 case 3: // 0x03 Lese holding registers
 #ifdef Serial_Debug_Modbus
-                    logDebugP("DPT14| Double Word | 0x03 ");
+                    logDebugP("DPT14| 32Bit| 0x03 ");
 #endif
                     result = readHoldingRegisters(_registerAddr, 2);
                     break;
 
                 case 4:
 #ifdef Serial_Debug_Modbus
-                    logDebugP("DPT14| Double Word | 0x04 ");
+                    logDebugP("DPT14| 32Bit | 0x04 ");
 #endif
                     result = readInputRegisters(_registerAddr, 2);
                     break;
@@ -1287,7 +1400,8 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                         v = lValueFloat / (float)ParamMOD_CHModBuscalculationValueDiff;
                         v = v + (int16_t)ParamMOD_CHModBuscalculationValueAdd;
                     }
-                    break;
+                    break; // Ende Case 1
+
                     default:
                         return result;
                     }
@@ -1300,407 +1414,486 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
 
                     return result;
                 }
-                break; // Ende Case 1 Double Register
-            default:
-                return result;
-            } // ENDE ENDE Word / Double Word Register
+                break; // Ende Case 2 32Bit Register
+            case 3:    // *********************************** 64Bit Register ******************************************************
 
-            if (result == ku8MBSuccess)
-            {
-                // send on first value or value change
-                float lAbsolute = ParamMOD_CHModBusValueChange / 10.0;
-                float lDiff = abs(v - lastSentValue.lValue);
-                if (lAbsolute > 0.0f && lDiff >= lAbsolute)
-                    lSend = true;
-
-                // we always store the new value in KO, even it it is not sent (to satisfy potential read request)
-                KoMOD_GO_BASE_.valueNoSend(v, DPT_Value_Acceleration_Angular);
-                if (lSend)
+                switch (ParamMOD_CHModBusReadWordFunktion) // Choose Modbus Funktion (0x03 readHoldingRegisters ODER 0x04 readInputRegisters)
                 {
-                    lastSentValue.lValue = v;
+                case 3: // 0x03 Lese holding registers
+#ifdef Serial_Debug_Modbus
+                    logDebugP("DPT14| 64Bit| 0x03 ");
+#endif
+                    result = readHoldingRegisters(_registerAddr, 4);
+                    break;
+
+                case 4:
+#ifdef Serial_Debug_Modbus
+                    logDebugP("DPT14| 64Bit | 0x04 ");
+#endif
+                    result = readInputRegisters(_registerAddr, 4);
+                    break;
+                default:
+                    return result;
                 }
 
-                logDebugP("%f", v, 2);
+                if (result == ku8MBSuccess)
+                {
+                    uint64_t raw;
 
-                // Löscht Fehlerspeicher
-                errorState[0] = false;
-                errorState[1] = false;
+                    // check HI / LO   OR   LO / Hi  order
+                    switch (ParamMOD_CHModBusWordPosDpt14)
+                    {
+                        //  ************************************************************************** MUSS NOCH GEPRÜFT WERDEN !!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    case 0: // HI Word / LO Word
+                        raw = ((uint64_t)getResponseBuffer(0) << 48) |
+                              ((uint64_t)getResponseBuffer(1) << 32) |
+                              ((uint64_t)getResponseBuffer(2) << 16) |
+                              ((uint64_t)getResponseBuffer(3));
+                        break;
+                    case 1: // LO Word / HI Word
+                        raw = ((uint64_t)getResponseBuffer(0)) |
+                              ((uint64_t)getResponseBuffer(1) << 16) |
+                              ((uint64_t)getResponseBuffer(2) << 32) |
+                              ((uint64_t)getResponseBuffer(3) << 48);
+                        //  ************************************************************************** MUSS NOCH GEPRÜFT WERDEN !!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        break;
+                    default:
+                        return result;
+                    } // Ende // HI / LO Word
+                    // check receive input datatype ( signed / unsgined / Float)
+                    switch (ParamMOD_CHModBusRegisterValueTypDpt14)
+                    {
+                    case 1: // unsigned
+                    {
+                        uint64_t lValueu64bit = raw;
+                        //                                                         ************************ MUSS NOCH GEPRÜFT WERDEN !!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        v = lValueu64bit / (float)ParamMOD_CHModBuscalculationValueDiff;
+                        v = v + (int16_t)ParamMOD_CHModBuscalculationValueAdd;
+                    }
+                    break;
+                    case 2: // signed
+                    {
+                        int64_t lValuei64bit = (int64_t)raw;
+                        //                                                         ************************ MUSS NOCH GEPRÜFT WERDEN !!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        v = lValuei64bit / (float)ParamMOD_CHModBuscalculationValueDiff;
+                        v = v + (int16_t)ParamMOD_CHModBuscalculationValueAdd;
+                    }
+                    break;
+                    case 3: // float
+                    {
+                        // going via union allows the compiler to be sure about alignment
+                        union intfloat
+                        {
+                            uint64_t intVal;
+                            float floatVal;
+                        };
+                        // float lValueFloat = ((intfloat *)&raw)->floatVal;
+                        float lValueFloat = (float)raw;
+                        //                                                         ************************ MUSS NOCH GEPRÜFT WERDEN !!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        v = lValueFloat / (float)ParamMOD_CHModBuscalculationValueDiff;
+                        v = v + (int16_t)ParamMOD_CHModBuscalculationValueAdd;
+                    }
+                    break; // ************************************************** Ende Case 3 64Bit *************************************************************
+                    default:
+                        return result;
+                    } // ENDE ENDE Word / Double Word Register
+
+                    if (result == ku8MBSuccess)
+                    {
+                        // send on first value or value change
+                        float lAbsolute = ParamMOD_CHModBusValueChange / 10.0;
+                        float lDiff = abs(v - lastSentValue.lValue);
+                        if (lAbsolute > 0.0f && lDiff >= lAbsolute)
+                            lSend = true;
+
+                        // we always store the new value in KO, even it it is not sent (to satisfy potential read request)
+                        KoMOD_GO_BASE_.valueNoSend(v, DPT_Value_Acceleration_Angular);
+                        if (lSend)
+                        {
+                            lastSentValue.lValue = v;
+                        }
+
+                        logDebugP("%f", v, 2);
+
+                        // Löscht Fehlerspeicher
+                        errorState[0] = false;
+                        errorState[1] = false;
+                    }
+
+                } // ENDE
+                break; // Ende PDT14
+
+            default: // all other dpts
+                logInfoP("Falscher DPT: %i", dpt);
+                break;
+            } // Ende DPT Wahl Wahl
+
+            if (lSend && !errorState[0] && !errorState[1])
+            {
+                KoMOD_GO_BASE_.objectWritten();
+                valueValid = true;
+                sendDelay = millis();
+                lSend = false;
             }
 
-        } // ENDE
-        break; // Ende PDT14
+            return true;
+        }
 
-    default: // all other dpts
-        logInfoP("Falscher DPT: %i", dpt);
-        break;
-    } // Ende DPT Wahl Wahl
+        //*****************************************************************************************************************************************
+        //*****************************************************************************************************************************************
+        //
+        //*****************************************  KNX TO Modbus ********************************************************************************
+        //
+        //*****************************************************************************************************************************************
+        //*****************************************************************************************************************************************
+        uint8_t modbusChannel::knxToModbus()
+        {
+            if (ParamMOD_CHModBusBusDirection != 0)
+                return 0xFF;
 
-    if (lSend && !errorState[0] && !errorState[1])
-    {
-        KoMOD_GO_BASE_.objectWritten();
-        valueValid = true;
-        sendDelay = millis();
-        lSend = false;
-    }
-
-    return true;
-}
-
-//*****************************************************************************************************************************************
-//*****************************************************************************************************************************************
-//
-//*****************************************  KNX TO Modbus ********************************************************************************
-//
-//*****************************************************************************************************************************************
-//*****************************************************************************************************************************************
-uint8_t modbusChannel::knxToModbus()
-{
-    if (ParamMOD_CHModBusBusDirection != 0)
-        return 0xFF;
-
-    uint8_t result = 0;
-    uint16_t _registerAddr = ParamMOD_CHModbusRegister; // adjustRegisterAddress(ParamMOD_CHModbusRegister);
-    // GroupObject ko = KoMOD_GO_BASE_;
+            uint8_t result = 0;
+            uint16_t _registerAddr = ParamMOD_CHModbusRegister; // adjustRegisterAddress(ParamMOD_CHModbusRegister);
+                                                                // GroupObject ko = KoMOD_GO_BASE_;
 
 #ifdef Serial_Debug_Modbus_Min
-    logDebugP("KNX: CH%i", (_channelIndex + 1));
+            logDebugP("KNX: CH%i", (_channelIndex + 1));
 #endif
 
-    //*****************************************************************************************************************************************
-    //*****************************************  DPT 1.001 ************************************************************************************
-    //*****************************************************************************************************************************************
-    if (ParamMOD_CHModBusDptSelection == 1)
-    {
-        if (true)
-        {
-            bool v = (bool)KoMOD_GO_BASE_.value(DPT_Switch) ^ (ParamMOD_CHModBusInputTypInvDpt1);
-
-            // Bit Register
-            if (ParamMOD_CHModBusInputTypDpt1 == 0)
+            //*****************************************************************************************************************************************
+            //*****************************************  DPT 1.001 ************************************************************************************
+            //*****************************************************************************************************************************************
+            if (ParamMOD_CHModBusDptSelection == 1)
             {
+                if (true)
+                {
+                    bool v = (bool)KoMOD_GO_BASE_.value(DPT_Switch) ^ (ParamMOD_CHModBusInputTypInvDpt1);
+
+                    // Bit Register
+                    if (ParamMOD_CHModBusInputTypDpt1 == 0)
+                    {
 #ifdef Serial_Debug_Modbus
-                SERIAL_DEBUG.print(" 0x05 ");
+                        SERIAL_DEBUG.print(" 0x05 ");
 #endif
-                result = writeSingleCoil(_registerAddr, v);
+                        result = writeSingleCoil(_registerAddr, v);
+                    }
+                    // Bit in Word
+                    else if (ParamMOD_CHModBusInputTypDpt1 == 1)
+                    {
+                        uint16_t value = v << ParamMOD_CHModBusBitPosDpt1;
+                        result = sendProtocol(_registerAddr, value);
+                    }
+                    else
+                    {
+                        return result;
+                    }
+                    printDebugResult("1.001", _registerAddr, result);
+                }
             }
-            // Bit in Word
-            else if (ParamMOD_CHModBusInputTypDpt1 == 1)
+            //*****************************************************************************************************************************************
+            //*****************************************  DPT 5.004 ************************************************************************************
+            //*****************************************************************************************************************************************
+            else if (4 == ParamMOD_CHModBusDptSelection)
             {
-                uint16_t value = v << ParamMOD_CHModBusBitPosDpt1;
-                result = sendProtocol(_registerAddr, value);
+                if (true)
+                {
+                    result = sendProtocol(_registerAddr, KoMOD_GO_BASE_.value(DPT_Percent_U8));
+                    printDebugResult("5.004", _registerAddr, result);
+                }
             }
-            else
+            //*****************************************************************************************************************************************
+            //*****************************************  DPT 5.010 ************************************************************************************
+            //*****************************************************************************************************************************************
+            else if (5 == ParamMOD_CHModBusDptSelection)
             {
-                return result;
+
+                uint16_t v = KoMOD_GO_BASE_.value(DPT_Value_1_Ucount);
+
+                logDebugP("DPT5.10  value: %i", v);
+
+                switch (ParamMOD_CHModBusRegisterPosDPT5)
+                {
+                case 1: // High Byte
+                    v <<= 8;
+                    break;
+                case 2: // Low Byte
+                    // already at correct position
+                    break;
+                case 3: // frei Wählbar
+                    v &= ParamMOD_CHModbusCountBitsDPT56;
+                    v <<= ParamMOD_CHModBusOffsetRight5;
+                    break;
+                default:
+                    logDebugP("DPT5: ER: %i", ParamMOD_CHModBusRegisterPosDPT5);
+                    return 0x02;
+                } // Ende Register Pos
+
+                logDebugP("start");
+                result = sendProtocol(_registerAddr, v);
+                logDebugP("stopp");
+                printDebugResult("5.001", _registerAddr, result);
             }
-            printDebugResult("1.001", _registerAddr, result);
-        }
-    }
-    //*****************************************************************************************************************************************
-    //*****************************************  DPT 5.004 ************************************************************************************
-    //*****************************************************************************************************************************************
-    else if (4 == ParamMOD_CHModBusDptSelection)
-    {
-        if (true)
-        {
-            result = sendProtocol(_registerAddr, KoMOD_GO_BASE_.value(DPT_Percent_U8));
-            printDebugResult("5.004", _registerAddr, result);
-        }
-    }
-    //*****************************************************************************************************************************************
-    //*****************************************  DPT 5.010 ************************************************************************************
-    //*****************************************************************************************************************************************
-    else if (5 == ParamMOD_CHModBusDptSelection)
-    {
-
-        uint16_t v = KoMOD_GO_BASE_.value(DPT_Value_1_Ucount);
-
-        logDebugP("DPT5.10  value: %i", v);
-
-        switch (ParamMOD_CHModBusRegisterPosDPT5)
-        {
-        case 1: // High Byte
-            v <<= 8;
-            break;
-        case 2: // Low Byte
-            // already at correct position
-            break;
-        case 3: // frei Wählbar
-            v &= ParamMOD_CHModbusCountBitsDPT56;
-            v <<= ParamMOD_CHModBusOffsetRight5;
-            break;
-        default:
-            logDebugP("DPT5: ER: %i", ParamMOD_CHModBusRegisterPosDPT5);
-            return 0x02;
-        } // Ende Register Pos
-
-        logDebugP("start");
-        result = sendProtocol(_registerAddr, v);
-        logDebugP("stopp");
-        printDebugResult("5.001", _registerAddr, result);
-    }
-    //*****************************************************************************************************************************************
-    //*****************************************  DPT 7 ***************************************************************************************
-    //*****************************************************************************************************************************************
-    else if (7 == ParamMOD_CHModBusDptSelection)
-    {
-        if (true)
-        {
-            uint16_t v = KoMOD_GO_BASE_.value(DPT_Value_2_Ucount);
-
-            switch (ParamMOD_CHModBusRegisterPosDPT7)
+            //*****************************************************************************************************************************************
+            //*****************************************  DPT 7 ***************************************************************************************
+            //*****************************************************************************************************************************************
+            else if (7 == ParamMOD_CHModBusDptSelection)
             {
-            case 1: // High/LOW Byte
-                // already at correct position
-                break;
-            case 2: // frei Wählbar
-                v &= ((1 << ParamMOD_CHModbusCountBitsDPT7) - 1);
-                v <<= (ParamMOD_CHModBusOffsetRight7);
-                break;
-            default:
-                return result;
-            } // Ende Register Pos
+                if (true)
+                {
+                    uint16_t v = KoMOD_GO_BASE_.value(DPT_Value_2_Ucount);
 
-            result = sendProtocol(_registerAddr, v);
-            printDebugResult("5", _registerAddr, result);
-        }
-    }
-    //*****************************************************************************************************************************************
-    //*****************************************  DPT 8 signed 16Bit ***************************************************************************
-    //*****************************************************************************************************************************************
-    else if (8 == ParamMOD_CHModBusDptSelection)
-    {
-        if (true)
-        {
-            result = sendProtocol(_registerAddr, KoMOD_GO_BASE_.value(DPT_Value_2_Count));
-            printDebugResult("8", _registerAddr, result);
-        }
-    }
-    //*****************************************************************************************************************************************
-    //*****************************************  DPT 9 ***************************************************************************************
-    //*****************************************************************************************************************************************
-    else if (9 == ParamMOD_CHModBusDptSelection)
-    {
-        if (true)
-        {
-            float raw = KoMOD_GO_BASE_.value(DPT_Value_Temp);
-            uint16_t v;
-            // adapt input value (Low Byte / High Byte / High&Low Byte / .... )
-            switch (ParamMOD_CHModBusRegisterPosDPT9)
+                    switch (ParamMOD_CHModBusRegisterPosDPT7)
+                    {
+                    case 1: // High/LOW Byte
+                        // already at correct position
+                        break;
+                    case 2: // frei Wählbar
+                        v &= ((1 << ParamMOD_CHModbusCountBitsDPT7) - 1);
+                        v <<= (ParamMOD_CHModBusOffsetRight7);
+                        break;
+                    default:
+                        return result;
+                    } // Ende Register Pos
+
+                    result = sendProtocol(_registerAddr, v);
+                    printDebugResult("5", _registerAddr, result);
+                }
+            }
+            //*****************************************************************************************************************************************
+            //*****************************************  DPT 8 signed 16Bit ***************************************************************************
+            //*****************************************************************************************************************************************
+            else if (8 == ParamMOD_CHModBusDptSelection)
             {
-            case 1: // Low Byte unsigned
-                v = ((uint16_t)roundf(raw)) & 0xff;
-                break;
-            case 2: // High Byte unsigned
-                v = (((uint16_t)roundf(raw)) >> 8) & 0xff;
-                break;
-            case 3: // High/Low Byte unsigned
-                v = (uint16_t)roundf(raw);
-                break;
-            case 4: // Low Byte signed
-                v = ((int)roundf(raw)) & 0xff;
-                break;
-            case 5: // High Byte signed
-                v = (((int)roundf(raw)) >> 8) & 0xff;
-                break;
-            case 6: // High/Low Byte signed
-                v = (int)roundf(raw);
-                break;
-            default:
-                return result;
+                if (true)
+                {
+                    result = sendProtocol(_registerAddr, KoMOD_GO_BASE_.value(DPT_Value_2_Count));
+                    printDebugResult("8", _registerAddr, result);
+                }
             }
-            result = sendProtocol(_registerAddr, v);
-            printDebugResult("9", _registerAddr, result);
-        }
-    }
-    //*****************************************************************************************************************************************
-    //*****************************************  DPT 12 ***************************************************************************************
-    //*****************************************************************************************************************************************
-    else if (12 == ParamMOD_CHModBusDptSelection)
-    {
-        if (true)
-        {
-            uint32_t v = KoMOD_GO_BASE_.value(DPT_Value_4_Ucount);
-            setTransmitBuffer(0, v >> 16);
-            setTransmitBuffer(1, v & 0xffff);
-            result = writeMultipleRegisters(_registerAddr, 2);
-            printDebugResult("12 0x10", _registerAddr, result);
-        }
-    }
-    //*****************************************************************************************************************************************
-    //*****************************************  DPT 13 ***************************************************************************************
-    //*****************************************************************************************************************************************
-    else if (13 == ParamMOD_CHModBusDptSelection)
-    {
-        if (true)
-        {
-            int32_t v = KoMOD_GO_BASE_.value(DPT_Value_4_Count);
-            setTransmitBuffer(0, v >> 16);
-            setTransmitBuffer(1, v);
-            result = writeMultipleRegisters(_registerAddr, 2);
-            printDebugResult("13 0x10", _registerAddr, result);
-        }
-    }
-    //*****************************************************************************************************************************************
-    //*****************************************  DPT 14 ***************************************************************************************
-    //*****************************************************************************************************************************************
-    else if (14 == ParamMOD_CHModBusDptSelection)
-    {
-        if (true)
-        {
-            float raw = KoMOD_GO_BASE_.value(DPT_Value_Acceleration_Angular);
-            union floatint
+            //*****************************************************************************************************************************************
+            //*****************************************  DPT 9 ***************************************************************************************
+            //*****************************************************************************************************************************************
+            else if (9 == ParamMOD_CHModBusDptSelection)
             {
-                float floatVal;
-                uint32_t intVal;
-            };
-            uint32_t v = ((floatint *)&raw)->intVal;
-            // HI / LO   OR   LO / Hi  order
-            if (ParamMOD_CHModBusWordPosDpt14 == 0)
-            { // HI / LO
-                setTransmitBuffer(0, v >> 16);
-                setTransmitBuffer(1, v);
+                if (true)
+                {
+                    float raw = KoMOD_GO_BASE_.value(DPT_Value_Temp);
+                    uint16_t v;
+                    // adapt input value (Low Byte / High Byte / High&Low Byte / .... )
+                    switch (ParamMOD_CHModBusRegisterPosDPT9)
+                    {
+                    case 1: // Low Byte unsigned
+                        v = ((uint16_t)roundf(raw)) & 0xff;
+                        break;
+                    case 2: // High Byte unsigned
+                        v = (((uint16_t)roundf(raw)) >> 8) & 0xff;
+                        break;
+                    case 3: // High/Low Byte unsigned
+                        v = (uint16_t)roundf(raw);
+                        break;
+                    case 4: // Low Byte signed
+                        v = ((int)roundf(raw)) & 0xff;
+                        break;
+                    case 5: // High Byte signed
+                        v = (((int)roundf(raw)) >> 8) & 0xff;
+                        break;
+                    case 6: // High/Low Byte signed
+                        v = (int)roundf(raw);
+                        break;
+                    default:
+                        return result;
+                    }
+                    result = sendProtocol(_registerAddr, v);
+                    printDebugResult("9", _registerAddr, result);
+                }
             }
-            else
-            { // LO / HI
-                setTransmitBuffer(0, v);
-                setTransmitBuffer(1, v >> 16);
+            //*****************************************************************************************************************************************
+            //*****************************************  DPT 12 ***************************************************************************************
+            //*****************************************************************************************************************************************
+            else if (12 == ParamMOD_CHModBusDptSelection)
+            {
+                if (true)
+                {
+                    uint32_t v = KoMOD_GO_BASE_.value(DPT_Value_4_Ucount);
+                    setTransmitBuffer(0, v >> 16);
+                    setTransmitBuffer(1, v & 0xffff);
+                    result = writeMultipleRegisters(_registerAddr, 2);
+                    printDebugResult("12 0x10", _registerAddr, result);
+                }
             }
-            result = writeMultipleRegisters(_registerAddr, 2);
-            printDebugResult("14 0x10", _registerAddr, result);
+            //*****************************************************************************************************************************************
+            //*****************************************  DPT 13 ***************************************************************************************
+            //*****************************************************************************************************************************************
+            else if (13 == ParamMOD_CHModBusDptSelection)
+            {
+                if (true)
+                {
+                    int32_t v = KoMOD_GO_BASE_.value(DPT_Value_4_Count);
+                    setTransmitBuffer(0, v >> 16);
+                    setTransmitBuffer(1, v);
+                    result = writeMultipleRegisters(_registerAddr, 2);
+                    printDebugResult("13 0x10", _registerAddr, result);
+                }
+            }
+            //*****************************************************************************************************************************************
+            //*****************************************  DPT 14 ***************************************************************************************
+            //*****************************************************************************************************************************************
+            else if (14 == ParamMOD_CHModBusDptSelection)
+            {
+                if (true)
+                {
+                    float raw = KoMOD_GO_BASE_.value(DPT_Value_Acceleration_Angular);
+                    union floatint
+                    {
+                        float floatVal;
+                        uint32_t intVal;
+                    };
+                    uint32_t v = ((floatint *)&raw)->intVal;
+                    // HI / LO   OR   LO / Hi  order
+                    if (ParamMOD_CHModBusWordPosDpt14 == 0)
+                    { // HI / LO
+                        setTransmitBuffer(0, v >> 16);
+                        setTransmitBuffer(1, v);
+                    }
+                    else
+                    { // LO / HI
+                        setTransmitBuffer(0, v);
+                        setTransmitBuffer(1, v >> 16);
+                    }
+                    result = writeMultipleRegisters(_registerAddr, 2);
+                    printDebugResult("14 0x10", _registerAddr, result);
+                }
+            }
+
+            return true;
         }
-    }
 
-    return true;
-}
-
-uint8_t modbusChannel::sendProtocol(uint16_t _registerAddr, uint16_t u16value)
-{
-    if (0x06 == ParamMOD_CHModBusWriteWordFunktion)
-    {
+        uint8_t modbusChannel::sendProtocol(uint16_t _registerAddr, uint16_t u16value)
+        {
+            if (0x06 == ParamMOD_CHModBusWriteWordFunktion)
+            {
 #ifdef Serial_Debug_Modbus
-        SERIAL_DEBUG.print(" 0x06 ");
+                SERIAL_DEBUG.print(" 0x06 ");
 #endif
-        return writeSingleRegister(_registerAddr, u16value);
-    }
-    else if (0x10 == ParamMOD_CHModBusWriteWordFunktion)
-    {
+                return writeSingleRegister(_registerAddr, u16value);
+            }
+            else if (0x10 == ParamMOD_CHModBusWriteWordFunktion)
+            {
 #ifdef Serial_Debug_Modbus
-        SERIAL_DEBUG.print(" 0x10 ");
+                SERIAL_DEBUG.print(" 0x10 ");
 #endif
-        setTransmitBuffer(0, u16value);
-        return writeMultipleRegisters(_registerAddr, 1);
-    }
-    return ku8MBIllegalFunction;
-}
+                setTransmitBuffer(0, u16value);
+                return writeMultipleRegisters(_registerAddr, 1);
+            }
+            return ku8MBIllegalFunction;
+        }
 
-void modbusChannel::printDebugResult(const char *dpt, uint16_t _registerAddr, uint8_t result)
-{
+        void modbusChannel::printDebugResult(const char *dpt, uint16_t _registerAddr, uint8_t result)
+        {
 #ifdef Serial_Debug_Modbus
-    logDebugP("DPT:%s Reg:%u", dpt, _registerAddr);
+            logDebugP("DPT:%s Reg:%u", dpt, _registerAddr);
 #endif
 #ifdef Serial_Debug_Modbus_Min
-    switch (result)
-    {
-    case ku8MBSuccess:
-        logDebugP("DONE");
-        break;
+            switch (result)
+            {
+            case ku8MBSuccess:
+                logDebugP("DONE");
+                break;
 #ifdef Serial_Debug_Modbus
-    case ku8MBInvalidSlaveID:
-        logDebugP("ERROR: Invalid Slave ID");
-        break;
-    case ku8MBInvalidFunction:
-        logDebugP("ERROR: Invalid Function");
-        break;
-    case ku8MBResponseTimedOut:
-        logDebugP("ERROR: Response Timed Out");
-        break;
-    case ku8MBInvalidCRC:
-        logDebugP("ERROR: Invalid CRC");
-        break;
+            case ku8MBInvalidSlaveID:
+                logDebugP("ERROR: Invalid Slave ID");
+                break;
+            case ku8MBInvalidFunction:
+                logDebugP("ERROR: Invalid Function");
+                break;
+            case ku8MBResponseTimedOut:
+                logDebugP("ERROR: Response Timed Out");
+                break;
+            case ku8MBInvalidCRC:
+                logDebugP("ERROR: Invalid CRC");
+                break;
 #endif
-    default:
-        logDebugP("ERROR");
-        break;
-    }
+            default:
+                logDebugP("ERROR");
+                break;
+            }
 #endif
-}
+        }
 
-bool modbusChannel::modbusParitySerial(uint32_t baud, HardwareSerial &serial)
-{
-    switch (_parity_value)
-    {
-    case 0: // Even (1 stop bit)
-        serial.begin(baud, SERIAL_8E1);
-        // logDebugP.println("Parity: Even (1 stop bit)");
-        return true;
-        break;
-    case 1: // Odd (1 stop bit)
-        serial.begin(baud, SERIAL_8O1);
-        // logDebugP.println("Parity: Odd (1 stop bit)");
-        return true;
-        break;
-    case 2: // None (2 stop bits)
-        serial.begin(baud, SERIAL_8N2);
-        // logDebugP.println("Parity: None (2 stop bits)");
-        return true;
-        break;
-    case 3: // None (1 stop bit)
-        serial.begin(baud, SERIAL_8N1);
-        // logDebugP.println("Parity: None (1 stop bit)");
-        return true;
-        break;
+        bool modbusChannel::modbusParitySerial(uint32_t baud, HardwareSerial &serial)
+        {
+            switch (_parity_value)
+            {
+            case 0: // Even (1 stop bit)
+                serial.begin(baud, SERIAL_8E1);
+                // logDebugP.println("Parity: Even (1 stop bit)");
+                return true;
+                break;
+            case 1: // Odd (1 stop bit)
+                serial.begin(baud, SERIAL_8O1);
+                // logDebugP.println("Parity: Odd (1 stop bit)");
+                return true;
+                break;
+            case 2: // None (2 stop bits)
+                serial.begin(baud, SERIAL_8N2);
+                // logDebugP.println("Parity: None (2 stop bits)");
+                return true;
+                break;
+            case 3: // None (1 stop bit)
+                serial.begin(baud, SERIAL_8N1);
+                // logDebugP.println("Parity: None (1 stop bit)");
+                return true;
+                break;
 
-    default:
-        // logDebugP.print("Parity: Error: ");
-        // logDebugP.println(_parity_value);
-        return false;
-        break;
-    }
-}
+            default:
+                // logDebugP.print("Parity: Error: ");
+                // logDebugP.println(_parity_value);
+                return false;
+                break;
+            }
+        }
 
-bool modbusChannel::modbusInitSerial(HardwareSerial &serial)
-{
-    // Set Modbus communication baudrate
-    switch (_baud_value)
-    {
-    case 0:
-        // logDebugP.println("Baudrate: 1200kBit/s");
-        return modbusParitySerial(1200, serial);
+        bool modbusChannel::modbusInitSerial(HardwareSerial & serial)
+        {
+            // Set Modbus communication baudrate
+            switch (_baud_value)
+            {
+            case 0:
+                // logDebugP.println("Baudrate: 1200kBit/s");
+                return modbusParitySerial(1200, serial);
 
-        break;
-    case 1:
-        // logDebugP.println("Baudrate: 2400kBit/s");
-        return modbusParitySerial(2400, serial);
-        break;
-    case 2:
-        // logDebugP.println("Baudrate: 4800kBit/s");
-        return modbusParitySerial(4800, serial);
-        break;
-    case 3:
-        // logDebugP.println("Baudrate: 9600kBit/s");
-        return modbusParitySerial(9600, serial);
-        break;
-    case 4:
-        // logDebugP.println("Baudrate: 19200kBit/s");
-        return modbusParitySerial(19200, serial);
-        break;
-    case 5:
-        // logDebugP.println("Baudrate: 38400kBit/s");
-        return modbusParitySerial(38400, serial);
-        break;
-    case 6:
-        // logDebugP.println("Baudrate: 56000kBit/s");
-        return modbusParitySerial(56000, serial);
-        break;
-    case 7:
-        // logDebugP.println("Baudrate: 115200kBit/s");
-        return modbusParitySerial(115200, serial);
-        break;
-    default:
-        // logDebugP.print("Baudrate: Error: ");
-        // logDebugP.println(_baud_value);
-        return false;
-        break;
-    }
-}
+                break;
+            case 1:
+                // logDebugP.println("Baudrate: 2400kBit/s");
+                return modbusParitySerial(2400, serial);
+                break;
+            case 2:
+                // logDebugP.println("Baudrate: 4800kBit/s");
+                return modbusParitySerial(4800, serial);
+                break;
+            case 3:
+                // logDebugP.println("Baudrate: 9600kBit/s");
+                return modbusParitySerial(9600, serial);
+                break;
+            case 4:
+                // logDebugP.println("Baudrate: 19200kBit/s");
+                return modbusParitySerial(19200, serial);
+                break;
+            case 5:
+                // logDebugP.println("Baudrate: 38400kBit/s");
+                return modbusParitySerial(38400, serial);
+                break;
+            case 6:
+                // logDebugP.println("Baudrate: 56000kBit/s");
+                return modbusParitySerial(56000, serial);
+                break;
+            case 7:
+                // logDebugP.println("Baudrate: 115200kBit/s");
+                return modbusParitySerial(115200, serial);
+                break;
+            default:
+                // logDebugP.print("Baudrate: Error: ");
+                // logDebugP.println(_baud_value);
+                return false;
+                break;
+            }
+        }

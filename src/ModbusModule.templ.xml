@@ -45,13 +45,14 @@
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="18" BitOffset="0" />
                 <Parameter Id="%AID%_UP-%T%%CCC%020" Name="CH%C%ModbusCountBitsDPT56" Offset="0" BitOffset="0" ParameterType="%AID%_PT-CountBitsDPT56" Text="Anzahl Bits" Value="255" />
                 <Parameter Id="%AID%_UP-%T%%CCC%022" Name="CH%C%ModbusCountBitsDPT7" Offset="1" BitOffset="0" ParameterType="%AID%_PT-CountBitsDPT7" Text="Anzahl Bits" Value="16" />
-                <Parameter Id="%AID%_UP-%T%%CCC%025" Name="CH%C%ModBusWordPosDpt12" Offset="2" BitOffset="0" ParameterType="%AID%_PT-WordPosDpt14" Text="Word Reihenfolge" Value="0" />  <!-- 1bit -->
-                <Parameter Id="%AID%_UP-%T%%CCC%026" Name="CH%C%ModBusWordPosDpt13" Offset="2" BitOffset="1" ParameterType="%AID%_PT-WordPosDpt14" Text="Word Reihenfolge" Value="0" /> <!-- 1bit -->
-                <Parameter Id="%AID%_UP-%T%%CCC%027" Name="CH%C%ModBusWordPosDpt14" Offset="2" BitOffset="2" ParameterType="%AID%_PT-WordPosDpt14" Text="Word Reihenfolge" Value="0" /> <!-- 1bit -->
-                <Parameter Id="%AID%_UP-%T%%CCC%035" Name="CH%C%ModBusWordTyp12" Offset="2" BitOffset="3" ParameterType="%AID%_PT-WordTyp" Text="Register Typ" Value="0" /> <!-- 1bit -->
-                <Parameter Id="%AID%_UP-%T%%CCC%036" Name="CH%C%ModBusWordTyp13" Offset="2" BitOffset="4" ParameterType="%AID%_PT-WordTyp" Text="Register Typ" Value="0" /> <!-- 1bit -->
-                <Parameter Id="%AID%_UP-%T%%CCC%037" Name="CH%C%ModBusWordTyp14" Offset="2" BitOffset="5" ParameterType="%AID%_PT-WordTyp" Text="Register Typ" Value="0" /> <!-- 1bit -->
-                <Parameter Id="%AID%_UP-%T%%CCC%047" Name="CH%C%ModBusRegisterValueTypDpt14" Offset="2" BitOffset="6" ParameterType="%AID%_PT-RegisterValueTypDpt14" Text="Registerwert-Typ" Value="3" /> <!-- 2bit -->
+                <Parameter Id="%AID%_UP-%T%%CCC%025" Name="CH%C%ModBusWordPosDpt12" Offset="2" BitOffset="0" ParameterType="%AID%_PT-WordPosDpt14" Text="Byte Reihenfolge" Value="0" />  <!-- 1bit -->
+                <Parameter Id="%AID%_UP-%T%%CCC%026" Name="CH%C%ModBusWordPosDpt13" Offset="2" BitOffset="1" ParameterType="%AID%_PT-WordPosDpt14" Text="Byte Reihenfolge" Value="0" /> <!-- 1bit -->
+                <Parameter Id="%AID%_UP-%T%%CCC%027" Name="CH%C%ModBusWordPosDpt14" Offset="2" BitOffset="2" ParameterType="%AID%_PT-WordPosDpt14" Text="Byte Reihenfolge" Value="0" /> <!-- 1bit -->
+                <Parameter Id="%AID%_UP-%T%%CCC%035" Name="CH%C%ModBusWordTyp12" Offset="2" BitOffset="3" ParameterType="%AID%_PT-WordTyp" Text="Register Typ" Value="0" /> <!-- 2bit -->
+                <Parameter Id="%AID%_UP-%T%%CCC%036" Name="CH%C%ModBusWordTyp13" Offset="2" BitOffset="5" ParameterType="%AID%_PT-WordTyp" Text="Register Typ" Value="0" /> <!-- 2bit -->
+                <!-- 1bit free -->
+                <Parameter Id="%AID%_UP-%T%%CCC%037" Name="CH%C%ModBusWordTyp14" Offset="3" BitOffset="0" ParameterType="%AID%_PT-WordTyp" Text="Register Typ" Value="0" /> <!-- 2bit -->
+                <Parameter Id="%AID%_UP-%T%%CCC%047" Name="CH%C%ModBusRegisterValueTypDpt14" Offset="3" BitOffset="2" ParameterType="%AID%_PT-RegisterValueTypDpt14" Text="Registerwert-Typ" Value="3" /> <!-- 2bit -->
               </Union>
               <Union SizeInBit="24">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="22" BitOffset="0" />
@@ -483,8 +484,8 @@
                                   <when test="0">
                                     <ComObjectRefRef RefId="%AID%_O-%T%%CCC%001_R-%T%%CCC%00133" />
                                     <ParameterSeparator Id="%AID%_PS-12" Text="Funktion                                                            0x10 Schreibe Multi Register" />
-                                    <ParameterSeparator Id="%AID%_PS-12" Text="Register Typ                                                       Double Word Register" />
-                                    <ParameterSeparator Id="%AID%_PS-12" Text="Registerwert-Typ                                                 float" />
+                                    <ParameterSeparator Id="%AID%_PS-12" Text="Register Typ                                                       32Bit Register" />
+                                    <ParameterSeparator Id="%AID%_PS-12" Text="Registerwert-Typ                                                float" />
                                     <ParameterRefRef RefId="%AID%_UP-%T%%CCC%027_R-%T%%CCC%02701" />
                                   </when>
                                   <!-- Modbus - KNX -->
