@@ -1,6 +1,8 @@
 #include "ModbusModule.h"
 #include "HardwareConfig.h"
 #include "ModBusMaster.h"
+#include "LED_Statusanzeige.h"
+#include "Device.h"
 
 // #define DEVICE_SMARTMF_MODBUS_RTU_3BE
 #define SMARTMF_MODBUS_SERIAL Serial2
@@ -40,6 +42,13 @@ void modbusModule::setup(bool configured)
     pinMode(SMARTMF_LED, OUTPUT);
     digitalWrite(SMARTMF_LED, LOW);
 #endif
+#ifdef DEVICE_SMARTMF_MODBUS_RTU_3BE
+    Wire.setSDA(12);
+    Wire.setSCL(13);
+    Wire.begin();
+    Wire.setClock(400000);
+    initHW(get_HW_ID());
+#endif
     pinMode(SMARTMF_MODBUS_DIR_PIN, OUTPUT);
     SMARTMF_MODBUS_SERIAL.setRX(SMARTMF_MODBUS_RX_PIN);
     SMARTMF_MODBUS_SERIAL.setTX(SMARTMF_MODBUS_TX_PIN);
@@ -56,8 +65,6 @@ void modbusModule::setup(bool configured)
 
 void modbusModule::setupChannels()
 {
-    pinMode(SMARTMF_MODBUS_DIR_PIN, OUTPUT);
-    digitalWrite(SMARTMF_MODBUS_DIR_PIN, 0);
 
     for (uint8_t i = 0; i < ParamMOD_VisibleChannels; i++)
     {
@@ -67,6 +74,12 @@ void modbusModule::setupChannels()
         _channels[i]->preTransmission(preTransmission);
         _channels[i]->postTransmission(postTransmission);
     }
+#ifdef DEVICE_SMARTMF_MODBUS_RTU_3BE
+    if (ParamMOD_VisibleChannels != 0)
+        setLED_Modbus(true);
+    else
+        setLED_Modbus(false);
+#endif
 }
 
 void modbusModule::setupCustomFlash()
@@ -174,12 +187,18 @@ void modbusModule::ErrorHandlingLED()
 #ifdef DEVICE_SMARTMF_1TE_MODBUS
         digitalWrite(SMARTMF_LED, HIGH);
 #endif
+#ifdef DEVICE_SMARTMF_MODBUS_RTU_3BE
+        setLED_ERROR(true);
+#endif
     }
     else
     {
         // setLED_ERROR(LOW);
 #ifdef DEVICE_SMARTMF_1TE_MODBUS
         digitalWrite(SMARTMF_LED, LOW);
+#endif
+#ifdef DEVICE_SMARTMF_MODBUS_RTU_3BE
+        setLED_ERROR(false);
 #endif
     }
 }

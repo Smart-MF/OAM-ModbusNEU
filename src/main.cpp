@@ -144,13 +144,12 @@ void setup()
 
 void loop()
 {
-    if (delayCheck(_debugCore0, 10000))
-    {
-        _debugCore0 = millis();
-    }
+    // if (delayCheck(_debugCore0, 10000))
+    //{
+    //     _debugCore0 = millis();
+    // }
 
     openknx.loop();
-    //  delay(50);
 }
 
 #ifdef OPENKNX_DUALCORE
