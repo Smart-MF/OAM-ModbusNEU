@@ -1657,7 +1657,7 @@ uint8_t modbusChannel::knxToModbus()
             } // Ende Register Pos
 
             result = sendProtocol(_registerAddr, v);
-            printDebugResult("5", _registerAddr, result);
+            printDebugResult("7", _registerAddr, result);
         }
     }
     //*****************************************************************************************************************************************
@@ -1813,9 +1813,12 @@ void modbusChannel::printDebugResult(const char *dpt, uint16_t _registerAddr, ui
     case ku8MBInvalidCRC:
         logDebugP("ERROR: Invalid CRC");
         break;
+    case ku8MBIllegalDataValue:
+        logDebugP("ERROR: illegal Data Value");
+        break;
 #endif
     default:
-        logDebugP("ERROR");
+        logDebugP("undefined ERROR: %i", result);
         break;
     }
 #endif

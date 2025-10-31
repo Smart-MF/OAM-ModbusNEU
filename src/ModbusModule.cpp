@@ -60,6 +60,12 @@ void modbusModule::setup(bool configured)
         // setupCustomFlash();                               // ********************************* anpassen wenn notwendig *********************
         setupChannels();
     }
+    else
+    {
+#ifdef DEVICE_SMARTMF_MODBUS_RTU_3BE
+        setLED_Modbus(false);
+#endif
+    }
     logIndentDown();
 }
 
@@ -246,7 +252,7 @@ void modbusModule::loop(bool configured)
             if (!idle_processing)
             {
 
-                if (delayCheck(_timerCycleChannel, 50 + (ParamMOD_BusDelayRequest * 10))) // Zeit zwischen zwei Modbus Register Abfragen +50ms default Wartezeit
+                if (delayCheck(_timerCycleChannel, (ParamMOD_BusDelayRequest * 10))) // Zeit zwischen zwei Modbus Register Abfragen +50ms default Wartezeit
                 {
                     // prüft ob ein CH eine Modbus Botschaft senden will und gibt diese CH-nummer zurück
                     uint8_t ch = findNextReadyToSend(ParamMOD_VisibleChannels);

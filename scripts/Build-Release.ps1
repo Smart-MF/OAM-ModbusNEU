@@ -28,20 +28,12 @@
 ../OGM-Common/scripts/setup/reusable/Build-Release-Preprocess.ps1 $args[0]
 if (!$?) { exit 1 }
 
-# build firmware based on generated headerfile for SAMD
-lib/OGM-Common/scripts/setup/reusable/Build-Step.ps1 release_SAMD firmware-SAMD bin
+# build firmware for DEVICE_SMARTMF_MODBUS_RTU_3BE
+lib/OGM-Common/scripts/setup/reusable/Build-Step.ps1 release_RP2040_TP_DEVICE_SMARTMF_MODBUS_RTU_3BE firmware-SMART-MF_Modbus_2TE uf2
 if (!$?) { exit 1 }
 
-# build firmware for PiPico-BCU-Connector
-lib/OGM-Common/scripts/setup/reusable/Build-Step.ps1 release_PiPico_BCU_Connector firmware-PiPico-BCU-Connector uf2
-if (!$?) { exit 1 }
-
-# build firmware for Masifi-Sensor_Breakout
-lib/OGM-Common/scripts/setup/reusable/Build-Step.ps1 release_MASIFI_SENSOR_BREAKOUT firmware-Masifi-Sensor_Breakout uf2
-if (!$?) { exit 1 }
-
-# build firmware based on generated headerfile for ESP32
-../OGM-Common/scripts/setup/reusable/Build-Step.ps1 release_ESP32 firmware-ESP32 bin
+# build firmware for DEVICE_SMARTMF_1TE_MODBUS
+lib/OGM-Common/scripts/setup/reusable/Build-Step.ps1 release_RP2040_TP_DEVICE_SMARTMF_1TE_MODBUS firmware-SMART-MF_1TE uf2
 if (!$?) { exit 1 }
 
 # execute generic post-build steps

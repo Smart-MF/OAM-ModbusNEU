@@ -16,5 +16,13 @@
             "problemMatcher": [],
             "group": "test"
         },
+        {
+            "label": "Build-Release",
+            "type": "shell",
+            "command": "scripts/Build-Release.ps1",
+            "args": [],
+            "problemMatcher": [],
+            "group": "test"
+        }
     ]
-}
+}#

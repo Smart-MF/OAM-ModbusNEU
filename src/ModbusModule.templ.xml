@@ -48,11 +48,13 @@
                 <Parameter Id="%AID%_UP-%T%%CCC%025" Name="CH%C%ModBusWordPosDpt12" Offset="2" BitOffset="0" ParameterType="%AID%_PT-WordPosDpt14" Text="Byte Reihenfolge" Value="0" />  <!-- 1bit -->
                 <Parameter Id="%AID%_UP-%T%%CCC%026" Name="CH%C%ModBusWordPosDpt13" Offset="2" BitOffset="1" ParameterType="%AID%_PT-WordPosDpt14" Text="Byte Reihenfolge" Value="0" /> <!-- 1bit -->
                 <Parameter Id="%AID%_UP-%T%%CCC%027" Name="CH%C%ModBusWordPosDpt14" Offset="2" BitOffset="2" ParameterType="%AID%_PT-WordPosDpt14" Text="Byte Reihenfolge" Value="0" /> <!-- 1bit -->
-                <Parameter Id="%AID%_UP-%T%%CCC%035" Name="CH%C%ModBusWordTyp12" Offset="2" BitOffset="3" ParameterType="%AID%_PT-WordTyp" Text="Register Typ" Value="0" /> <!-- 2bit -->
-                <Parameter Id="%AID%_UP-%T%%CCC%036" Name="CH%C%ModBusWordTyp13" Offset="2" BitOffset="5" ParameterType="%AID%_PT-WordTyp" Text="Register Typ" Value="0" /> <!-- 2bit -->
-                <!-- 1bit free -->
+                <Parameter Id="%AID%_UP-%T%%CCC%080" Name="CH%C%ModBusWordPosDpt29" Offset="2" BitOffset="3" ParameterType="%AID%_PT-WordPosDpt14" Text="Byte Reihenfolge" Value="0" /> <!-- 1bit -->
+                <Parameter Id="%AID%_UP-%T%%CCC%035" Name="CH%C%ModBusWordTyp12" Offset="2" BitOffset="4" ParameterType="%AID%_PT-WordTyp" Text="Register Typ" Value="0" /> <!-- 2bit -->
+                <Parameter Id="%AID%_UP-%T%%CCC%036" Name="CH%C%ModBusWordTyp13" Offset="2" BitOffset="6" ParameterType="%AID%_PT-WordTyp" Text="Register Typ" Value="0" /> <!-- 2bit -->
                 <Parameter Id="%AID%_UP-%T%%CCC%037" Name="CH%C%ModBusWordTyp14" Offset="3" BitOffset="0" ParameterType="%AID%_PT-WordTyp" Text="Register Typ" Value="0" /> <!-- 2bit -->
                 <Parameter Id="%AID%_UP-%T%%CCC%047" Name="CH%C%ModBusRegisterValueTypDpt14" Offset="3" BitOffset="2" ParameterType="%AID%_PT-RegisterValueTypDpt14" Text="Registerwert-Typ" Value="3" /> <!-- 2bit -->
+                <Parameter Id="%AID%_UP-%T%%CCC%082" Name="CH%C%ModBusRegisterPosDPT29" Offset="3" BitOffset="4" ParameterType="%AID%_PT-RegisterPos" Text="Register Position" Value="3" /> <!-- 3bit -->
+                <!--1bit frei -->
               </Union>
               <Union SizeInBit="24">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="22" BitOffset="0" />
@@ -65,7 +67,8 @@
                 <Parameter Id="%AID%_UP-%T%%CCC%048" Name="CH%C%ModBusReadBitFunktion" Offset="0" BitOffset="0" ParameterType="%AID%_PT-ReadBitFunction" Text="Funktion" Value="1" />
                 <Parameter Id="%AID%_UP-%T%%CCC%049" Name="CH%C%ModBusReadWordFunktion" Offset="1" BitOffset="0" ParameterType="%AID%_PT-ReadWordFunction" Text="Funktion" Value="4" />
                 <Parameter Id="%AID%_UP-%T%%CCC%050" Name="CH%C%ModBusWriteWordFunktion" Offset="2" BitOffset="0" ParameterType="%AID%_PT-WriteWordFunction" Text="Funktion" Value="6" />
-                <!-- free 2bit -->
+                <Parameter Id="%AID%_UP-%T%%CCC%081" Name="CH%C%ModBusWordTyp29" Offset="2" BitOffset="6" ParameterType="%AID%_PT-WordTypDPT29" Text="Register Typ" Value="0" /> <!-- 2bit -->
+
               </Union>
               <Union SizeInBit="32">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="28" BitOffset="0" />
@@ -195,11 +198,15 @@
               <ParameterRef Id="%AID%_P-%T%%CCC%077_R-%T%%CCC%07701" RefId="%AID%_P-%T%%CCC%077" />
               <ParameterRef Id="%AID%_P-%T%%CCC%078_R-%T%%CCC%07801" RefId="%AID%_P-%T%%CCC%078" />
               -->
+              <ParameterRef Id="%AID%_UP-%T%%CCC%080_R-%T%%CCC%08001" RefId="%AID%_UP-%T%%CCC%080" />
+              <ParameterRef Id="%AID%_UP-%T%%CCC%081_R-%T%%CCC%08101" RefId="%AID%_UP-%T%%CCC%081" />
+              <ParameterRef Id="%AID%_UP-%T%%CCC%082_R-%T%%CCC%08201" RefId="%AID%_UP-%T%%CCC%082" />
+
               <ParameterRef Id="%AID%_P-%T%%CCC%100_R-%T%%CCC%10001" RefId="%AID%_P-%T%%CCC%100" />  <!-- Description -->
             </ParameterRefs>
             <ComObjectTable>
               <!-- ComOject Kanal 1 -->
-              <ComObject Id="%AID%_O-%T%%CCC%001" Name="GO_BASE_%C%" Text="GO_BASE_%C%" Number="%K0%" ObjectSize="4 Bytes" FunctionText="" ReadFlag="Disabled" WriteFlag="Disabled" CommunicationFlag="Disabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-14-0" />
+              <ComObject Id="%AID%_O-%T%%CCC%001" Name="GO_BASE_%C%" Text="GO_BASE_%C%" Number="%K0%" ObjectSize="8 Bytes" FunctionText="" ReadFlag="Disabled" WriteFlag="Disabled" CommunicationFlag="Disabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-29-10" />
             </ComObjectTable>
             <ComObjectRefs>
               <!-- ModBus -->
@@ -227,6 +234,8 @@
               <ComObjectRef Id="%AID%_O-%T%%CCC%001_R-%T%%CCC%00131" RefId="%AID%_O-%T%%CCC%001" Name="INP_CH_%C%_DPT_13" Text="{{0:Kanal %C%}}: Input" FunctionText="Kanal %C%: Signed - 4 byte" Priority="Low" ObjectSize="4 Bytes" WriteFlag="Enabled" CommunicationFlag="Enabled" DatapointType="DPST-13-1" TextParameterRefId="%AID%_P-%T%%CCC%004_R-%T%%CCC%00401" />
               <ComObjectRef Id="%AID%_O-%T%%CCC%001_R-%T%%CCC%00132" RefId="%AID%_O-%T%%CCC%001" Name="OUT_CH_%C%_DPT_14" Text="{{0:Kanal %C%}}: Output" FunctionText="Kanal %C%: Float - 4 byte" Priority="Low" ObjectSize="4 Bytes" ReadFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" DatapointType="DPST-14-0" TextParameterRefId="%AID%_P-%T%%CCC%004_R-%T%%CCC%00401" />
               <ComObjectRef Id="%AID%_O-%T%%CCC%001_R-%T%%CCC%00133" RefId="%AID%_O-%T%%CCC%001" Name="INP_CH_%C%_DPT_14" Text="{{0:Kanal %C%}}: Input" FunctionText="Kanal %C%: Float - 4 byte" Priority="Low" ObjectSize="4 Bytes" WriteFlag="Enabled" CommunicationFlag="Enabled" DatapointType="DPST-14-0" TextParameterRefId="%AID%_P-%T%%CCC%004_R-%T%%CCC%00401" />
+              <ComObjectRef Id="%AID%_O-%T%%CCC%001_R-%T%%CCC%00134" RefId="%AID%_O-%T%%CCC%001" Name="OUT_CH_%C%_DPT_29" Text="{{0:Kanal %C%}}: Output" FunctionText="Kanal %C%: signed - 8 byte" Priority="Low" ObjectSize="8 Bytes" ReadFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" DatapointType="DPST-29-10" TextParameterRefId="%AID%_P-%T%%CCC%004_R-%T%%CCC%00401" />
+              <ComObjectRef Id="%AID%_O-%T%%CCC%001_R-%T%%CCC%00135" RefId="%AID%_O-%T%%CCC%001" Name="INP_CH_%C%_DPT_29" Text="{{0:Kanal %C%}}: Input" FunctionText="Kanal %C%: signed - 8 byte" Priority="Low" ObjectSize="8 Bytes" WriteFlag="Enabled" CommunicationFlag="Enabled" DatapointType="DPST-29-10" TextParameterRefId="%AID%_P-%T%%CCC%004_R-%T%%CCC%00401" />
             </ComObjectRefs>
           </Static>
           <Dynamic>
@@ -501,6 +510,45 @@
                                         <ParameterRefRef RefId="%AID%_UP-%T%%CCC%058_R-%T%%CCC%05801" />
                                       </when>
                                       <when test="1">
+                                        <ParameterRefRef RefId="%AID%_UP-%T%%CCC%047_R-%T%%CCC%04701" />
+                                        <ParameterRefRef RefId="%AID%_UP-%T%%CCC%027_R-%T%%CCC%02701" />
+                                        <choose ParamRefId="%AID%_UP-%T%%CCC%047_R-%T%%CCC%04701">
+                                          <!-- 1 unsigned; 2 Signed; 3 float -->
+                                          <when test="1 2 3">
+                                            <ParameterSeparator Id="%AID%_PS-15" Text="" UIHint="HorizontalRuler" />
+                                            <ParameterRefRef RefId="%AID%_UP-%T%%CCC%053_R-%T%%CCC%05301" />
+                                            <ParameterRefRef RefId="%AID%_UP-%T%%CCC%058_R-%T%%CCC%05801" />
+                                          </when>
+                                        </choose>
+                                      </when>
+                                    </choose>
+                                  </when>
+                                </choose>
+                              </when>
+                              <!-- DPT29 -->
+                              <when test="29">
+                                <choose ParamRefId="%AID%_UP-%T%%CCC%002_R-%T%%CCC%00201">
+                                  <!-- KNX - ModBus -->
+                                  <when test="0">
+                                    <ComObjectRefRef RefId="%AID%_O-%T%%CCC%001_R-%T%%CCC%00135" />
+                                    <ParameterSeparator Id="%AID%_PS-12" Text="Funktion                                                            0x10 Schreibe Multi Register" />
+                                    <ParameterSeparator Id="%AID%_PS-12" Text="Register Typ                                                       64Bit Register" />
+                                    <ParameterSeparator Id="%AID%_PS-12" Text="Registerwert-Typ                                                signed" />
+                                    <ParameterRefRef RefId="%AID%_UP-%T%%CCC%027_R-%T%%CCC%02701" />
+                                  </when>
+                                  <!-- Modbus - KNX -->
+                                  <when test="1">
+                                    <ComObjectRefRef RefId="%AID%_O-%T%%CCC%001_R-%T%%CCC%00134" />
+                                    <ParameterRefRef RefId="%AID%_UP-%T%%CCC%049_R-%T%%CCC%04901" />
+                                    <ParameterRefRef RefId="%AID%_UP-%T%%CCC%081_R-%T%%CCC%08101" />
+                                    <choose ParamRefId="%AID%_UP-%T%%CCC%081_R-%T%%CCC%08101">
+                                      <when test="0">
+                                        <ParameterRefRef RefId="%AID%_UP-%T%%CCC%017_R-%T%%CCC%01701" />
+                                        <ParameterSeparator Id="%AID%_PS-15" Text="" UIHint="HorizontalRuler" />
+                                        <ParameterRefRef RefId="%AID%_UP-%T%%CCC%053_R-%T%%CCC%05301" />
+                                        <ParameterRefRef RefId="%AID%_UP-%T%%CCC%058_R-%T%%CCC%05801" />
+                                      </when>
+                                      <when test="1 2">
                                         <ParameterRefRef RefId="%AID%_UP-%T%%CCC%047_R-%T%%CCC%04701" />
                                         <ParameterRefRef RefId="%AID%_UP-%T%%CCC%027_R-%T%%CCC%02701" />
                                         <choose ParamRefId="%AID%_UP-%T%%CCC%047_R-%T%%CCC%04701">

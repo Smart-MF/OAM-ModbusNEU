@@ -135,6 +135,7 @@
                   <Enumeration Text="DPT 12 - unsigned (U32) - 4 bytes" Value="12" Id="%ENID%" />
                   <Enumeration Text="DPT 13 - signed (V32) - 4 bytes" Value="13" Id="%ENID%" />
                   <Enumeration Text="DPT 14 - float (F32) - 4 bytes" Value="14" Id="%ENID%" />
+                  <Enumeration Text="DPT 29 - signed (V64) - 8 bytes" Value="29" Id="%ENID%" />
                 </TypeRestriction>
               </ParameterType>
               <!-- ModBus Slaves  -->
@@ -271,9 +272,17 @@
               <!-- Typ Word / double Word -->
               <ParameterType Id="%AID%_PT-WordTyp" Name="WordTyp">
                 <TypeRestriction Base="Value" SizeInBit="2">
-                  <Enumeration Text="16Bit Register" Value="0" Id="%ENID%" />
-                  <Enumeration Text="32Bit Register" Value="1" Id="%ENID%" />
-                  <Enumeration Text="64Bit Register" Value="2" Id="%ENID%" />
+                  <Enumeration Text="16Bit Register (2Byte)" Value="0" Id="%ENID%" />
+                  <Enumeration Text="32Bit Register (4Byte)" Value="1" Id="%ENID%" />
+                </TypeRestriction>
+              </ParameterType>
+              <!-- DPT29 Typ -->
+              <!-- Typ Word / double Word -->
+              <ParameterType Id="%AID%_PT-WordTypDPT29" Name="WordTypDPT29">
+                <TypeRestriction Base="Value" SizeInBit="2">
+                  <Enumeration Text="16Bit Register (2Byte)" Value="0" Id="%ENID%" />
+                  <Enumeration Text="32Bit Register (4Byte)" Value="1" Id="%ENID%" />
+                  <Enumeration Text="64Bit Register (8Byte)" Value="2" Id="%ENID%" />
                 </TypeRestriction>
               </ParameterType>
               <!-- Position Register -->

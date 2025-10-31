@@ -1,4 +1,4 @@
-$checkVersion = "0.2.1"
+$checkVersion = "0.2.7"
 $toolsExist = Test-Path -PathType Leaf ~/bin/KnxFileTransferClient.exe
 if ($toolsExist) {
     $versionLine = ~/bin/KnxFileTransferClient.exe version | findstr /R /C:"Version Client: *\d*.\d*.\d*"
@@ -25,7 +25,7 @@ if (!$toolsExist) {
 }
 
 if ($toolsExist) {
-    $firmwareName = (Resolve-Path "./data/$($args[0])").Path
+    $firmwareName = (Resolve-Path "./$($args[0])").Path
     if (Test-Path -PathType Leaf ~/bin/KnxFileTransferClient.ps1) {
         ~/bin/KnxFileTransferClient.ps1 "$firmwareName"
     } else {
