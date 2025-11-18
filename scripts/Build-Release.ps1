@@ -36,6 +36,10 @@ if (!$?) { exit 1 }
 lib/OGM-Common/scripts/setup/reusable/Build-Step.ps1 release_RP2040_TP_DEVICE_SMARTMF_1TE_MODBUS firmware-SMART-MF_1TE uf2
 if (!$?) { exit 1 }
 
+# build firmware for DEVICE_SMARTMF_1TE_MODBUS
+lib/OGM-Common/scripts/setup/reusable/Build-Step.ps1 release_RP2040_TP_DEVICE_SMARTMF_MODBUS_AUSSEN firmware-SMART-MF_AUSSEN uf2
+if (!$?) { exit 1 }
+
 # execute generic post-build steps
 ../OGM-Common/scripts/setup/reusable/Build-Release-Postprocess.ps1 $args[0]
 if (!$?) { exit 1 }

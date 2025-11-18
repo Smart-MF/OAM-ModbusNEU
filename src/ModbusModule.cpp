@@ -38,7 +38,7 @@ void modbusModule::setup(bool configured)
     logIndentUp();
 
     // setup Pins
-#ifdef DEVICE_SMARTMF_1TE_MODBUS
+#ifdef DEVICE_SMARTMF_1TE_MODBUS || DEVICE_SMARTMF_MODBUS_AUSSEN
     pinMode(SMARTMF_LED, OUTPUT);
     digitalWrite(SMARTMF_LED, LOW);
 #endif
@@ -190,7 +190,7 @@ void modbusModule::ErrorHandlingLED()
     if (error)
     {
         // setLED_ERROR(HIGH);
-#ifdef DEVICE_SMARTMF_1TE_MODBUS
+#ifdef DEVICE_SMARTMF_1TE_MODBUS || DEVICE_SMARTMF_MODBUS_AUSSEN
         digitalWrite(SMARTMF_LED, HIGH);
 #endif
 #ifdef DEVICE_SMARTMF_MODBUS_RTU_3BE
@@ -200,7 +200,7 @@ void modbusModule::ErrorHandlingLED()
     else
     {
         // setLED_ERROR(LOW);
-#ifdef DEVICE_SMARTMF_1TE_MODBUS
+#ifdef DEVICE_SMARTMF_1TE_MODBUS || DEVICE_SMARTMF_MODBUS_AUSSEN
         digitalWrite(SMARTMF_LED, LOW);
 #endif
 #ifdef DEVICE_SMARTMF_MODBUS_RTU_3BE
