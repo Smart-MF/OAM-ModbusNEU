@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Content>
-    <ETSapp Name="" XmlFile=".xml" />
-    <Products>
-         <Product Name="SMART-MF_Modbus_2TE" Firmware="../Firmware/SMART-MF_Modbus_2TE/firmware-SMART-MF_Modbus_2TE.uf2" Processor="RP2040" />
-         <Product Name="SMART-MF_1TE" Firmware="../Firmware/SMART-MF_1TE/firmware-SMART-MF_1TE.uf2" Processor="RP2040" />
-    </Products>
-</Content>
