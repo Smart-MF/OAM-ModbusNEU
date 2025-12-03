@@ -18,7 +18,7 @@
 // #define SMARTMF_MODBUS_TX_PIN 4
 // #define SMARTMF_MODBUS_DIR_PIN 24
 
-class modbusModule : public OpenKNX::Module, public ModbusMaster
+class ModbusModule : public OpenKNX::Module, public ModbusMaster
 {
 private:
     bool _error[255];
@@ -32,7 +32,7 @@ private:
     uint8_t _currentChannel = 0;
     uint8_t _channel = 0;
 
-    modbusChannel *_channels[MOD_ChannelCount];
+    ModbusChannel *_channels[MOD_ChannelCount];
     OpenKNX::Flash::Driver *_modbusStorage = nullptr;
     static bool idle_processing;
     static uint32_t _timerCycleChannel;
@@ -54,7 +54,7 @@ private:
     static void postTransmission();
 
 public:
-    modbusModule();
+    ModbusModule();
     void loop(bool configured) override;
     void setup(bool configured) override;
 #ifdef OPENKNX_DUALCORE
@@ -71,4 +71,4 @@ public:
     bool modbusParitySerial(uint32_t baud, HardwareSerial &serial);
 };
 
-extern modbusModule openknxmodbusModule;
+extern ModbusModule openknxModbusModule;

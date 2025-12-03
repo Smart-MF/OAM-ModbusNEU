@@ -13,7 +13,7 @@
 #define ETS_ModuleId_UCT 2
 #define ETS_ModuleId_MOD 3
 #define ETS_ModuleId_LOG 4
-#define MAIN_FirmwareName "ModbusRTU"
+#define MAIN_FirmwareName "Modbus-RTU-Gateway"
 #define MAIN_OpenKnxId 0xA2
 #define MAIN_ApplicationNumber 48
 #define MAIN_ApplicationVersion 21

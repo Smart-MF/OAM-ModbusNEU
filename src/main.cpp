@@ -38,7 +38,7 @@ void setup()
     const uint8_t firmwareRevision = 0;
     openknx.init(firmwareRevision);
     openknx.addModule(1, openknxLogic);
-    openknx.addModule(2, openknxmodbusModule);
+    openknx.addModule(2, openknxModbusModule);
 #ifdef ARDUINO_ARCH_RP2040
 #ifndef OPENKNX_USB_EXCHANGE_IGNORE
     openknx.addModule(8, openknxUsbExchangeModule);

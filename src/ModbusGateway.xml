@@ -15,11 +15,12 @@
     ApplicationVersion="1.5"
     ReplacesVersions="1.4 1.3 1.2 1.1 1.0"
     ApplicationRevision="0"
-    ProductName="ModbusRTU"
+    ProductName="Modbus-RTU-Gateway"
     BusCurrent="10"
     BuildSuffix=""
     BuildSuffixText=""
     MediumTypes="MT-0"
+    ApplicationName="Modbus-RTU"
     OrderNumber="SmartMF_ModbusRTU" />
 
   <op:define prefix="BASE" ModuleType="10"

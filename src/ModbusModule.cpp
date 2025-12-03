@@ -13,26 +13,26 @@
 bool run_cycle = true;
 bool readyToSend = false; 
 
-bool modbusModule::idle_processing = false;
-unsigned long modbusModule::_timerCycleChannel = 0;
+bool ModbusModule::idle_processing = false;
+unsigned long ModbusModule::_timerCycleChannel = 0;
 
-modbusModule::modbusModule()
+ModbusModule::ModbusModule()
 {
-    idle(modbusModule::idleCallback);
+    idle(ModbusModule::idleCallback);
 }
 
-const std::string modbusModule::name()
+const std::string ModbusModule::name()
 {
     return "modbus";
 }
 
-const std::string modbusModule::version()
+const std::string ModbusModule::version()
 {
     // hides the module in the version output on the console, because the firmware version is sufficient.
     return "";
 }
 
-void modbusModule::setup(bool configured)
+void ModbusModule::setup(bool configured)
 {
     // delay(1000);
     logDebugP("Setup0");
@@ -70,12 +70,12 @@ void modbusModule::setup(bool configured)
     logIndentDown();
 }
 
-void modbusModule::setupChannels()
+void ModbusModule::setupChannels()
 {
 
     for (uint8_t i = 0; i < ParamMOD_VisibleChannels; i++)
     {
-        _channels[i] = new modbusChannel(i, 3, 3, SMARTMF_MODBUS_SERIAL);
+        _channels[i] = new ModbusChannel(i, 3, 3, SMARTMF_MODBUS_SERIAL);
         _channels[i]->setup();
         _channels[i]->idle(idleCallback);
         _channels[i]->preTransmission(preTransmission);
@@ -89,7 +89,7 @@ void modbusModule::setupChannels()
 #endif
 }
 
-void modbusModule::setupCustomFlash()
+void ModbusModule::setupCustomFlash()
 {
     logDebugP("initialize modbus flash");
     OpenKNX::Flash::Driver _modbusStorage;
@@ -119,7 +119,7 @@ void modbusModule::setupCustomFlash()
     logIndentDown();
 }
 
-void modbusModule::idleCallback()
+void ModbusModule::idleCallback()
 {
     idle_processing = true;
     openknx.loop();
@@ -127,17 +127,17 @@ void modbusModule::idleCallback()
     _timerCycleChannel = millis();
 }
 
-void modbusModule::preTransmission()
+void ModbusModule::preTransmission()
 {
     digitalWrite(SMARTMF_MODBUS_DIR_PIN, 1);
 }
 
-void modbusModule::postTransmission()
+void ModbusModule::postTransmission()
 {
     digitalWrite(SMARTMF_MODBUS_DIR_PIN, 0);
 }
 
-uint8_t modbusModule::findNextReadyToSend(int size)
+uint8_t ModbusModule::findNextReadyToSend(int size)
 {
     for (int i = 1; i <= size; i++) // i=1, damit wir die 0 als Rückgabewert haben, für kein CH is ready
     {
@@ -150,7 +150,7 @@ uint8_t modbusModule::findNextReadyToSend(int size)
     return 0;
 }
 
-int modbusModule::findNextActive(int size, int currentIndex)
+int ModbusModule::findNextActive(int size, int currentIndex)
 {
     for (int i = 1; i <= size; i++) // i=1, damit wir nicht wieder currentIndex selbst nehmen
     {
@@ -163,7 +163,7 @@ int modbusModule::findNextActive(int size, int currentIndex)
     return 0;
 }
 
-int modbusModule::findNextReady(int size, int currentIndex)
+int ModbusModule::findNextReady(int size, int currentIndex)
 {
     for (int i = currentIndex + 1; i < size; i++)
     {
@@ -173,12 +173,12 @@ int modbusModule::findNextReady(int size, int currentIndex)
     return size;
 }
 
-void modbusModule::errorHandling()
+void ModbusModule::errorHandling()
 {
     ErrorHandlingLED();
 }
 
-void modbusModule::ErrorHandlingLED()
+void ModbusModule::ErrorHandlingLED()
 {
     bool error = false;
     for (int i = 0; i < ParamMOD_VisibleChannels; i++)
@@ -210,7 +210,7 @@ void modbusModule::ErrorHandlingLED()
     }
 }
 
-void modbusModule::loop(bool configured)
+void ModbusModule::loop(bool configured)
 {
 
     // if (delayCheck(_timer1, 1000))
@@ -309,13 +309,13 @@ void modbusModule::loop(bool configured)
 
 #ifdef OPENKNX_DUALCORE
 
-void modbusModule::setup1(bool configured)
+void ModbusModule::setup1(bool configured)
 {
     delay(1000);
     // logDebugP("Setup1");
 }
 
-void modbusModule::loop1(bool configured)
+void ModbusModule::loop1(bool configured)
 {
     if (delayCheck(_timer2, 7200))
     {
@@ -325,7 +325,7 @@ void modbusModule::loop1(bool configured)
 }
 #endif
 
-void modbusModule::processInputKo(GroupObject &ko)
+void ModbusModule::processInputKo(GroupObject &ko)
 {
     logDebugP("processInputKo GA%04X", ko.asap());
     logHexDebugP(ko.valueRef(), ko.valueSize());
@@ -345,12 +345,12 @@ void modbusModule::processInputKo(GroupObject &ko)
     }
 }
 
-void modbusModule::showHelp()
+void ModbusModule::showHelp()
 {
     openknx.console.printHelpLine("modbus", "Print a modbus text");
 }
 
-bool modbusModule::processCommand(const std::string cmd, bool diagnoseKo)
+bool ModbusModule::processCommand(const std::string cmd, bool diagnoseKo)
 {
     if (cmd.substr(0, 5) == "modbus")
     {
@@ -372,7 +372,7 @@ bool modbusModule::processCommand(const std::string cmd, bool diagnoseKo)
 
 #ifdef ARDUINO_ARCH_RP2040
 #ifndef OPENKNX_USB_EXCHANGE_IGNORE
-void modbusModule::registerUsbExchangeCallbacks()
+void ModbusModule::registerUsbExchangeCallbacks()
 {
     // Sample
     openknxUsbExchangeModule.onLoad("modbus.txt", [](UsbExchangeFile *file) -> void
@@ -382,7 +382,7 @@ void modbusModule::registerUsbExchangeCallbacks()
         // File is required
         if (file == nullptr)
         {
-            logError("modbusModule", "File modbus.txt was deleted but is mandatory");
+            logError("ModbusModule", "File modbus.txt was deleted but is mandatory");
             return false;
         }
         return true; });
@@ -390,7 +390,7 @@ void modbusModule::registerUsbExchangeCallbacks()
 #endif
 #endif
 
-bool modbusModule::modbusParitySerial(uint32_t baud, HardwareSerial &serial)
+bool ModbusModule::modbusParitySerial(uint32_t baud, HardwareSerial &serial)
 {
     switch (ParamMOD_BusParitySelection_Slave1)
     {
@@ -422,7 +422,7 @@ bool modbusModule::modbusParitySerial(uint32_t baud, HardwareSerial &serial)
     }
 }
 
-bool modbusModule::modbusInitSerial(HardwareSerial &serial)
+bool ModbusModule::modbusInitSerial(HardwareSerial &serial)
 {
     // Set Modbus communication baudrate
     switch (ParamMOD_BusBaudrateSelection_Slave1)
@@ -467,4 +467,4 @@ bool modbusModule::modbusInitSerial(HardwareSerial &serial)
     }
 }
 
-modbusModule openknxmodbusModule;
+ModbusModule openknxModbusModule;

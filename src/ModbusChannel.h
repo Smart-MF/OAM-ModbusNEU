@@ -2,7 +2,7 @@
 #include "OpenKNX.h"
 #include "ModBusMaster.h"
 
-class modbusChannel : public OpenKNX::Channel, public ModbusMaster
+class ModbusChannel : public OpenKNX::Channel, public ModbusMaster
 {
 private:
   uint32_t sendDelay;
@@ -38,7 +38,7 @@ private:
   void sendKNX();
 
 public:
-  modbusChannel(uint8_t index, uint8_t baud_value, uint8_t parity_value, HardwareSerial &serial);
+  ModbusChannel(uint8_t index, uint8_t baud_value, uint8_t parity_value, HardwareSerial &serial);
   bool isActiveCH();
   bool readDone();
   bool isReadyCH();

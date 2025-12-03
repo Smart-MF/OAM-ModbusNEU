@@ -2,24 +2,24 @@
 #include "Arduino.h"
 
 #define Serial_Debug_Modbus_Min
-#define Serial_Debug_Modbus
+//#define Serial_Debug_Modbus
 
-// bool modbusChannel::idle_processing = false;
+// bool ModbusChannel::idle_processing = false;
 
-modbusChannel::modbusChannel(uint8_t index, uint8_t baud_value, uint8_t parity_value, HardwareSerial &serial) : _serial(serial)
+ModbusChannel::ModbusChannel(uint8_t index, uint8_t baud_value, uint8_t parity_value, HardwareSerial &serial) : _serial(serial)
 {
     _channelIndex = index;
     _baud_value = baud_value;
     _parity_value = parity_value;
-    // idle(modbusChannel::idleCallback);
+    // idle(ModbusChannel::idleCallback);
 }
 
-const std::string modbusChannel::name()
+const std::string ModbusChannel::name()
 {
-    return "modbusChannel";
+    return "ModbusChannel";
 }
 
-void modbusChannel::setup()
+void ModbusChannel::setup()
 {
     logInfoP("setup ");
     logIndentUp();
@@ -102,7 +102,7 @@ void modbusChannel::setup()
     begin(_modbus_ID, _serial);
 }
 
-void modbusChannel::loop(bool readyToSend)
+void ModbusChannel::loop(bool readyToSend)
 {
     if (readyToSend) // erst auf den Bus senden, wenn ein Wert zur Verfügung steht
     {
@@ -116,7 +116,7 @@ void modbusChannel::loop(bool readyToSend)
     // }
 }
 
-bool modbusChannel::isActiveCH()
+bool ModbusChannel::isActiveCH()
 {
     if (ParamMOD_CHModbusSlaveSelection == 0)
         return false;
@@ -124,7 +124,7 @@ bool modbusChannel::isActiveCH()
         return true;
 }
 
-bool modbusChannel::isReadyCH()
+bool ModbusChannel::isReadyCH()
 {
     if (ParamMOD_CHModbusSlaveSelection != 0 && _readCyclecounter == 1)
         return true;
@@ -135,17 +135,17 @@ bool modbusChannel::isReadyCH()
     }
 }
 
-uint8_t modbusChannel::getModbusID()
+uint8_t ModbusChannel::getModbusID()
 {
     return _modbus_ID;
 }
 
-bool modbusChannel::getDirection()
+bool ModbusChannel::getDirection()
 {
     return ParamMOD_CHModBusBusDirection;
 }
 
-uint8_t modbusChannel::readModbus(bool readRequest)
+uint8_t ModbusChannel::readModbus(bool readRequest)
 {
     // 1. DPT auslesen: bei 0 abbrechen
     // 2. Richtung bestimmen: KNX - Modbus / Modbus - KNX
@@ -198,7 +198,7 @@ uint8_t modbusChannel::readModbus(bool readRequest)
     }
 }
 
-// bool modbusChannel::sendModbus()
+// bool ModbusChannel::sendModbus()
 //{
 //     uint8_t dpt = ParamMOD_CHModBusDptSelection;
 //     if (dpt == 0) // Kein DPT ausgewählt, daher abbruch
@@ -209,7 +209,7 @@ uint8_t modbusChannel::readModbus(bool readRequest)
 //     return knxToModbus(dpt, true);
 // }
 
-// void modbusChannel::ErrorHandling()
+// void ModbusChannel::ErrorHandling()
 //{
 //     if (errorState[0] == false && errorState[1] == false)
 //     {
@@ -222,12 +222,12 @@ uint8_t modbusChannel::readModbus(bool readRequest)
 //     }
 // }
 
-inline uint16_t modbusChannel::adjustRegisterAddress(uint16_t u16ReadAddress, uint8_t RegisterStart)
+inline uint16_t ModbusChannel::adjustRegisterAddress(uint16_t u16ReadAddress, uint8_t RegisterStart)
 {
     return u16ReadAddress && RegisterStart ? u16ReadAddress - 1 : u16ReadAddress;
 }
 
-void modbusChannel::sendKNX()
+void ModbusChannel::sendKNX()
 {
     uint32_t lCycle = ParamMOD_CHModBusSendDelay * 1000;
     // if cyclic sending is requested, send the last value if one is available
@@ -248,7 +248,7 @@ void modbusChannel::sendKNX()
  **********************************************************************************************************/
 
 // Routine zum Einlesen des ModBus-Register mit senden auf KNX-Bus
-uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
+uint8_t ModbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
 {
 
     bool lSend = 0; // = readRequest; // && !valueValid; // Flag if value should be send on KNX
@@ -1555,7 +1555,7 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
 //
 //*****************************************************************************************************************************************
 //*****************************************************************************************************************************************
-uint8_t modbusChannel::knxToModbus()
+uint8_t ModbusChannel::knxToModbus()
 {
     if (ParamMOD_CHModBusBusDirection != 0)
         return 0xFF;
@@ -1776,7 +1776,7 @@ uint8_t modbusChannel::knxToModbus()
     return true;
 }
 
-uint8_t modbusChannel::sendProtocol(uint16_t _registerAddr, uint16_t u16value)
+uint8_t ModbusChannel::sendProtocol(uint16_t _registerAddr, uint16_t u16value)
 {
     if (0x06 == ParamMOD_CHModBusWriteWordFunktion)
     {
@@ -1796,7 +1796,7 @@ uint8_t modbusChannel::sendProtocol(uint16_t _registerAddr, uint16_t u16value)
     return ku8MBIllegalFunction;
 }
 
-void modbusChannel::printDebugResult(const char *dpt, uint16_t _registerAddr, uint8_t result)
+void ModbusChannel::printDebugResult(const char *dpt, uint16_t _registerAddr, uint8_t result)
 {
 #ifdef Serial_Debug_Modbus
     logDebugP("DPT:%s Reg:%u", dpt, _registerAddr);
@@ -1831,7 +1831,7 @@ void modbusChannel::printDebugResult(const char *dpt, uint16_t _registerAddr, ui
 #endif
 }
 
-bool modbusChannel::modbusParitySerial(uint32_t baud, HardwareSerial &serial)
+bool ModbusChannel::modbusParitySerial(uint32_t baud, HardwareSerial &serial)
 {
     switch (_parity_value)
     {
@@ -1864,7 +1864,7 @@ bool modbusChannel::modbusParitySerial(uint32_t baud, HardwareSerial &serial)
     }
 }
 
-bool modbusChannel::modbusInitSerial(HardwareSerial &serial)
+bool ModbusChannel::modbusInitSerial(HardwareSerial &serial)
 {
     // Set Modbus communication baudrate
     switch (_baud_value)

@@ -5,12 +5,12 @@
     <Manufacturer RefId="M-00FA">
       <Catalog>
         <CatalogSection Id="M-00FA_CS-OpenKNX" Name="OpenKNX" Number="OpenKNX" DefaultLanguage="de-DE">
-          <CatalogItem Id="M-00FA_H-0xA230-1_HP-A230-15-0000_CI-SmartMF.5FModbusRTU-1" Name="OpenKNX: ModbusRTU" Number="1" ProductRefId="M-00FA_H-0xA230-1_P-SmartMF.5FModbusRTU" Hardware2ProgramRefId="M-00FA_H-0xA230-1_HP-A230-15-0000" DefaultLanguage="de-DE" />
+          <CatalogItem Id="M-00FA_H-0xA230-1_HP-A230-15-0000_CI-SmartMF.5FModbusRTU-1" Name="OpenKNX: Modbus-RTU-Gateway" Number="1" ProductRefId="M-00FA_H-0xA230-1_P-SmartMF.5FModbusRTU" Hardware2ProgramRefId="M-00FA_H-0xA230-1_HP-A230-15-0000" DefaultLanguage="de-DE" />
         </CatalogSection>
       </Catalog>
       <ApplicationPrograms>
         <!-- OpenKnxId="0xA2" ApplicationNumber="48" ApplicationVersion="21" ReplacesVersions="20 19 18 17 16" ApplicationRevision="0" FirmwareRevision="-1" -->
-        <ApplicationProgram Id="M-00FA_A-A230-15-0000" ProgramType="ApplicationProgram" MaskVersion="MV-07B0" Name="ModbusRTU" LoadProcedureStyle="MergedProcedure" PeiType="0" DefaultLanguage="de-DE" DynamicTableManagement="false" Linkable="true" MinEtsVersion="5.0" ContextHelpFile="M-00FA_BG-A2.5C30.5C15-Help.5Fde.2Ezip" IconFile="M-00FA_BG-A2.5C30.5C15-Icons.2Ezip" IPConfig="Custom" ApplicationNumber="41520" ApplicationVersion="21" ReplacesVersions="20 19 18 17 16">
+        <ApplicationProgram Id="M-00FA_A-A230-15-0000" ProgramType="ApplicationProgram" MaskVersion="MV-07B0" Name="Modbus-RTU" LoadProcedureStyle="MergedProcedure" PeiType="0" DefaultLanguage="de-DE" DynamicTableManagement="false" Linkable="true" MinEtsVersion="5.0" ContextHelpFile="M-00FA_BG-A2.5C30.5C15-Help.5Fde.2Ezip" IconFile="M-00FA_BG-A2.5C30.5C15-Icons.2Ezip" IPConfig="Custom" ApplicationNumber="41520" ApplicationVersion="21" ReplacesVersions="20 19 18 17 16">
           <Static>
             <Code>
               <RelativeSegment Id="M-00FA_A-A230-15-0000_RS-04-00000" Name="Parameters" Offset="0" Size="10400" LoadStateMachine="4" />
@@ -148300,19 +148300,19 @@ function LOG_CalcRelFromAbs(input, output, context) {
       </ApplicationPrograms>
       <Baggages>
         <Baggage TargetPath="A2\30\15" Name="ets.png" Id="M-00FA_BG-A2.5C30.5C15-ets.2Epng">
-          <FileInfo TimeInfo="2025-12-03T10:08:20.3715908Z" />
+          <FileInfo TimeInfo="2025-12-03T20:46:04.0887671Z" />
         </Baggage>
         <Baggage TargetPath="A2\30\15" Name="Help_de.zip" Id="M-00FA_BG-A2.5C30.5C15-Help.5Fde.2Ezip">
-          <FileInfo TimeInfo="2025-12-03T10:08:21.1396872Z" />
+          <FileInfo TimeInfo="2025-12-03T20:46:05.2386369Z" />
         </Baggage>
         <Baggage TargetPath="A2\30\15" Name="Icons.zip" Id="M-00FA_BG-A2.5C30.5C15-Icons.2Ezip">
-          <FileInfo TimeInfo="2025-12-03T10:08:21.6888214Z" />
+          <FileInfo TimeInfo="2025-12-03T20:46:06.1255065Z" />
         </Baggage>
       </Baggages>
       <Hardware>
-        <Hardware Id="M-00FA_H-0xA230-1" Name="OpenKNX-ModbusRTU" SerialNumber="0xA230" VersionNumber="1" BusCurrent="10" HasIndividualAddress="true" HasApplicationProgram="true">
+        <Hardware Id="M-00FA_H-0xA230-1" Name="OpenKNX-Modbus-RTU-Gateway" SerialNumber="0xA230" VersionNumber="1" BusCurrent="10" HasIndividualAddress="true" HasApplicationProgram="true">
           <Products>
-            <Product Id="M-00FA_H-0xA230-1_P-SmartMF.5FModbusRTU" Text="OpenKNX: ModbusRTU" OrderNumber="SmartMF_ModbusRTU" IsRailMounted="false" DefaultLanguage="de-DE">
+            <Product Id="M-00FA_H-0xA230-1_P-SmartMF.5FModbusRTU" Text="OpenKNX: Modbus-RTU-Gateway" OrderNumber="SmartMF_ModbusRTU" IsRailMounted="false" DefaultLanguage="de-DE">
               <RegistrationInfo RegistrationStatus="Registered" />
             </Product>
           </Products>
