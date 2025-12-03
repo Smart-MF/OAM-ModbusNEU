@@ -4,14 +4,6 @@
 #include "OpenKNX.h"
 // #include <async_http_client.h>
 
-#define PROG_LED_PIN 11
-#define PROG_LED_PIN_ACTIVE_ON HIGH
-#define PROG_BUTTON_PIN 14
-#define SAVE_INTERRUPT_PIN 8
-#define KNX_UART_NUM 0
-#define KNX_UART_RX_PIN 1
-#define KNX_UART_TX_PIN 0
-
 #ifdef ARDUINO_ARCH_RP2040
 #include "FileTransferModule.h"
 #ifndef OPENKNX_USB_EXCHANGE_IGNORE

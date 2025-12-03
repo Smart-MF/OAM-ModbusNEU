@@ -23,7 +23,7 @@ void modbusChannel::setup()
 {
     logInfoP("setup ");
     logIndentUp();
-    logDebugP("debug setup");
+    logDebugP("debug setup"); //*** logDebugP */
     logTraceP("trace setup");
     logIndentDown();
 
@@ -1242,7 +1242,7 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
             float v;
 
             // Bestimmt ob Register-Typ: Word oder Double Word
-            switch (ParamMOD_CHModBusWordTyp14) // Choose 26bit, 32bit Register OR 64Bit Register
+            switch (ParamMOD_CHModBusWordTyp14) // Choose 16bit, 32bit Register OR 64Bit Register
             {
             case 0: // ************************************************  16bit  Register *********************************************************
 
@@ -1330,7 +1330,9 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                 }
 
                 break;
-            case 1:                                        // *********************************** 32Bit Register ******************************************************
+
+                // *********************************** 32Bit Register ******************************************************
+            case 1:
                 switch (ParamMOD_CHModBusReadWordFunktion) // Choose Modbus Funktion (0x03 readHoldingRegisters ODER 0x04 readInputRegisters)
                 {
                 case 3: // 0x03 Lese holding registers
@@ -1415,7 +1417,8 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                     return result;
                 }
                 break; // Ende Case 2 32Bit Register
-            case 3:    // *********************************** 64Bit Register ******************************************************
+
+            case 3: // *********************************** 64Bit Register ******************************************************
 
                 switch (ParamMOD_CHModBusReadWordFunktion) // Choose Modbus Funktion (0x03 readHoldingRegisters ODER 0x04 readInputRegisters)
                 {
@@ -1498,28 +1501,6 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                         return result;
                     } // ENDE ENDE Word / Double Word Register
 
-                    if (result == ku8MBSuccess)
-                    {
-                        // send on first value or value change
-                        float lAbsolute = ParamMOD_CHModBusValueChange / 10.0;
-                        float lDiff = abs(v - lastSentValue.lValue);
-                        if (lAbsolute > 0.0f && lDiff >= lAbsolute)
-                            lSend = true;
-
-                        // we always store the new value in KO, even it it is not sent (to satisfy potential read request)
-                        KoMOD_GO_BASE_.valueNoSend(v, DPT_Value_Acceleration_Angular);
-                        if (lSend)
-                        {
-                            lastSentValue.lValue = v;
-                        }
-
-                        logDebugP("%f", v, 2);
-
-                        // Löscht Fehlerspeicher
-                        errorState[0] = false;
-                        errorState[1] = false;
-                    }
-
                 } // ENDE
                 break; // Ende PDT14
 
@@ -1528,16 +1509,39 @@ uint8_t modbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
                 break;
             } // Ende DPT Wahl Wahl
 
-            if (lSend && !errorState[0] && !errorState[1])
+            if (result == ku8MBSuccess)
             {
-                KoMOD_GO_BASE_.objectWritten();
-                valueValid = true;
-                sendDelay = millis();
-                lSend = false;
+                logDebugP("%f", v, 2);
+
+                // send on first value or value change
+                float lAbsolute = ParamMOD_CHModBusValueChange / 10.0;
+                float lDiff = abs(v - lastSentValue.lValue);
+                if (lAbsolute > 0.0f && lDiff >= lAbsolute)
+                    lSend = true;
+
+                // we always store the new value in KO, even it it is not sent (to satisfy potential read request)
+                KoMOD_GO_BASE_.valueNoSend(v, DPT_Value_Acceleration_Angular);
+                if (lSend)
+                {
+                    lastSentValue.lValue = v;
+                }
+
+                // Löscht Fehlerspeicher
+                errorState[0] = false;
+                errorState[1] = false;
             }
         }
         break;
     } // wählt den passenden DPT
+
+    if (lSend && !errorState[0] && !errorState[1])
+    {
+        KoMOD_GO_BASE_.objectWritten();
+        valueValid = true;
+        sendDelay = millis();
+        lSend = false;
+    }
+
     return true;
 }
 

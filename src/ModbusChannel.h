@@ -45,7 +45,7 @@ public:
   uint8_t getModbusID();
   bool getDirection();
   inline uint16_t adjustRegisterAddress(uint16_t u16ReadAddress, uint8_t RegisterStart);
-  uint8_t readModbus(bool readRequest);
+  uint8_t readModbus(bool readyToSend);
   bool sendModbus();
   uint8_t modbusToKnx(uint8_t dpt, bool readRequest);
   uint8_t knxToModbus();

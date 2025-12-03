@@ -38,7 +38,7 @@ void modbusModule::setup(bool configured)
     logIndentUp();
 
     // setup Pins
-#ifdef DEVICE_SMARTMF_1TE_MODBUS || DEVICE_SMARTMF_MODBUS_AUSSEN
+#if defined(DEVICE_SMARTMF_1TE_MODBUS) || defined(DEVICE_SMARTMF_MODBUS_AUSSEN)
     pinMode(SMARTMF_LED, OUTPUT);
     digitalWrite(SMARTMF_LED, LOW);
 #endif
@@ -190,7 +190,7 @@ void modbusModule::ErrorHandlingLED()
     if (error)
     {
         // setLED_ERROR(HIGH);
-#ifdef DEVICE_SMARTMF_1TE_MODBUS || DEVICE_SMARTMF_MODBUS_AUSSEN
+#if defined(DEVICE_SMARTMF_1TE_MODBUS) || defined(DEVICE_SMARTMF_MODBUS_AUSSEN)
         digitalWrite(SMARTMF_LED, HIGH);
 #endif
 #ifdef DEVICE_SMARTMF_MODBUS_RTU_3BE
@@ -200,7 +200,7 @@ void modbusModule::ErrorHandlingLED()
     else
     {
         // setLED_ERROR(LOW);
-#ifdef DEVICE_SMARTMF_1TE_MODBUS || DEVICE_SMARTMF_MODBUS_AUSSEN
+#if defined(DEVICE_SMARTMF_1TE_MODBUS) || defined(DEVICE_SMARTMF_MODBUS_AUSSEN)
         digitalWrite(SMARTMF_LED, LOW);
 #endif
 #ifdef DEVICE_SMARTMF_MODBUS_RTU_3BE
@@ -252,7 +252,7 @@ void modbusModule::loop(bool configured)
             if (!idle_processing)
             {
 
-                if (delayCheck(_timerCycleChannel, (ParamMOD_BusDelayRequest * 10))) // Zeit zwischen zwei Modbus Register Abfragen +50ms default Wartezeit
+                if (delayCheck(_timerCycleChannel, (ParamMOD_BusDelayRequest * 10)+5)) // Zeit zwischen zwei Modbus Register Abfragen +5ms default Wartezeit
                 {
                     // prüft ob ein CH eine Modbus Botschaft senden will und gibt diese CH-nummer zurück
                     uint8_t ch = findNextReadyToSend(ParamMOD_VisibleChannels);
