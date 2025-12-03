@@ -11,6 +11,7 @@
 // uint32_t timer_time_between_Cycle_Reads;
 
 bool run_cycle = true;
+bool readyToSend = false; 
 
 bool modbusModule::idle_processing = false;
 unsigned long modbusModule::_timerCycleChannel = 0;
@@ -232,7 +233,7 @@ void modbusModule::loop(bool configured)
         {
             errorHandling();
 
-            _channels[_currentChannel]->loop(); // loop -> only for KNX send send cyclically
+            _channels[_currentChannel]->loop(readyToSend); // loop -> only for KNX send send cyclically
             _currentChannel = findNextActive(ParamMOD_VisibleChannels, _currentChannel);
 
             // if (!idle_processing)
@@ -300,6 +301,7 @@ void modbusModule::loop(bool configured)
             if (delayCheck(_timerCycle, (ParamMOD_BusDelayCycle * 1000)) && !run_cycle)
             {
                 run_cycle = true;
+                readyToSend = true; // Nachdem alle CH durchgelaufen sind, darf auf den Bus gesendet werden
             }
         } while (openknx.freeLoopIterate(ParamMOD_VisibleChannels, count, processed));
     }

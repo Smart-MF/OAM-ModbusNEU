@@ -53,5 +53,5 @@ public:
   uint8_t sendProtocol(uint16_t registerAddr, uint16_t u16value);
   const std::string name() override;
   void setup() override;
-  void loop() override;
+  void loop(bool readyToSend) override;
 };

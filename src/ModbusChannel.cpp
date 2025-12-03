@@ -102,9 +102,12 @@ void modbusChannel::setup()
     begin(_modbus_ID, _serial);
 }
 
-void modbusChannel::loop()
+void modbusChannel::loop(bool readyToSend)
 {
-    sendKNX();
+    if (readyToSend) // erst auf den Bus senden, wenn ein Wert zur Verfügung steht
+    {
+        sendKNX();
+    }
 
     // if (delayCheck(timer1sec, 10000))
     //{
