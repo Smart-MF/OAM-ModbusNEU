@@ -2,7 +2,7 @@
 #include "Arduino.h"
 
 #define Serial_Debug_Modbus_Min
-//#define Serial_Debug_Modbus
+// #define Serial_Debug_Modbus
 
 // bool ModbusChannel::idle_processing = false;
 
@@ -1037,6 +1037,7 @@ uint8_t ModbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
             clearResponseBuffer();
 
             int32_t v;
+            int64_t v_64;
 
             // Bestimmt ob Register-Typ: Word oder Double Word
             switch (ParamMOD_CHModBusWordTyp13) // Choose Word Register OR Double Word Register
@@ -1120,20 +1121,25 @@ uint8_t ModbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
 
                 if (result == ku8MBSuccess)
                 {
+                    uint32_t uraw;
                     // check HI / LO   OR   LO / Hi  order
                     switch (ParamMOD_CHModBusWordPosDpt13)
                     {
                         //  ************************************************************************** MUSS NOCH GEPRÜFT WERDEN !!!!!!!!!!!!!!!!!!!!!!!!!!!
                     case 0: // HI Word / LO Word
-                        v = (int32_t)(getResponseBuffer(0) << 16 | getResponseBuffer(1));
+                        uraw = (int32_t)(getResponseBuffer(0) << 16 | getResponseBuffer(1));
                         break;
                     case 1: // LO Word / HI Word
-                        v = (int32_t)(getResponseBuffer(0) | getResponseBuffer(1) << 16);
+                        uraw = (int32_t)(getResponseBuffer(0) | getResponseBuffer(1) << 16);
                         //  ************************************************************************** MUSS NOCH GEPRÜFT WERDEN !!!!!!!!!!!!!!!!!!!!!!!!!!!
                         break;
                     default:
                         return result;
                     } // Ende // HI / LO Word
+
+                    //  ************************ MUSS NOCH GEPRÜFT WERDEN !!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    v = uraw / (float)ParamMOD_CHModBuscalculationValueDiff;
+                    v = v + ParamMOD_CHModBuscalculationValueAdd;
                 }
                 else
                 {
@@ -1170,27 +1176,31 @@ uint8_t ModbusChannel::modbusToKnx(uint8_t dpt, bool readRequest)
 
                 if (result == ku8MBSuccess)
                 {
+                    int64_t vraw_64;
                     // check HI / LO   OR   LO / Hi  order
                     switch (ParamMOD_CHModBusWordPosDpt12)
                     {
                         //  ************************************************************************** MUSS NOCH GEPRÜFT WERDEN !!!!!!!!!!!!!!!!!!!!!!!!!!!
                     case 0: // HI Word / LO Word
-                        v = ((int64_t)getResponseBuffer(0) << 48) |
-                            ((int64_t)getResponseBuffer(1) << 32) |
-                            ((int64_t)getResponseBuffer(2) << 16) |
-                            ((int64_t)getResponseBuffer(3));
+                        vraw_64 = ((int64_t)getResponseBuffer(0) << 48) |
+                                  ((int64_t)getResponseBuffer(1) << 32) |
+                                  ((int64_t)getResponseBuffer(2) << 16) |
+                                  ((int64_t)getResponseBuffer(3));
                         break;
                     case 1: // LO Word / HI Word
-                        v = ((int64_t)getResponseBuffer(0)) |
-                            ((int64_t)getResponseBuffer(1) << 16) |
-                            ((int64_t)getResponseBuffer(2) << 32) |
-                            ((int64_t)getResponseBuffer(3) << 48);
+                        vraw_64 = ((int64_t)getResponseBuffer(0)) |
+                                  ((int64_t)getResponseBuffer(1) << 16) |
+                                  ((int64_t)getResponseBuffer(2) << 32) |
+                                  ((int64_t)getResponseBuffer(3) << 48);
 
                         //  ************************************************************************** MUSS NOCH GEPRÜFT WERDEN !!!!!!!!!!!!!!!!!!!!!!!!!!!
                         break;
                     default:
                         return result;
                     } // Ende // HI / LO Word
+                    v_64 = vraw_64 / (float)ParamMOD_CHModBuscalculationValueDiff;
+                    v_64 = v_64 + ParamMOD_CHModBuscalculationValueAdd;
+                      
                 }
                 else // Fehler
                 {

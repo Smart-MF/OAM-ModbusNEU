@@ -1,0 +1,10 @@
+ToDos:
+
+
+1.) https://github.com/OpenKNX/OAM-Modbu...rc/Device.cpp:
+Das hier meinte ich. Die einzelnen Funktionen wie get_PROG_LED_PIN z.B. sind in meinen Augen toter Code.
+https://github.com/OpenKNX/OAM-Modbu...busModule.cpp:
+- das // #define DEVICE_SMARTMF_MODBUS_RTU_3BE könnte weg, ist ja auskommentiert
+- das #define SMARTMF_MODBUS_SERIAL Serial2 könnte eigentlich in die HardwareConfig. Beim UP1-GW-RS485 hatte ich gesehen, dass das z.B. dort schon definiert wird "#define RS485_SERIAL Serial2". Man könnte wenn man dabei ist auch die SMARTMF_MODBUS_RX_PIN/SMARTMF_MODBUS_TX_PIN/SMARTMF_MODBUS_DIR_PIN vielleicht vereinheitlichen? Dann würde das OAM-WeatherWN90LP auf deiner Hardware laufen und andersrum würde es möglicherweise auch gehen.
+https://github.com/OpenKNX/OAM-Modbu...odbusModule.h:
+Da ist auch noch eine große auskommentierte Sektion an defines die eigtl. in das HardwareConfig-Modul gewandert sind.
